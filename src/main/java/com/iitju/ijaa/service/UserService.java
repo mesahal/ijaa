@@ -26,14 +26,19 @@ public class UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
 
 
-    public User register(User user) {
+    public String register(User user) {
+        User userExists = userRepository.findByUsername(user.getUsername());
+
+        if (userExists != null) {
+            return "username already exists";
+        }
+
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
-        return userRepository.save(user);
+        return "Successfully registered";
     }
 
     public String verify(User user) {
-        //TODO: Should I find in the repository for the username first?
 
         User userExists = userRepository.findByUsername(user.getUsername());
 
