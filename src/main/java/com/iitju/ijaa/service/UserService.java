@@ -9,6 +9,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -26,16 +28,33 @@ public class UserService {
 
     public User register(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+
         return userRepository.save(user);
     }
 
     public String verify(User user) {
+        //TODO: Should I find in the repository for the username first?
+
+        User userExists = userRepository.findByUsername(user.getUsername());
+
+        if(userExists == null) {
+            return "Wrong username or password";
+        }
+
+        if(!userExists.isActive()) {
+            return "User is not active";
+        }
+
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
         if (authentication.isAuthenticated()) {
             return jwtService.generateToken(user.getUsername());
         }
-        return "Fail";
+        return "Failed";
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }
