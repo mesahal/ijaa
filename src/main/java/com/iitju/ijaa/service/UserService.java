@@ -1,15 +1,22 @@
 package com.iitju.ijaa.service;
 
+import com.iitju.ijaa.dto.ApiResponse;
 import com.iitju.ijaa.entity.User;
 import com.iitju.ijaa.repository.UserRepository;
+import com.iitju.ijaa.utils.ResponseUtils;
+import org.apache.tomcat.util.http.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -38,25 +45,30 @@ public class UserService {
         return "Successfully registered";
     }
 
-    public String verify(User user) {
+    public ResponseEntity<ApiResponse<Map<String,Object>>> verify(User user) {
 
         User userExists = userRepository.findByUsername(user.getUsername());
 
         if(userExists == null) {
-            return "Wrong username or password";
+            return ResponseUtils.createHttpResponse(HttpStatus.OK,"Wrong username or password",null);
         }
 
         if(!userExists.isActive()) {
-            return "User is not active";
+            return ResponseUtils.createHttpResponse(HttpStatus.OK,"User is not active",null);
         }
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
+        String token = jwtService.generateToken(user.getUsername());
+
         if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(user.getUsername());
+            Map<String,Object> responseData = new HashMap<>();
+            responseData.put("token", token);
+            responseData.put("user", userExists);
+            return ResponseUtils.createHttpResponse(HttpStatus.OK,"Login Successful",responseData);
         }
-        return "Failed";
+        return ResponseUtils.createHttpResponse(HttpStatus.INTERNAL_SERVER_ERROR,"Login failed due to an unexpected error",null);
     }
 
     public List<User> getAllUsers() {

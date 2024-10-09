@@ -1,4 +1,4 @@
-package com.iitju.ijaa.filter;
+package com.iitju.ijaa.security;
 
 import com.iitju.ijaa.service.JWTService;
 import com.iitju.ijaa.service.UserDetailsService;

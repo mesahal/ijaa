@@ -1,7 +1,7 @@
 package com.iitju.ijaa.service;
 
 import com.iitju.ijaa.entity.User;
-import com.iitju.ijaa.entity.UserPrincipal;
+import com.iitju.ijaa.security.UserPrincipal;
 import com.iitju.ijaa.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
