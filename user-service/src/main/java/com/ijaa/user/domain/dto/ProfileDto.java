@@ -2,6 +2,8 @@ package com.ijaa.user.domain.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ProfileDto {
     private String name;
@@ -12,10 +14,13 @@ public class ProfileDto {
     private String linkedIn;
     private String website;
     private String batch;
-    private String department;
+    private String facebook;
     private String email;
     private Boolean showPhone;
     private Boolean showLinkedIn;
     private Boolean showWebsite;
     private Boolean showEmail;
+    private Boolean showFacebook;
+    private Integer connections;
+    private List<String> interests;
 }

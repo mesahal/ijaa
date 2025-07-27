@@ -8,14 +8,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Builder
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "profiles")
-public class Profile {
+@Builder
+@Table(name = "alumni_profiles")
+public class AlumniSearch {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,45 +25,30 @@ public class Profile {
     private String username;
 
     private String name;
+    private String batch;
+    private String department;
     private String profession;
+    private String company;
     private String location;
+    private String avatar;
 
     @Column(columnDefinition = "TEXT")
     private String bio;
 
-    private String phone;
-    private String linkedIn;
-    private String website;
-    private String batch;
-    private String email;
-    private String facebook;
+    @Builder.Default
+    private Integer connections = 0;
 
-    @ElementCollection
-    @CollectionTable(name = "profile_interests", joinColumns = @JoinColumn(name = "profile_id"))
-    @Column(name = "interest")
-    private List<String> interests;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "alumni_skills", joinColumns = @JoinColumn(name = "alumni_id"))
+    @Column(name = "skill")
+    private List<String> skills;
 
     @Builder.Default
-    private Boolean showPhone = true;
-
-    @Builder.Default
-    private Boolean showLinkedIn = true;
-
-    @Builder.Default
-    private Boolean showWebsite = true;
-
-    @Builder.Default
-    private Boolean showEmail = true;
-
-    @Builder.Default
-    private Boolean showFacebook = true;
+    private Boolean isVisible = true;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-    @Builder.Default
-    private Integer connections = 0;
 }

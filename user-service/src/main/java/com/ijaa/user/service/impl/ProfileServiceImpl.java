@@ -70,8 +70,8 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
         if (dto.getBatch() != null) {
             entity.setBatch(dto.getBatch());
         }
-        if (dto.getDepartment() != null) {
-            entity.setDepartment(dto.getDepartment());
+        if (dto.getFacebook() != null) {
+            entity.setFacebook(dto.getFacebook());
         }
 
         // Update visibility settings if provided
@@ -87,6 +87,11 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
         if (dto.getShowEmail() != null) {
             entity.setShowEmail(dto.getShowEmail());
         }
+        if (dto.getShowFacebook() != null) {
+            entity.setShowFacebook(dto.getShowFacebook());
+        }
+        if (dto.getInterests() != null) entity.setInterests(dto.getInterests());
+
 
         repository.save(entity);
         return toDto(entity);
@@ -111,6 +116,9 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
         if (dto.getShowEmail() != null) {
             entity.setShowEmail(dto.getShowEmail());
         }
+        if (dto.getShowFacebook() != null) {
+            entity.setShowFacebook(dto.getShowFacebook());
+        }
 
         repository.save(entity);
         return toDto(entity);
@@ -127,11 +135,14 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
         dto.setWebsite(entity.getWebsite());
         dto.setEmail(entity.getEmail());
         dto.setBatch(entity.getBatch());
-        dto.setDepartment(entity.getDepartment());
+        dto.setFacebook(entity.getFacebook());
         dto.setShowPhone(entity.getShowPhone());
         dto.setShowLinkedIn(entity.getShowLinkedIn());
         dto.setShowWebsite(entity.getShowWebsite());
         dto.setShowEmail(entity.getShowEmail());
+        dto.setFacebook(entity.getFacebook());
+        dto.setConnections(entity.getConnections());
+        dto.setInterests(entity.getInterests());
         return dto;
     }
 
