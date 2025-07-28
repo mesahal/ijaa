@@ -6,5 +6,4 @@ import com.ijaa.user.domain.request.AlumniSearchRequest;
 
 public interface AlumniSearchService {
     PagedResponse<AlumniSearchDto> searchAlumni(AlumniSearchRequest request);
-    void syncAlumniProfile();
 }

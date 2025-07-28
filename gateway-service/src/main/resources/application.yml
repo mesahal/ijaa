@@ -14,7 +14,8 @@ spring:
           '[/**]':
             allowedOrigins:
               - "http://localhost:3000"
-              - "https://2f94799e287e.ngrok-free.app"
+              - "https://c4c7f3750389.ngrok-free.app"
+              - "https://ijaa-frontend.vercel.app"
             allowedMethods:
               - GET
               - POST

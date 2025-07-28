@@ -6,7 +6,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Builder
 @Entity
@@ -21,27 +20,41 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 100)
     private String username;
 
+    @Column(unique = true, nullable = false, length = 50)
+    private String userId;
+
+    @Column(length = 255)
     private String name;
+
+    @Column(length = 255)
     private String profession;
+
+    @Column(length = 255)
     private String location;
 
     @Column(columnDefinition = "TEXT")
     private String bio;
 
+    @Column(length = 20)
     private String phone;
-    private String linkedIn;
-    private String website;
-    private String batch;
-    private String email;
-    private String facebook;
 
-    @ElementCollection
-    @CollectionTable(name = "profile_interests", joinColumns = @JoinColumn(name = "profile_id"))
-    @Column(name = "interest")
-    private List<String> interests;
+    @Column(length = 255)
+    private String linkedIn;
+
+    @Column(length = 255)
+    private String website;
+
+    @Column(length = 10)
+    private String batch;
+
+    @Column(length = 255)
+    private String email;
+
+    @Column(length = 255)
+    private String facebook;
 
     @Builder.Default
     private Boolean showPhone = true;
@@ -58,12 +71,12 @@ public class Profile {
     @Builder.Default
     private Boolean showFacebook = true;
 
+    @Builder.Default
+    private Integer connections = 0;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-    @Builder.Default
-    private Integer connections = 0;
 }

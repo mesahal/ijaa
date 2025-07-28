@@ -1,10 +1,13 @@
 package com.ijaa.user.domain.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class AuthResponse {
-    private String token; // Only expose necessary data
+    private String token;
+    private String userId;
 }

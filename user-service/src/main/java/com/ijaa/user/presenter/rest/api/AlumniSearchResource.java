@@ -51,12 +51,4 @@ public class AlumniSearchResource {
                 new ApiResponse<>("Alumni search completed successfully", "200", result)
         );
     }
-
-    @PostMapping("/sync-profile")
-    public ResponseEntity<ApiResponse<Void>> syncProfile() {
-        alumniSearchService.syncAlumniProfile();
-        return ResponseEntity.ok(
-                new ApiResponse<>("Profile synced successfully", "200", null)
-        );
-    }
 }

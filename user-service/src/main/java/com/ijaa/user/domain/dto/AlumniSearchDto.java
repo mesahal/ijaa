@@ -5,16 +5,14 @@ import java.util.List;
 
 @Data
 public class AlumniSearchDto {
-    private Long id;
+    private String userId;
     private String name;
     private String batch;
-    private String department;
     private String profession;
-    private String company;
     private String location;
     private String avatar;
     private String bio;
     private Integer connections;
     private Boolean isConnected;
-    private List<String> skills;
+    private List<String> interests; // This field is already present
 }

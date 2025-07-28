@@ -3,15 +3,14 @@ package com.ijaa.user.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ijaa.user.domain.common.PagedResponse;
 import com.ijaa.user.domain.dto.AlumniSearchDto;
+import com.ijaa.user.domain.dto.InterestDto;
 import com.ijaa.user.domain.request.AlumniSearchRequest;
-import com.ijaa.user.domain.entity.AlumniSearch;
 import com.ijaa.user.domain.entity.Profile;
-import com.ijaa.user.repository.AlumniSearchRepository;
 import com.ijaa.user.repository.ConnectionRepository;
+import com.ijaa.user.repository.InterestRepository;
 import com.ijaa.user.repository.ProfileRepository;
 import com.ijaa.user.service.AlumniSearchService;
 import com.ijaa.user.service.BaseService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,27 +18,27 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class AlumniSearchServiceImpl extends BaseService implements AlumniSearchService {
 
-    public AlumniSearchServiceImpl(
-            AlumniSearchRepository alumniSearchRepository,
-            ConnectionRepository connectionRepository,
-            ProfileRepository profileRepository,
-            ObjectMapper objectMapper) {
-
-        super(objectMapper); // Call parent constructor with ObjectMapper
-
-        this.alumniSearchRepository = alumniSearchRepository;
-        this.connectionRepository = connectionRepository;
-        this.profileRepository = profileRepository;
-    }
-
-    private final AlumniSearchRepository alumniSearchRepository;
     private final ConnectionRepository connectionRepository;
     private final ProfileRepository profileRepository;
+    private final InterestRepository interestRepository;
+
+    public AlumniSearchServiceImpl(
+            ConnectionRepository connectionRepository,
+            ProfileRepository profileRepository,
+            InterestRepository interestRepository,
+            ObjectMapper objectMapper) {
+
+        super(objectMapper);
+        this.connectionRepository = connectionRepository;
+        this.profileRepository = profileRepository;
+        this.interestRepository = interestRepository;
+    }
 
     @Override
     public PagedResponse<AlumniSearchDto> searchAlumni(AlumniSearchRequest request) {
@@ -51,56 +50,48 @@ public class AlumniSearchServiceImpl extends BaseService implements AlumniSearch
         // Create pageable with sorting
         Pageable pageable = createPageable(request);
 
-        // Search alumni with filters
-        Page<AlumniSearch> alumniPage = alumniSearchRepository.findAlumniWithFilters(
+        // Search alumni directly from profiles table with filters
+        Page<Profile> profilePage = profileRepository.findProfilesWithFilters(
                 request.getSearchQuery(),
                 request.getBatch(),
                 request.getProfession(),
                 request.getLocation(),
+                currentUsername, // Exclude current user
                 pageable
         );
 
+        // Get all userIds from the profile results
+        List<String> userIds = profilePage.getContent().stream()
+                .map(Profile::getUserId)
+                .collect(Collectors.toList());
+
+        // Fetch all interests for these users in one query
+        Map<String, List<String>> userInterestsMap = interestRepository
+                .findByUserIdIn(userIds)
+                .stream()
+                .collect(Collectors.groupingBy(
+                        interest -> interest.getUserId(),
+                        Collectors.mapping(interest -> interest.getInterest(), Collectors.toList())
+                ));
+
         // Convert to DTOs
-        List<AlumniSearchDto> alumniDtos = alumniPage.getContent().stream()
-                .map(alumni -> toDto(alumni, connectedUsernames.contains(alumni.getUsername())))
+        List<AlumniSearchDto> alumniDtos = profilePage.getContent().stream()
+                .map(profile -> toDto(
+                        profile,
+                        connectedUsernames.contains(profile.getUsername()),
+                        userInterestsMap.getOrDefault(profile.getUserId(), List.of())
+                ))
                 .collect(Collectors.toList());
 
         return new PagedResponse<>(
                 alumniDtos,
-                alumniPage.getNumber(),
-                alumniPage.getSize(),
-                alumniPage.getTotalElements(),
-                alumniPage.getTotalPages(),
-                alumniPage.isFirst(),
-                alumniPage.isLast()
+                profilePage.getNumber(),
+                profilePage.getSize(),
+                profilePage.getTotalElements(),
+                profilePage.getTotalPages(),
+                profilePage.isFirst(),
+                profilePage.isLast()
         );
-    }
-
-    @Override
-    public void syncAlumniProfile() {
-        String username = getCurrentUsername();
-
-        // Get profile information
-        Profile profile = profileRepository.findByUsername(username).orElse(null);
-        if (profile == null) return;
-
-        // Get or create alumni search record
-        AlumniSearch alumniSearch = alumniSearchRepository.findByUsername(username)
-                .orElse(AlumniSearch.builder().username(username).build());
-
-        // Sync data from profile
-        alumniSearch.setName(profile.getName());
-        alumniSearch.setBatch(profile.getBatch());
-        alumniSearch.setProfession(profile.getProfession());
-        alumniSearch.setLocation(profile.getLocation());
-        alumniSearch.setBio(profile.getBio());
-
-        // You can set avatar URL here based on your file storage logic
-        if (alumniSearch.getAvatar() == null) {
-            alumniSearch.setAvatar("https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1");
-        }
-
-        alumniSearchRepository.save(alumniSearch);
     }
 
     private Pageable createPageable(AlumniSearchRequest request) {
@@ -125,20 +116,21 @@ public class AlumniSearchServiceImpl extends BaseService implements AlumniSearch
         return PageRequest.of(request.getPage(), request.getSize(), sort);
     }
 
-    private AlumniSearchDto toDto(AlumniSearch entity, boolean isConnected) {
+    private AlumniSearchDto toDto(Profile profile, boolean isConnected, List<String> interests) {
         AlumniSearchDto dto = new AlumniSearchDto();
-        dto.setId(entity.getId());
-        dto.setName(entity.getName());
-        dto.setBatch(entity.getBatch());
-        dto.setDepartment(entity.getDepartment());
-        dto.setProfession(entity.getProfession());
-        dto.setCompany(entity.getCompany());
-        dto.setLocation(entity.getLocation());
-        dto.setAvatar(entity.getAvatar());
-        dto.setBio(entity.getBio());
-        dto.setConnections(entity.getConnections());
+        dto.setUserId(profile.getUserId());
+        dto.setName(profile.getName());
+        dto.setBatch(profile.getBatch());
+        dto.setProfession(profile.getProfession());
+        dto.setLocation(profile.getLocation());
+        dto.setBio(profile.getBio());
+        dto.setConnections(profile.getConnections());
         dto.setIsConnected(isConnected);
-        dto.setSkills(entity.getSkills());
+        dto.setInterests(interests); // Now populated from Interest entity
+
+        // Set default avatar if not available
+        dto.setAvatar("https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1");
+
         return dto;
     }
 }

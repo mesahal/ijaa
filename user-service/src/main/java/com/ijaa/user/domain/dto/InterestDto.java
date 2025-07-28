@@ -5,12 +5,9 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ExperienceDto {
+public class InterestDto {
     private Long id;
     private String userId;
-    private String title;
-    private String company;
-    private String period;
-    private String description;
+    private String interest;
     private LocalDateTime createdAt;
 }

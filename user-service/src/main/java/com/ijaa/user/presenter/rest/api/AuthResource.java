@@ -24,8 +24,7 @@ public class AuthResource {
     @PostMapping("/signin")
     public ResponseEntity<ApiResponse<AuthResponse>> signIn(
             @Valid @RequestBody SignInRequest request) {
-        String token = authService.verify(request);
-        AuthResponse authResponse = new AuthResponse(token);
+        AuthResponse authResponse = authService.verify(request);
         return ResponseEntity.ok(
                 new ApiResponse<>("Login successful", "200", authResponse)
         );
@@ -34,11 +33,9 @@ public class AuthResource {
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<AuthResponse>> signUp(
             @Valid @RequestBody SignUpRequest request) {
-        String token = authService.registerUser(request);
-        AuthResponse authResponse = new AuthResponse(token);
+        AuthResponse authResponse = authService.registerUser(request);
         return ResponseEntity.ok(
                 new ApiResponse<>("Registration successful", "201", authResponse)
         );
     }
-
 }

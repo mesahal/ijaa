@@ -1,16 +1,25 @@
 package com.ijaa.user.service;
 
-
 import com.ijaa.user.domain.dto.ExperienceDto;
+import com.ijaa.user.domain.dto.InterestDto;
 import com.ijaa.user.domain.dto.ProfileDto;
 
 import java.util.List;
 
 public interface ProfileService {
-    ProfileDto getProfile();
-    ProfileDto updateBasicInfo(ProfileDto dto);
-    ProfileDto updateVisibility(ProfileDto dto);
-    List<ExperienceDto> getExperiences();
+
+    // Profile methods
+    ProfileDto getProfileByUserId(String userId);
+    ProfileDto updateBasicInfo(ProfileDto profileDto);
+    ProfileDto updateVisibility(ProfileDto profileDto);
+
+    // Experience methods
+    List<ExperienceDto> getExperiencesByUserId(String userId);
     ExperienceDto addExperience(ExperienceDto experienceDto);
-    void deleteExperience(Long id);
+    void deleteExperience(String userId);
+
+    // Interest methods
+    List<InterestDto> getInterestsByUserId(String userId);
+    InterestDto addInterest(String interest);
+    void deleteInterest(String userId);
 }

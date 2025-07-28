@@ -1,8 +1,10 @@
+// ProfileResource.java
 package com.ijaa.user.presenter.rest.api;
 
 import com.ijaa.user.common.utils.AppUtils;
 import com.ijaa.user.domain.common.ApiResponse;
 import com.ijaa.user.domain.dto.ExperienceDto;
+import com.ijaa.user.domain.dto.InterestDto;
 import com.ijaa.user.domain.dto.ProfileDto;
 import com.ijaa.user.service.ProfileService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(AppUtils.BASE_URL)
@@ -18,9 +21,10 @@ public class ProfileResource {
 
     private final ProfileService profileService;
 
-    @GetMapping("/profile")
-    public ResponseEntity<ApiResponse<ProfileDto>> getProfile() {
-        ProfileDto profileDto = profileService.getProfile();
+    // Get user's profile by userId
+    @GetMapping("/profile/{userId}")
+    public ResponseEntity<ApiResponse<ProfileDto>> getProfileByUserId(@PathVariable String userId) {
+        ProfileDto profileDto = profileService.getProfileByUserId(userId);
         return ResponseEntity.ok(
                 new ApiResponse<>("Profile fetched successfully", "200", profileDto)
         );
@@ -43,9 +47,9 @@ public class ProfileResource {
     }
 
     // Experience endpoints
-    @GetMapping("/experiences")
-    public ResponseEntity<ApiResponse<List<ExperienceDto>>> getExperiences() {
-        List<ExperienceDto> experiences = profileService.getExperiences();
+    @GetMapping("/experiences/{userId}")
+    public ResponseEntity<ApiResponse<List<ExperienceDto>>> getExperiencesByUserId(@PathVariable String userId) {
+        List<ExperienceDto> experiences = profileService.getExperiencesByUserId(userId);
         return ResponseEntity.ok(
                 new ApiResponse<>("Experiences fetched successfully", "200", experiences)
         );
@@ -59,11 +63,37 @@ public class ProfileResource {
         );
     }
 
-    @DeleteMapping("/experiences/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteExperience(@PathVariable Long id) {
-        profileService.deleteExperience(id);
+    @DeleteMapping("/experiences/{userId}")
+    public ResponseEntity<ApiResponse<Void>> deleteExperience(@PathVariable String userId) {
+        profileService.deleteExperience(userId);
         return ResponseEntity.ok(
                 new ApiResponse<>("Experience deleted successfully", "200", null)
+        );
+    }
+
+    // Interest endpoints
+    @GetMapping("/interests/{userId}")
+    public ResponseEntity<ApiResponse<List<InterestDto>>> getInterestsByUserId(@PathVariable String userId) {
+        List<InterestDto> interests = profileService.getInterestsByUserId(userId);
+        return ResponseEntity.ok(
+                new ApiResponse<>("Interests fetched successfully", "200", interests)
+        );
+    }
+
+    @PostMapping("/interests")
+    public ResponseEntity<ApiResponse<InterestDto>> addInterest(@RequestBody Map<String, String> request) {
+        String interest = request.get("interest");
+        InterestDto addedInterest = profileService.addInterest(interest);
+        return ResponseEntity.ok(
+                new ApiResponse<>("Interest added successfully", "200", addedInterest)
+        );
+    }
+
+    @DeleteMapping("/interests/{userId}")
+    public ResponseEntity<ApiResponse<Void>> deleteInterest(@PathVariable String userId) {
+        profileService.deleteInterest(userId);
+        return ResponseEntity.ok(
+                new ApiResponse<>("Interest deleted successfully", "200", null)
         );
     }
 }

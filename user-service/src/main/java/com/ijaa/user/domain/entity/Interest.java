@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "experiences")
-public class Experience {
+@Table(name = "interests")
+public class Interest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,12 +26,8 @@ public class Experience {
     @Column(nullable = false)
     private String userId;
 
-    private String title;
-    private String company;
-    private String period;
-
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    @Column(nullable = false, length = 100)
+    private String interest;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

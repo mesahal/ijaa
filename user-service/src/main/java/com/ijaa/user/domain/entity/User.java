@@ -1,22 +1,29 @@
 package com.ijaa.user.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
 
-@Entity
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-@Table(name = "Users")
+@AllArgsConstructor
+@Entity
+@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true, nullable = false, length = 50)
+    private String userId; // This is your unique identifier
+
+    @Column(unique = true, nullable = false, length = 100)
     private String username;
+
+    @Column(nullable = false)
     private String password;
+
+    // Add other fields as needed (email, firstName, lastName, etc.)
 }
