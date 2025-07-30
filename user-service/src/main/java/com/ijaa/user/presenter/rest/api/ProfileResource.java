@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+import com.ijaa.user.domain.request.InterestRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +33,7 @@ public class ProfileResource {
     }
 
     @PutMapping("/basic")
-    public ResponseEntity<ApiResponse<ProfileDto>> updateBasicInfo(@RequestBody ProfileDto profileDto) {
+    public ResponseEntity<ApiResponse<ProfileDto>> updateBasicInfo(@Valid @RequestBody ProfileDto profileDto) {
         ProfileDto updatedProfile = profileService.updateBasicInfo(profileDto);
         return ResponseEntity.ok(
                 new ApiResponse<>("Profile updated successfully", "200", updatedProfile)
@@ -39,7 +41,7 @@ public class ProfileResource {
     }
 
     @PutMapping("/visibility")
-    public ResponseEntity<ApiResponse<ProfileDto>> updateVisibility(@RequestBody ProfileDto profileDto) {
+    public ResponseEntity<ApiResponse<ProfileDto>> updateVisibility(@Valid @RequestBody ProfileDto profileDto) {
         ProfileDto updatedProfile = profileService.updateVisibility(profileDto);
         return ResponseEntity.ok(
                 new ApiResponse<>("Visibility updated successfully", "200", updatedProfile)
@@ -56,7 +58,7 @@ public class ProfileResource {
     }
 
     @PostMapping("/experiences")
-    public ResponseEntity<ApiResponse<ExperienceDto>> addExperience(@RequestBody ExperienceDto experienceDto) {
+    public ResponseEntity<ApiResponse<ExperienceDto>> addExperience(@Valid @RequestBody ExperienceDto experienceDto) {
         ExperienceDto addedExperience = profileService.addExperience(experienceDto);
         return ResponseEntity.ok(
                 new ApiResponse<>("Experience added successfully", "200", addedExperience)
@@ -81,9 +83,8 @@ public class ProfileResource {
     }
 
     @PostMapping("/interests")
-    public ResponseEntity<ApiResponse<InterestDto>> addInterest(@RequestBody Map<String, String> request) {
-        String interest = request.get("interest");
-        InterestDto addedInterest = profileService.addInterest(interest);
+    public ResponseEntity<ApiResponse<InterestDto>> addInterest(@Valid @RequestBody InterestRequest request) {
+        InterestDto addedInterest = profileService.addInterest(request.getInterest());
         return ResponseEntity.ok(
                 new ApiResponse<>("Interest added successfully", "200", addedInterest)
         );

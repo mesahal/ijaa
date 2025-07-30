@@ -1,11 +1,15 @@
 package com.ijaa.user.domain.dto;
 
 import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
 
 @Data
 public class ProfileDto {
+    @NotBlank(message = "UserId must not be blank")
     private String userId;
+    @NotBlank(message = "Name must not be blank")
     private String name;
+    @NotBlank(message = "Profession must not be blank")
     private String profession;
     private String location;
     private String bio;

@@ -245,7 +245,7 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
         return java.util.UUID.randomUUID().toString();
     }
 
-    private String getCurrentUserId() {
+    public String getCurrentUserId() {
         // Implement logic to get current user's ID
         // This should be derived from the current username or security context
         String username = getCurrentUsername();

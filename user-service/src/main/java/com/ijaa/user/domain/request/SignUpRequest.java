@@ -8,12 +8,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SignUpRequest {
-    @NotBlank
-    @Size(min = 3, max = 50)
+    @NotBlank(message = "Username must not be blank")
     private String username;
 
-    @NotBlank
-    @Size(min = 6, max = 100)
+    @NotBlank(message = "Password must not be blank")
+    @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 }
 
