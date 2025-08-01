@@ -21,6 +21,13 @@ public class GatewayConfig {
                                 .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://USERS"))
+                // Admin routes - no authentication filter for login/signup
+                .route(p-> p
+                        .path("/ijaa/api/v1/admin/**")
+                        .filters(f-> f
+                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
+                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
+                        .uri("lb://USERS"))
                 .build();
     }
 }

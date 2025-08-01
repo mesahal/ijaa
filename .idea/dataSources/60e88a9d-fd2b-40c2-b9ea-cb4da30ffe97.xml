@@ -3,9 +3,17 @@
   <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.53">
     <root id="1">
       <DateStyle>dmy</DateStyle>
-      <IntrospectionStateNumber>666</IntrospectionStateNumber>
+      <Grants>1||-9223372036854775808|c|G
+1||10|c|G
+1||10|C|G
+1||10|T|G
+13462||-9223372036854775808|c|G
+13462||10|c|G
+13462||10|C|G
+13462||10|T|G</Grants>
+      <IntrospectionStateNumber>706</IntrospectionStateNumber>
       <ServerVersion>12.22</ServerVersion>
-      <StartupTime>1753705373</StartupTime>
+      <StartupTime>1753968106</StartupTime>
       <TimeZones>true ACDT
 true ACSST
 false ACST
@@ -1428,7 +1436,7 @@ true posixrules
 13163||10|C|G
 13163||-9223372036854775808|U|G
 13163||10|U|G</Grants>
-      <IntrospectionStateNumber>666</IntrospectionStateNumber>
+      <IntrospectionStateNumber>706</IntrospectionStateNumber>
       <ObjectId>16384</ObjectId>
       <OwnerName>postgres</OwnerName>
     </database>
@@ -4655,21 +4663,29 @@ true posixrules
     <schema id="246" parent="2" name="public">
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <IntrospectionStateNumber>666</IntrospectionStateNumber>
-      <LastIntrospectionLocalTimestamp>2025-07-28.14:44:10</LastIntrospectionLocalTimestamp>
+      <IntrospectionStateNumber>706</IntrospectionStateNumber>
+      <LastIntrospectionLocalTimestamp>2025-07-31.13:36:25</LastIntrospectionLocalTimestamp>
       <ObjectId>2200</ObjectId>
       <StateNumber>275</StateNumber>
       <OwnerName>postgres</OwnerName>
     </schema>
-    <sequence id="247" parent="246" name="alumni_profiles_id_seq">
-      <ObjectId>16517</ObjectId>
+    <sequence id="247" parent="246" name="admins_id_seq">
+      <ObjectId>24729</ObjectId>
       <SequenceIdentity>1</SequenceIdentity>
       <StartValue>1</StartValue>
-      <StateNumber>636</StateNumber>
+      <StateNumber>691</StateNumber>
       <StoredType>bigint|0s</StoredType>
       <OwnerName>root</OwnerName>
     </sequence>
-    <sequence id="248" parent="246" name="connections_id_seq">
+    <sequence id="248" parent="246" name="alumni_profiles_id_seq">
+      <ObjectId>16551</ObjectId>
+      <SequenceIdentity>1</SequenceIdentity>
+      <StartValue>1</StartValue>
+      <StateNumber>683</StateNumber>
+      <StoredType>bigint|0s</StoredType>
+      <OwnerName>root</OwnerName>
+    </sequence>
+    <sequence id="249" parent="246" name="connections_id_seq">
       <ObjectId>16428</ObjectId>
       <SequenceIdentity>1</SequenceIdentity>
       <StartValue>1</StartValue>
@@ -4677,7 +4693,7 @@ true posixrules
       <StoredType>bigint|0s</StoredType>
       <OwnerName>root</OwnerName>
     </sequence>
-    <sequence id="249" parent="246" name="experiences_id_seq">
+    <sequence id="250" parent="246" name="experiences_id_seq">
       <ObjectId>16396</ObjectId>
       <SequenceIdentity>1</SequenceIdentity>
       <StartValue>1</StartValue>
@@ -4685,7 +4701,15 @@ true posixrules
       <StoredType>bigint|0s</StoredType>
       <OwnerName>root</OwnerName>
     </sequence>
-    <sequence id="250" parent="246" name="interests_id_seq">
+    <sequence id="251" parent="246" name="feature_flags_id_seq">
+      <ObjectId>24742</ObjectId>
+      <SequenceIdentity>1</SequenceIdentity>
+      <StartValue>1</StartValue>
+      <StateNumber>694</StateNumber>
+      <StoredType>bigint|0s</StoredType>
+      <OwnerName>root</OwnerName>
+    </sequence>
+    <sequence id="252" parent="246" name="interests_id_seq">
       <ObjectId>16539</ObjectId>
       <SequenceIdentity>1</SequenceIdentity>
       <StartValue>1</StartValue>
@@ -4693,7 +4717,7 @@ true posixrules
       <StoredType>bigint|0s</StoredType>
       <OwnerName>root</OwnerName>
     </sequence>
-    <sequence id="251" parent="246" name="profiles_id_seq">
+    <sequence id="253" parent="246" name="profiles_id_seq">
       <ObjectId>16406</ObjectId>
       <SequenceIdentity>1</SequenceIdentity>
       <StartValue>1</StartValue>
@@ -4701,7 +4725,7 @@ true posixrules
       <StoredType>bigint|0s</StoredType>
       <OwnerName>root</OwnerName>
     </sequence>
-    <sequence id="252" parent="246" name="users_id_seq">
+    <sequence id="254" parent="246" name="users_id_seq">
       <ObjectId>16386</ObjectId>
       <SequenceIdentity>1</SequenceIdentity>
       <StartValue>1</StartValue>
@@ -4709,43 +4733,301 @@ true posixrules
       <StoredType>bigint|0s</StoredType>
       <OwnerName>root</OwnerName>
     </sequence>
-    <table id="253" parent="246" name="connections">
+    <table id="255" parent="246" name="admins">
+      <ObjectId>24731</ObjectId>
+      <StateNumber>691</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+      <OwnerName>root</OwnerName>
+    </table>
+    <table id="256" parent="246" name="alumni_profiles">
+      <ObjectId>16553</ObjectId>
+      <StateNumber>687</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+      <OwnerName>root</OwnerName>
+    </table>
+    <table id="257" parent="246" name="alumni_skills">
+      <ObjectId>16561</ObjectId>
+      <StateNumber>687</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+      <OwnerName>root</OwnerName>
+    </table>
+    <table id="258" parent="246" name="connections">
       <ObjectId>16430</ObjectId>
       <StateNumber>531</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>root</OwnerName>
     </table>
-    <table id="254" parent="246" name="experiences">
+    <table id="259" parent="246" name="experiences">
       <ObjectId>16398</ObjectId>
       <StateNumber>665</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>root</OwnerName>
     </table>
-    <table id="255" parent="246" name="interests">
+    <table id="260" parent="246" name="feature_flags">
+      <ObjectId>24744</ObjectId>
+      <StateNumber>694</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+      <OwnerName>root</OwnerName>
+    </table>
+    <table id="261" parent="246" name="interests">
       <ObjectId>16541</ObjectId>
       <StateNumber>653</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>root</OwnerName>
     </table>
-    <table id="256" parent="246" name="profiles">
+    <table id="262" parent="246" name="profiles">
       <ObjectId>16408</ObjectId>
       <StateNumber>647</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>root</OwnerName>
     </table>
-    <table id="257" parent="246" name="users">
+    <table id="263" parent="246" name="users">
       <ObjectId>16388</ObjectId>
       <StateNumber>626</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>root</OwnerName>
     </table>
-    <check id="258" parent="253" name="connections_status_check">
+    <check id="264" parent="255" name="admins_role_check">
+      <ColNames>role</ColNames>
+      <ObjectId>24734</ObjectId>
+      <Predicate>(role)::text = ANY ((ARRAY[&apos;SUPER_ADMIN&apos;::character varying, &apos;EVENT_MANAGER&apos;::character varying, &apos;CONTENT_MANAGER&apos;::character varying, &apos;MODERATOR&apos;::character varying])::text[])</Predicate>
+      <StateNumber>691</StateNumber>
+    </check>
+    <column id="265" parent="255" name="id">
+      <IdentityKind>by-default</IdentityKind>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StateNumber>691</StateNumber>
+      <StoredType>bigint|0s</StoredType>
+      <SequenceId>24729</SequenceId>
+      <TypeId>20</TypeId>
+    </column>
+    <column id="266" parent="255" name="active">
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StateNumber>691</StateNumber>
+      <StoredType>boolean|0s</StoredType>
+      <TypeId>16</TypeId>
+    </column>
+    <column id="267" parent="255" name="created_at">
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+      <StateNumber>691</StateNumber>
+      <StoredType>timestamp(6)|0s</StoredType>
+      <TypeId>1114</TypeId>
+    </column>
+    <column id="268" parent="255" name="email">
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+      <StateNumber>691</StateNumber>
+      <StoredType>varchar(100)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="269" parent="255" name="name">
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+      <StateNumber>691</StateNumber>
+      <StoredType>varchar(100)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="270" parent="255" name="password_hash">
+      <NotNull>1</NotNull>
+      <Position>6</Position>
+      <StateNumber>691</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="271" parent="255" name="role">
+      <NotNull>1</NotNull>
+      <Position>7</Position>
+      <StateNumber>691</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="272" parent="255" name="updated_at">
+      <NotNull>1</NotNull>
+      <Position>8</Position>
+      <StateNumber>691</StateNumber>
+      <StoredType>timestamp(6)|0s</StoredType>
+      <TypeId>1114</TypeId>
+    </column>
+    <index id="273" parent="255" name="admins_pkey">
+      <ColNames>id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>24738</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>691</StateNumber>
+      <Unique>1</Unique>
+      <AccessMethodId>403</AccessMethodId>
+    </index>
+    <index id="274" parent="255" name="uk47bvqemyk6vlm0w7crc3opdd4">
+      <ColNames>email</ColNames>
+      <ObjectId>24740</ObjectId>
+      <StateNumber>693</StateNumber>
+      <Unique>1</Unique>
+      <AccessMethodId>403</AccessMethodId>
+      <CollationNames>default</CollationNames>
+      <CollationIds>100</CollationIds>
+      <CollationParentNames>pg_catalog</CollationParentNames>
+    </index>
+    <key id="275" parent="255" name="admins_pkey">
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>24739</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>691</StateNumber>
+      <UnderlyingIndexId>24738</UnderlyingIndexId>
+    </key>
+    <key id="276" parent="255" name="uk47bvqemyk6vlm0w7crc3opdd4">
+      <ObjectId>24741</ObjectId>
+      <StateNumber>693</StateNumber>
+      <UnderlyingIndexId>24740</UnderlyingIndexId>
+    </key>
+    <column id="277" parent="256" name="id">
+      <IdentityKind>by-default</IdentityKind>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StateNumber>683</StateNumber>
+      <StoredType>bigint|0s</StoredType>
+      <SequenceId>16551</SequenceId>
+      <TypeId>20</TypeId>
+    </column>
+    <column id="278" parent="256" name="avatar">
+      <Position>2</Position>
+      <StateNumber>683</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="279" parent="256" name="batch">
+      <Position>3</Position>
+      <StateNumber>683</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="280" parent="256" name="bio">
+      <Position>4</Position>
+      <StateNumber>683</StateNumber>
+      <StoredType>text|0s</StoredType>
+      <TypeId>25</TypeId>
+    </column>
+    <column id="281" parent="256" name="company">
+      <Position>5</Position>
+      <StateNumber>683</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="282" parent="256" name="connections">
+      <Position>6</Position>
+      <StateNumber>683</StateNumber>
+      <StoredType>integer|0s</StoredType>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="283" parent="256" name="created_at">
+      <Position>7</Position>
+      <StateNumber>683</StateNumber>
+      <StoredType>timestamp(6)|0s</StoredType>
+      <TypeId>1114</TypeId>
+    </column>
+    <column id="284" parent="256" name="department">
+      <Position>8</Position>
+      <StateNumber>683</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="285" parent="256" name="is_visible">
+      <Position>9</Position>
+      <StateNumber>683</StateNumber>
+      <StoredType>boolean|0s</StoredType>
+      <TypeId>16</TypeId>
+    </column>
+    <column id="286" parent="256" name="location">
+      <Position>10</Position>
+      <StateNumber>683</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="287" parent="256" name="name">
+      <Position>11</Position>
+      <StateNumber>683</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="288" parent="256" name="profession">
+      <Position>12</Position>
+      <StateNumber>683</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="289" parent="256" name="updated_at">
+      <Position>13</Position>
+      <StateNumber>683</StateNumber>
+      <StoredType>timestamp(6)|0s</StoredType>
+      <TypeId>1114</TypeId>
+    </column>
+    <column id="290" parent="256" name="username">
+      <NotNull>1</NotNull>
+      <Position>14</Position>
+      <StateNumber>683</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <index id="291" parent="256" name="alumni_profiles_pkey">
+      <ColNames>id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>16559</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>683</StateNumber>
+      <Unique>1</Unique>
+      <AccessMethodId>403</AccessMethodId>
+    </index>
+    <index id="292" parent="256" name="ukeujc7oc2vy9athxt589kf2bro">
+      <ColNames>username</ColNames>
+      <ObjectId>16564</ObjectId>
+      <StateNumber>686</StateNumber>
+      <Unique>1</Unique>
+      <AccessMethodId>403</AccessMethodId>
+      <CollationNames>default</CollationNames>
+      <CollationIds>100</CollationIds>
+      <CollationParentNames>pg_catalog</CollationParentNames>
+    </index>
+    <key id="293" parent="256" name="alumni_profiles_pkey">
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>16560</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>683</StateNumber>
+      <UnderlyingIndexId>16559</UnderlyingIndexId>
+    </key>
+    <key id="294" parent="256" name="ukeujc7oc2vy9athxt589kf2bro">
+      <ObjectId>16565</ObjectId>
+      <StateNumber>686</StateNumber>
+      <UnderlyingIndexId>16564</UnderlyingIndexId>
+    </key>
+    <column id="295" parent="257" name="alumni_id">
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StateNumber>684</StateNumber>
+      <StoredType>bigint|0s</StoredType>
+      <TypeId>20</TypeId>
+    </column>
+    <column id="296" parent="257" name="skill">
+      <Position>2</Position>
+      <StateNumber>684</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <foreign-key id="297" parent="257" name="fki0f9txins73s8a7fkt3kxxxm2">
+      <ColNames>alumni_id</ColNames>
+      <ObjectId>16566</ObjectId>
+      <StateNumber>687</StateNumber>
+      <RefKeyColPositions>1</RefKeyColPositions>
+      <RefTableId>16553</RefTableId>
+    </foreign-key>
+    <check id="298" parent="258" name="connections_status_check">
       <ColNames>status</ColNames>
       <ObjectId>16433</ObjectId>
       <Predicate>(status)::text = ANY ((ARRAY[&apos;PENDING&apos;::character varying, &apos;ACCEPTED&apos;::character varying, &apos;REJECTED&apos;::character varying])::text[])</Predicate>
       <StateNumber>531</StateNumber>
     </check>
-    <column id="259" parent="253" name="id">
+    <column id="299" parent="258" name="id">
       <IdentityKind>by-default</IdentityKind>
       <NotNull>1</NotNull>
       <Position>1</Position>
@@ -4754,33 +5036,33 @@ true posixrules
       <SequenceId>16428</SequenceId>
       <TypeId>20</TypeId>
     </column>
-    <column id="260" parent="253" name="created_at">
+    <column id="300" parent="258" name="created_at">
       <Position>2</Position>
       <StateNumber>531</StateNumber>
       <StoredType>timestamp(6)|0s</StoredType>
       <TypeId>1114</TypeId>
     </column>
-    <column id="261" parent="253" name="receiver_username">
+    <column id="301" parent="258" name="receiver_username">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StateNumber>531</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="262" parent="253" name="requester_username">
+    <column id="302" parent="258" name="requester_username">
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StateNumber>531</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="263" parent="253" name="status">
+    <column id="303" parent="258" name="status">
       <Position>5</Position>
       <StateNumber>531</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <index id="264" parent="253" name="connections_pkey">
+    <index id="304" parent="258" name="connections_pkey">
       <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16437</ObjectId>
@@ -4789,7 +5071,7 @@ true posixrules
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <index id="265" parent="253" name="idx_connections_receiver">
+    <index id="305" parent="258" name="idx_connections_receiver">
       <ColNames>receiver_username</ColNames>
       <ObjectId>16456</ObjectId>
       <StateNumber>545</StateNumber>
@@ -4798,7 +5080,7 @@ true posixrules
       <CollationIds>100</CollationIds>
       <CollationParentNames>pg_catalog</CollationParentNames>
     </index>
-    <index id="266" parent="253" name="idx_connections_requester">
+    <index id="306" parent="258" name="idx_connections_requester">
       <ColNames>requester_username</ColNames>
       <ObjectId>16455</ObjectId>
       <StateNumber>544</StateNumber>
@@ -4807,7 +5089,7 @@ true posixrules
       <CollationIds>100</CollationIds>
       <CollationParentNames>pg_catalog</CollationParentNames>
     </index>
-    <index id="267" parent="253" name="idx_connections_status">
+    <index id="307" parent="258" name="idx_connections_status">
       <ColNames>status</ColNames>
       <ObjectId>16457</ObjectId>
       <StateNumber>546</StateNumber>
@@ -4816,14 +5098,14 @@ true posixrules
       <CollationIds>100</CollationIds>
       <CollationParentNames>pg_catalog</CollationParentNames>
     </index>
-    <key id="268" parent="253" name="connections_pkey">
+    <key id="308" parent="258" name="connections_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16438</ObjectId>
       <Primary>1</Primary>
       <StateNumber>531</StateNumber>
       <UnderlyingIndexId>16437</UnderlyingIndexId>
     </key>
-    <column id="269" parent="254" name="id">
+    <column id="309" parent="259" name="id">
       <IdentityKind>by-default</IdentityKind>
       <NotNull>1</NotNull>
       <Position>1</Position>
@@ -4832,57 +5114,57 @@ true posixrules
       <SequenceId>16396</SequenceId>
       <TypeId>20</TypeId>
     </column>
-    <column id="270" parent="254" name="company">
+    <column id="310" parent="259" name="company">
       <Position>2</Position>
       <StateNumber>494</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="271" parent="254" name="description">
+    <column id="311" parent="259" name="description">
       <Position>3</Position>
       <StateNumber>494</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="272" parent="254" name="period">
+    <column id="312" parent="259" name="period">
       <Position>4</Position>
       <StateNumber>494</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="273" parent="254" name="title">
+    <column id="313" parent="259" name="title">
       <Position>5</Position>
       <StateNumber>494</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="274" parent="254" name="created_at">
+    <column id="314" parent="259" name="created_at">
       <Position>6</Position>
       <StateNumber>516</StateNumber>
       <StoredType>timestamp(6)|0s</StoredType>
       <TypeId>1114</TypeId>
     </column>
-    <column id="275" parent="254" name="updated_at">
+    <column id="315" parent="259" name="updated_at">
       <Position>7</Position>
       <StateNumber>517</StateNumber>
       <StoredType>timestamp(6)|0s</StoredType>
       <TypeId>1114</TypeId>
     </column>
-    <column id="276" parent="254" name="username">
+    <column id="316" parent="259" name="username">
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StateNumber>518</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="277" parent="254" name="user_id">
+    <column id="317" parent="259" name="user_id">
       <NotNull>1</NotNull>
       <Position>9</Position>
-      <StateNumber>665</StateNumber>
-      <StoredType>varchar(50)|0s</StoredType>
+      <StateNumber>667</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <index id="278" parent="254" name="experiences_pkey">
+    <index id="318" parent="259" name="experiences_pkey">
       <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16404</ObjectId>
@@ -4891,14 +5173,88 @@ true posixrules
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="279" parent="254" name="experiences_pkey">
+    <key id="319" parent="259" name="experiences_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16405</ObjectId>
       <Primary>1</Primary>
       <StateNumber>494</StateNumber>
       <UnderlyingIndexId>16404</UnderlyingIndexId>
     </key>
-    <column id="280" parent="255" name="id">
+    <column id="320" parent="260" name="id">
+      <IdentityKind>by-default</IdentityKind>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StateNumber>694</StateNumber>
+      <StoredType>bigint|0s</StoredType>
+      <SequenceId>24742</SequenceId>
+      <TypeId>20</TypeId>
+    </column>
+    <column id="321" parent="260" name="created_at">
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StateNumber>694</StateNumber>
+      <StoredType>timestamp(6)|0s</StoredType>
+      <TypeId>1114</TypeId>
+    </column>
+    <column id="322" parent="260" name="description">
+      <Position>3</Position>
+      <StateNumber>694</StateNumber>
+      <StoredType>varchar(500)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="323" parent="260" name="enabled">
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+      <StateNumber>694</StateNumber>
+      <StoredType>boolean|0s</StoredType>
+      <TypeId>16</TypeId>
+    </column>
+    <column id="324" parent="260" name="feature_name">
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+      <StateNumber>694</StateNumber>
+      <StoredType>varchar(100)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="325" parent="260" name="updated_at">
+      <NotNull>1</NotNull>
+      <Position>6</Position>
+      <StateNumber>694</StateNumber>
+      <StoredType>timestamp(6)|0s</StoredType>
+      <TypeId>1114</TypeId>
+    </column>
+    <index id="326" parent="260" name="feature_flags_pkey">
+      <ColNames>id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>24750</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>694</StateNumber>
+      <Unique>1</Unique>
+      <AccessMethodId>403</AccessMethodId>
+    </index>
+    <index id="327" parent="260" name="uk2o4e6ne2aeiily8xlymvvydb8">
+      <ColNames>feature_name</ColNames>
+      <ObjectId>24752</ObjectId>
+      <StateNumber>696</StateNumber>
+      <Unique>1</Unique>
+      <AccessMethodId>403</AccessMethodId>
+      <CollationNames>default</CollationNames>
+      <CollationIds>100</CollationIds>
+      <CollationParentNames>pg_catalog</CollationParentNames>
+    </index>
+    <key id="328" parent="260" name="feature_flags_pkey">
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>24751</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>694</StateNumber>
+      <UnderlyingIndexId>24750</UnderlyingIndexId>
+    </key>
+    <key id="329" parent="260" name="uk2o4e6ne2aeiily8xlymvvydb8">
+      <ObjectId>24753</ObjectId>
+      <StateNumber>696</StateNumber>
+      <UnderlyingIndexId>24752</UnderlyingIndexId>
+    </key>
+    <column id="330" parent="261" name="id">
       <IdentityKind>by-default</IdentityKind>
       <NotNull>1</NotNull>
       <Position>1</Position>
@@ -4907,40 +5263,40 @@ true posixrules
       <SequenceId>16539</SequenceId>
       <TypeId>20</TypeId>
     </column>
-    <column id="281" parent="255" name="created_at">
+    <column id="331" parent="261" name="created_at">
       <Position>2</Position>
       <StateNumber>653</StateNumber>
       <StoredType>timestamp(6)|0s</StoredType>
       <TypeId>1114</TypeId>
     </column>
-    <column id="282" parent="255" name="interest">
+    <column id="332" parent="261" name="interest">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StateNumber>653</StateNumber>
       <StoredType>varchar(100)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="283" parent="255" name="updated_at">
+    <column id="333" parent="261" name="updated_at">
       <Position>4</Position>
       <StateNumber>653</StateNumber>
       <StoredType>timestamp(6)|0s</StoredType>
       <TypeId>1114</TypeId>
     </column>
-    <column id="284" parent="255" name="user_id">
+    <column id="334" parent="261" name="user_id">
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StateNumber>653</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="285" parent="255" name="username">
+    <column id="335" parent="261" name="username">
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StateNumber>653</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <index id="286" parent="255" name="interests_pkey">
+    <index id="336" parent="261" name="interests_pkey">
       <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16547</ObjectId>
@@ -4949,14 +5305,14 @@ true posixrules
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="287" parent="255" name="interests_pkey">
+    <key id="337" parent="261" name="interests_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16548</ObjectId>
       <Primary>1</Primary>
       <StateNumber>653</StateNumber>
       <UnderlyingIndexId>16547</UnderlyingIndexId>
     </key>
-    <column id="288" parent="256" name="id">
+    <column id="338" parent="262" name="id">
       <IdentityKind>by-default</IdentityKind>
       <NotNull>1</NotNull>
       <Position>1</Position>
@@ -4965,163 +5321,163 @@ true posixrules
       <SequenceId>16406</SequenceId>
       <TypeId>20</TypeId>
     </column>
-    <column id="289" parent="256" name="batch">
+    <column id="339" parent="262" name="batch">
       <Position>2</Position>
       <StateNumber>558</StateNumber>
       <StoredType>varchar(10)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="290" parent="256" name="bio">
+    <column id="340" parent="262" name="bio">
       <Position>3</Position>
       <StateNumber>497</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="291" parent="256" name="created_at">
+    <column id="341" parent="262" name="created_at">
       <Position>4</Position>
       <StateNumber>497</StateNumber>
       <StoredType>timestamp(6)|0s</StoredType>
       <TypeId>1114</TypeId>
     </column>
-    <column id="292" parent="256" name="facebook">
+    <column id="342" parent="262" name="facebook">
       <Position>5</Position>
       <StateNumber>497</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="293" parent="256" name="github">
+    <column id="343" parent="262" name="github">
       <Position>6</Position>
       <StateNumber>497</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="294" parent="256" name="instagram">
+    <column id="344" parent="262" name="instagram">
       <Position>7</Position>
       <StateNumber>497</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="295" parent="256" name="linkedin">
+    <column id="345" parent="262" name="linkedin">
       <Position>8</Position>
       <StateNumber>497</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="296" parent="256" name="location">
+    <column id="346" parent="262" name="location">
       <Position>9</Position>
       <StateNumber>497</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="297" parent="256" name="name">
+    <column id="347" parent="262" name="name">
       <Position>10</Position>
       <StateNumber>497</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="298" parent="256" name="phone">
+    <column id="348" parent="262" name="phone">
       <Position>11</Position>
       <StateNumber>559</StateNumber>
       <StoredType>varchar(20)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="299" parent="256" name="profession">
+    <column id="349" parent="262" name="profession">
       <Position>12</Position>
       <StateNumber>497</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="300" parent="256" name="skills">
+    <column id="350" parent="262" name="skills">
       <Position>13</Position>
       <StateNumber>497</StateNumber>
       <StoredType>varchar(255) []|0s</StoredType>
       <TypeId>1015</TypeId>
     </column>
-    <column id="301" parent="256" name="twitter">
+    <column id="351" parent="262" name="twitter">
       <Position>14</Position>
       <StateNumber>497</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="302" parent="256" name="updated_at">
+    <column id="352" parent="262" name="updated_at">
       <Position>15</Position>
       <StateNumber>497</StateNumber>
       <StoredType>timestamp(6)|0s</StoredType>
       <TypeId>1114</TypeId>
     </column>
-    <column id="303" parent="256" name="website">
+    <column id="353" parent="262" name="website">
       <Position>16</Position>
       <StateNumber>497</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="304" parent="256" name="linked_in">
+    <column id="354" parent="262" name="linked_in">
       <Position>17</Position>
       <StateNumber>498</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="305" parent="256" name="show_linked_in">
+    <column id="355" parent="262" name="show_linked_in">
       <Position>18</Position>
       <StateNumber>499</StateNumber>
       <StoredType>boolean|0s</StoredType>
       <TypeId>16</TypeId>
     </column>
-    <column id="306" parent="256" name="show_phone">
+    <column id="356" parent="262" name="show_phone">
       <Position>19</Position>
       <StateNumber>500</StateNumber>
       <StoredType>boolean|0s</StoredType>
       <TypeId>16</TypeId>
     </column>
-    <column id="307" parent="256" name="show_website">
+    <column id="357" parent="262" name="show_website">
       <Position>20</Position>
       <StateNumber>501</StateNumber>
       <StoredType>boolean|0s</StoredType>
       <TypeId>16</TypeId>
     </column>
-    <column id="308" parent="256" name="username">
+    <column id="358" parent="262" name="username">
       <Position>21</Position>
       <StateNumber>560</StateNumber>
       <StoredType>varchar(100)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="309" parent="256" name="department">
+    <column id="359" parent="262" name="department">
       <Position>22</Position>
       <StateNumber>508</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="310" parent="256" name="email">
+    <column id="360" parent="262" name="email">
       <Position>23</Position>
       <StateNumber>512</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="311" parent="256" name="show_email">
+    <column id="361" parent="262" name="show_email">
       <Position>24</Position>
       <StateNumber>519</StateNumber>
       <StoredType>boolean|0s</StoredType>
       <TypeId>16</TypeId>
     </column>
-    <column id="312" parent="256" name="connections">
+    <column id="362" parent="262" name="connections">
       <Position>25</Position>
       <StateNumber>553</StateNumber>
       <StoredType>integer|0s</StoredType>
       <TypeId>23</TypeId>
     </column>
-    <column id="313" parent="256" name="show_facebook">
+    <column id="363" parent="262" name="show_facebook">
       <Position>26</Position>
       <StateNumber>554</StateNumber>
       <StoredType>boolean|0s</StoredType>
       <TypeId>16</TypeId>
     </column>
-    <column id="314" parent="256" name="user_id">
+    <column id="364" parent="262" name="user_id">
       <Position>27</Position>
       <StateNumber>647</StateNumber>
       <StoredType>varchar(50)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <index id="315" parent="256" name="profiles_pkey">
+    <index id="365" parent="262" name="profiles_pkey">
       <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16414</ObjectId>
@@ -5130,7 +5486,7 @@ true posixrules
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <index id="316" parent="256" name="profiles_user_id_key">
+    <index id="366" parent="262" name="profiles_user_id_key">
       <ColNames>user_id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16537</ObjectId>
@@ -5141,20 +5497,20 @@ true posixrules
       <CollationIds>100</CollationIds>
       <CollationParentNames>pg_catalog</CollationParentNames>
     </index>
-    <key id="317" parent="256" name="profiles_pkey">
+    <key id="367" parent="262" name="profiles_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16415</ObjectId>
       <Primary>1</Primary>
       <StateNumber>497</StateNumber>
       <UnderlyingIndexId>16414</UnderlyingIndexId>
     </key>
-    <key id="318" parent="256" name="profiles_user_id_key">
+    <key id="368" parent="262" name="profiles_user_id_key">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16538</ObjectId>
       <StateNumber>647</StateNumber>
       <UnderlyingIndexId>16537</UnderlyingIndexId>
     </key>
-    <column id="319" parent="257" name="id">
+    <column id="369" parent="263" name="id">
       <IdentityKind>by-default</IdentityKind>
       <NotNull>1</NotNull>
       <Position>1</Position>
@@ -5163,25 +5519,25 @@ true posixrules
       <SequenceId>16386</SequenceId>
       <TypeId>20</TypeId>
     </column>
-    <column id="320" parent="257" name="password">
+    <column id="370" parent="263" name="password">
       <Position>2</Position>
       <StateNumber>489</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="321" parent="257" name="username">
+    <column id="371" parent="263" name="username">
       <Position>3</Position>
       <StateNumber>620</StateNumber>
       <StoredType>varchar(100)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="322" parent="257" name="user_id">
+    <column id="372" parent="263" name="user_id">
       <Position>4</Position>
       <StateNumber>626</StateNumber>
       <StoredType>varchar(50)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <index id="323" parent="257" name="users_pkey">
+    <index id="373" parent="263" name="users_pkey">
       <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16394</ObjectId>
@@ -5190,7 +5546,7 @@ true posixrules
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <index id="324" parent="257" name="users_user_id_key">
+    <index id="374" parent="263" name="users_user_id_key">
       <ColNames>user_id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16515</ObjectId>
@@ -5201,14 +5557,14 @@ true posixrules
       <CollationIds>100</CollationIds>
       <CollationParentNames>pg_catalog</CollationParentNames>
     </index>
-    <key id="325" parent="257" name="users_pkey">
+    <key id="375" parent="263" name="users_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16395</ObjectId>
       <Primary>1</Primary>
       <StateNumber>489</StateNumber>
       <UnderlyingIndexId>16394</UnderlyingIndexId>
     </key>
-    <key id="326" parent="257" name="users_user_id_key">
+    <key id="376" parent="263" name="users_user_id_key">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>16516</ObjectId>
       <StateNumber>626</StateNumber>

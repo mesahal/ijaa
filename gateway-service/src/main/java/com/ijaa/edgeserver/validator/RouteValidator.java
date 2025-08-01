@@ -10,6 +10,12 @@ import java.util.stream.Stream;
 public class RouteValidator {
 
     public Predicate<ServerHttpRequest> isSecured = request ->
-            Stream.of("/ijaa/api/v1/user/signup","/ijaa/api/v1/user/signin")
+            Stream.of(
+                    "/ijaa/api/v1/user/signup",
+                    "/ijaa/api/v1/user/signin",
+                    "/ijaa/api/v1/admin/login",
+                    "/ijaa/api/v1/admin/signup",
+                    "/ijaa/actuator/**"
+            )
                     .noneMatch(uri -> request.getURI().getPath().contains(uri));
 }
