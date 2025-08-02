@@ -131,8 +131,6 @@ public class TestDataBuilder {
         dto.setUserId("USER_ABC123XYZ");
         dto.setTitle("Senior Software Engineer");
         dto.setCompany("Tech Corp");
-        dto.setLocation("Dhaka, Bangladesh");
-        dto.setStartDate(java.time.LocalDate.of(2020, 1, 1));
         dto.setPeriod("2020-2023");
         dto.setDescription("Led development of microservices");
         dto.setCreatedAt(java.time.LocalDateTime.now());

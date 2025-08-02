@@ -7,8 +7,21 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration;
 
 @TestConfiguration
+@EnableAutoConfiguration(exclude = {
+    SecurityAutoConfiguration.class,
+    SecurityFilterAutoConfiguration.class,
+    UserDetailsServiceAutoConfiguration.class,
+    OAuth2ClientAutoConfiguration.class,
+    OAuth2ResourceServerAutoConfiguration.class
+})
 public class TestConfig {
 
     @Bean
