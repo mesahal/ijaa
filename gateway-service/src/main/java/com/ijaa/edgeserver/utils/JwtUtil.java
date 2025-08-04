@@ -55,4 +55,20 @@ public class JwtUtil {
         return extractClaim(token,jwtSecret,claim ->
                 claim.get(key, classType));
     }
+
+    public String extractUserType(String token, String jwtSecret) {
+        return extractClaimByKey(token, jwtSecret, "userType", String.class);
+    }
+
+    public String extractRole(String token, String jwtSecret) {
+        return extractClaimByKey(token, jwtSecret, "role", String.class);
+    }
+
+    public String extractUsername(String token, String jwtSecret) {
+        return extractClaimByKey(token, jwtSecret, "username", String.class);
+    }
+
+    public String extractEmail(String token, String jwtSecret) {
+        return extractClaimByKey(token, jwtSecret, "email", String.class);
+    }
 }

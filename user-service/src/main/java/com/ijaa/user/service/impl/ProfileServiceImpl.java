@@ -88,14 +88,13 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
         String username = getCurrentUsername();
         String userId = getCurrentUserId();
 
-        Experience experience = Experience.builder()
-                .username(username)
-                .userId(userId)
-                .title(experienceDto.getTitle())
-                .company(experienceDto.getCompany())
-                .period(experienceDto.getPeriod())
-                .description(experienceDto.getDescription())
-                .build();
+        Experience experience = new Experience();
+        experience.setUsername(username);
+        experience.setUserId(userId);
+        experience.setTitle(experienceDto.getTitle());
+        experience.setCompany(experienceDto.getCompany());
+        experience.setPeriod(experienceDto.getPeriod());
+        experience.setDescription(experienceDto.getDescription());
 
         Experience savedExperience = experienceRepository.save(experience);
         return experienceToDto(savedExperience);
@@ -135,11 +134,10 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
             throw new IllegalArgumentException("Interest already exists");
         }
 
-        Interest interest = Interest.builder()
-                .username(username)
-                .userId(userId)
-                .interest(cleanedInterest)
-                .build();
+        Interest interest = new Interest();
+        interest.setUsername(username);
+        interest.setUserId(userId);
+        interest.setInterest(cleanedInterest);
 
         Interest savedInterest = interestRepository.save(interest);
         return interestToDto(savedInterest);
@@ -156,10 +154,10 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
 
     // Private helper methods
     private Profile createNewProfile(String username) {
-        return profileRepository.save(Profile.builder()
-                .username(username)
-                .userId(generateUserId())
-                .build());
+        Profile profile = new Profile();
+        profile.setUsername(username);
+        profile.setUserId(generateUserId());
+        return profileRepository.save(profile);
     }
 
     private void updateProfileFields(Profile entity, ProfileDto dto) {

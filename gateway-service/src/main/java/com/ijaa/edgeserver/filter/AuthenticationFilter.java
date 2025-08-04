@@ -73,10 +73,23 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
     private CurrentUserContext prepareCurrentContext(String token) {
         try {
-            String userIdentity = jwtUtil.extractClaimByKey(token, jwtSecret, JwtClaimsEnum.USER_IDENTITY.getClaim(), String.class);
-
+            String userType = jwtUtil.extractUserType(token, jwtSecret);
+            String role = jwtUtil.extractRole(token, jwtSecret);
+            
             CurrentUserContext currentUserContext = new CurrentUserContext();
-            currentUserContext.setUsername(userIdentity);
+            
+            if ("ADMIN".equals(userType)) {
+                String email = jwtUtil.extractEmail(token, jwtSecret);
+                currentUserContext.setUsername(email);
+                currentUserContext.setUserType("ADMIN");
+                currentUserContext.setRole(role);
+            } else {
+                String username = jwtUtil.extractUsername(token, jwtSecret);
+                currentUserContext.setUsername(username);
+                currentUserContext.setUserType("USER");
+                currentUserContext.setRole(role);
+            }
+            
             return currentUserContext;
         } catch (Exception e) {
             e.printStackTrace();

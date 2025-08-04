@@ -3,6 +3,7 @@ package com.ijaa.user.service;
 import com.ijaa.user.common.exceptions.AdminAlreadyExistsException;
 import com.ijaa.user.common.exceptions.AdminNotFoundException;
 import com.ijaa.user.common.exceptions.AuthenticationFailedException;
+import com.ijaa.user.common.exceptions.InsufficientPrivilegesException;
 import com.ijaa.user.domain.entity.Admin;
 import com.ijaa.user.domain.enums.AdminRole;
 import com.ijaa.user.domain.request.AdminLoginRequest;
@@ -58,14 +59,14 @@ class AdminServiceTest {
         testAdmin.setName("Test Admin");
         testAdmin.setEmail("test@admin.com");
         testAdmin.setPasswordHash("encodedPassword");
-        testAdmin.setRole(AdminRole.SUPER_ADMIN);
+        testAdmin.setRole(AdminRole.ADMIN);
         testAdmin.setActive(true);
 
         signupRequest = new AdminSignupRequest();
         signupRequest.setName("Test Admin");
         signupRequest.setEmail("test@admin.com");
         signupRequest.setPassword("password123");
-        signupRequest.setRole(AdminRole.SUPER_ADMIN);
+        signupRequest.setRole(AdminRole.ADMIN);
 
         loginRequest = new AdminLoginRequest();
         loginRequest.setEmail("test@admin.com");
@@ -217,5 +218,58 @@ class AdminServiceTest {
         // Then
         assertFalse(result);
         verify(adminRepository).count();
+    }
+
+    @Test
+    void testSignup_FirstAdmin() {
+        // Given
+        AdminSignupRequest request = new AdminSignupRequest();
+        request.setName("First Admin");
+        request.setEmail("admin@test.com");
+        request.setPassword("password123");
+        request.setRole(AdminRole.ADMIN);
+
+        Admin mockAdmin = new Admin();
+        mockAdmin.setId(1L);
+        mockAdmin.setName("First Admin");
+        mockAdmin.setEmail("admin@test.com");
+        mockAdmin.setRole(AdminRole.ADMIN);
+        mockAdmin.setActive(true);
+
+        when(adminRepository.existsByEmail("admin@test.com")).thenReturn(false);
+        when(adminRepository.count()).thenReturn(0L);
+        when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");
+        when(adminRepository.save(any(Admin.class))).thenReturn(mockAdmin);
+        when(jwtService.generateAdminToken("admin@test.com", "ADMIN")).thenReturn("mock-jwt-token");
+
+        // When
+        AdminAuthResponse response = adminService.signup(request);
+
+        // Then
+        assertNotNull(response);
+        assertEquals("mock-jwt-token", response.getToken());
+        assertEquals(1L, response.getAdminId());
+        assertEquals("First Admin", response.getName());
+        assertEquals("admin@test.com", response.getEmail());
+        assertEquals(AdminRole.ADMIN, response.getRole());
+        assertTrue(response.getActive());
+    }
+
+    @Test
+    void testSignup_NotFirstAdmin_AdminRole() {
+        // Given
+        AdminSignupRequest request = new AdminSignupRequest();
+        request.setName("Second Admin");
+        request.setEmail("admin2@test.com");
+        request.setPassword("password123");
+        request.setRole(AdminRole.ADMIN);
+
+        when(adminRepository.existsByEmail("admin2@test.com")).thenReturn(false);
+        when(adminRepository.count()).thenReturn(1L); // Not first admin
+
+        // When & Then
+        assertThrows(InsufficientPrivilegesException.class, () -> {
+            adminService.signup(request);
+        });
     }
 } 

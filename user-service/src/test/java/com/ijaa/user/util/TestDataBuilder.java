@@ -19,11 +19,21 @@ public class TestDataBuilder {
 
     // User related test data
     public static User createTestUser() {
-        return new User(null, "USER_ABC123XYZ", "testuser", "encodedPassword");
+        User user = new User();
+        user.setUserId("USER_ABC123XYZ");
+        user.setUsername("testuser");
+        user.setPassword("encodedPassword");
+        user.setActive(true);
+        return user;
     }
 
     public static User createTestUser(String userId, String username) {
-        return new User(null, userId, username, "encodedPassword");
+        User user = new User();
+        user.setUserId(userId);
+        user.setUsername(username);
+        user.setPassword("encodedPassword");
+        user.setActive(true);
+        return user;
     }
 
     public static SignUpRequest createSignUpRequest() {
@@ -64,29 +74,29 @@ public class TestDataBuilder {
 
     // Profile related test data
     public static Profile createTestProfile() {
-        return Profile.builder()
-                .id(1L)
-                .username("testuser")
-                .userId("USER_ABC123XYZ")
-                .name("Test User")
-                .profession("Software Engineer")
-                .location("Dhaka, Bangladesh")
-                .bio("A passionate software engineer")
-                .phone("+8801234567890")
-                .linkedIn("linkedin.com/in/testuser")
-                .website("testuser.com")
-                .batch("2018")
-                .email("test@example.com")
-                .facebook("facebook.com/testuser")
-                .showPhone(true)
-                .showLinkedIn(true)
-                .showWebsite(true)
-                .showEmail(true)
-                .showFacebook(false)
-                .connections(10)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
+        Profile profile = new Profile();
+        profile.setId(1L);
+        profile.setUsername("testuser");
+        profile.setUserId("USER_ABC123XYZ");
+        profile.setName("Test User");
+        profile.setProfession("Software Engineer");
+        profile.setLocation("Dhaka, Bangladesh");
+        profile.setBio("A passionate software engineer");
+        profile.setPhone("+8801234567890");
+        profile.setLinkedIn("linkedin.com/in/testuser");
+        profile.setWebsite("testuser.com");
+        profile.setBatch("2018");
+        profile.setEmail("test@example.com");
+        profile.setFacebook("facebook.com/testuser");
+        profile.setShowPhone(true);
+        profile.setShowLinkedIn(true);
+        profile.setShowWebsite(true);
+        profile.setShowEmail(true);
+        profile.setShowFacebook(false);
+        profile.setConnections(10);
+        profile.setCreatedAt(LocalDateTime.now());
+        profile.setUpdatedAt(LocalDateTime.now());
+        return profile;
     }
 
     public static ProfileDto createTestProfileDto() {
@@ -113,16 +123,16 @@ public class TestDataBuilder {
 
     // Experience related test data
     public static Experience createTestExperience() {
-        return Experience.builder()
-                .id(1L)
-                .username("testuser")
-                .userId("USER_ABC123XYZ")
-                .title("Senior Software Engineer")
-                .company("Tech Corp")
-                .period("2020-2023")
-                .description("Led development of microservices")
-                .createdAt(LocalDateTime.now())
-                .build();
+        Experience experience = new Experience();
+        experience.setId(1L);
+        experience.setUsername("testuser");
+        experience.setUserId("USER_ABC123XYZ");
+        experience.setTitle("Senior Software Engineer");
+        experience.setCompany("Tech Corp");
+        experience.setPeriod("2020-2023");
+        experience.setDescription("Led development of microservices");
+        experience.setCreatedAt(LocalDateTime.now());
+        return experience;
     }
 
     public static ExperienceDto createTestExperienceDto() {
@@ -138,30 +148,31 @@ public class TestDataBuilder {
     }
 
     public static List<Experience> createTestExperienceList() {
+        Experience experience2 = new Experience();
+        experience2.setId(2L);
+        experience2.setUsername("testuser");
+        experience2.setUserId("USER_ABC123XYZ");
+        experience2.setTitle("Software Engineer");
+        experience2.setCompany("Startup Inc");
+        experience2.setPeriod("2018-2020");
+        experience2.setDescription("Full-stack development");
+        experience2.setCreatedAt(LocalDateTime.now());
+        
         return Arrays.asList(
                 createTestExperience(),
-                Experience.builder()
-                        .id(2L)
-                        .username("testuser")
-                        .userId("USER_ABC123XYZ")
-                        .title("Software Engineer")
-                        .company("Startup Inc")
-                        .period("2018-2020")
-                        .description("Full-stack development")
-                        .createdAt(LocalDateTime.now())
-                        .build()
+                experience2
         );
     }
 
     // Interest related test data
     public static Interest createTestInterest() {
-        return Interest.builder()
-                .id(1L)
-                .username("testuser")
-                .userId("USER_ABC123XYZ")
-                .interest("Java Programming")
-                .createdAt(LocalDateTime.now())
-                .build();
+        Interest interest = new Interest();
+        interest.setId(1L);
+        interest.setUsername("testuser");
+        interest.setUserId("USER_ABC123XYZ");
+        interest.setInterest("Java Programming");
+        interest.setCreatedAt(LocalDateTime.now());
+        return interest;
     }
 
     public static InterestDto createTestInterestDto() {
@@ -174,15 +185,16 @@ public class TestDataBuilder {
     }
 
     public static List<Interest> createTestInterestList() {
+        Interest interest2 = new Interest();
+        interest2.setId(2L);
+        interest2.setUsername("testuser");
+        interest2.setUserId("USER_ABC123XYZ");
+        interest2.setInterest("Spring Boot");
+        interest2.setCreatedAt(LocalDateTime.now());
+        
         return Arrays.asList(
                 createTestInterest(),
-                Interest.builder()
-                        .id(2L)
-                        .username("testuser")
-                        .userId("USER_ABC123XYZ")
-                        .interest("Spring Boot")
-                        .createdAt(LocalDateTime.now())
-                        .build()
+                interest2
         );
     }
 

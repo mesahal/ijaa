@@ -17,6 +17,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.ijaa.user.domain.response.AdminAuthResponse;
 
 @WebMvcTest(AdminAuthResource.class)
 class AdminAuthResourceIntegrationTest {
@@ -37,7 +38,16 @@ class AdminAuthResourceIntegrationTest {
         request.setName("Test Admin");
         request.setEmail("test@admin.com");
         request.setPassword("password123");
-        request.setRole(AdminRole.SUPER_ADMIN);
+        request.setRole(AdminRole.ADMIN);
+
+        // Mock admin service response
+        AdminAuthResponse mockResponse = new AdminAuthResponse();
+        mockResponse.setToken("mock-jwt-token");
+        mockResponse.setAdminId(1L);
+        mockResponse.setName("Test Admin");
+        mockResponse.setEmail("admin@test.com");
+        mockResponse.setRole(AdminRole.ADMIN);
+        mockResponse.setActive(true);
 
         // When & Then
         mockMvc.perform(post("/api/admin/signup")
@@ -54,6 +64,15 @@ class AdminAuthResourceIntegrationTest {
         AdminLoginRequest request = new AdminLoginRequest();
         request.setEmail("test@admin.com");
         request.setPassword("password123");
+
+        // Mock admin service response
+        AdminAuthResponse mockResponse = new AdminAuthResponse();
+        mockResponse.setToken("mock-jwt-token");
+        mockResponse.setAdminId(1L);
+        mockResponse.setName("Test Admin");
+        mockResponse.setEmail("admin@test.com");
+        mockResponse.setRole(AdminRole.ADMIN);
+        mockResponse.setActive(true);
 
         // When & Then
         mockMvc.perform(post("/api/admin/login")
@@ -91,7 +110,7 @@ class AdminAuthResourceIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "SUPER_ADMIN")
+    @WithMockUser(roles = "ADMIN")
     void testGetProfile_Authenticated() throws Exception {
         // When & Then
         mockMvc.perform(post("/api/admin/profile"))

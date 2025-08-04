@@ -276,12 +276,11 @@ class ProfileServiceTest {
     void addInterest_Success() {
         // Arrange
         String interestName = "Python Programming";
-        Interest savedInterest = Interest.builder()
-                .id(1L)
-                .username(TEST_USERNAME)
-                .userId(TEST_USER_ID)
-                .interest(interestName)
-                .build();
+        Interest savedInterest = new Interest();
+        savedInterest.setId(1L);
+        savedInterest.setUsername(TEST_USERNAME);
+        savedInterest.setUserId(TEST_USER_ID);
+        savedInterest.setInterest(interestName);
         
         when(interestRepository.existsByUserIdAndInterestIgnoreCase(TEST_USER_ID, interestName))
                 .thenReturn(false);

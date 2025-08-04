@@ -25,5 +25,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean active = true;
+
     // Add other fields as needed (email, firstName, lastName, etc.)
 }

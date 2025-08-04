@@ -18,9 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.quality.Strictness;
 import org.mockito.junit.jupiter.MockitoSettings;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
@@ -43,8 +41,7 @@ class AuthServiceTest {
     @Mock
     private JWTService jwtService;
 
-    @Mock
-    private AuthenticationManager authenticationManager;
+
 
     @Mock
     private UniqueIdGenerator idGenerator;
@@ -153,9 +150,8 @@ class AuthServiceTest {
         SignInRequest request = TestDataBuilder.createSignInRequest();
         User user = TestDataBuilder.createTestUser();
         
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenReturn(null);
         when(userRepository.findByUsername(TEST_USERNAME)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(request.getPassword(), user.getPassword())).thenReturn(true);
         when(jwtService.generateToken(anyString())).thenReturn(TEST_JWT_TOKEN);
 
         // Act
@@ -166,19 +162,17 @@ class AuthServiceTest {
         assertEquals(TEST_JWT_TOKEN, response.getToken());
         assertEquals(TEST_USER_ID, response.getUserId());
 
-        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
         verify(userRepository).findByUsername(TEST_USERNAME);
+        verify(passwordEncoder).matches(request.getPassword(), user.getPassword());
         verify(jwtService).generateToken(TEST_USERNAME);
     }
 
     @Test
-    @DisplayName("Should throw AuthenticationFailedException when user not found after authentication")
+    @DisplayName("Should throw AuthenticationFailedException when user not found")
     void verify_UserNotFound() {
         // Arrange
         SignInRequest request = TestDataBuilder.createSignInRequest();
         
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenReturn(null);
         when(userRepository.findByUsername(TEST_USERNAME)).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -188,19 +182,19 @@ class AuthServiceTest {
         );
 
         assertEquals("User not found", exception.getMessage());
-        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
         verify(userRepository).findByUsername(TEST_USERNAME);
         verify(jwtService, never()).generateToken(anyString());
     }
 
     @Test
-    @DisplayName("Should throw AuthenticationFailedException when authentication fails")
+    @DisplayName("Should throw AuthenticationFailedException when password verification fails")
     void verify_AuthenticationFailed() {
         // Arrange
         SignInRequest request = TestDataBuilder.createSignInRequest();
+        User user = TestDataBuilder.createTestUser();
         
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenThrow(new BadCredentialsException("Invalid credentials"));
+        when(userRepository.findByUsername(TEST_USERNAME)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(request.getPassword(), user.getPassword())).thenReturn(false);
 
         // Act & Assert
         AuthenticationFailedException exception = assertThrows(
@@ -209,8 +203,8 @@ class AuthServiceTest {
         );
 
         assertEquals("Invalid credentials", exception.getMessage());
-        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(userRepository, never()).findByUsername(anyString());
+        verify(userRepository).findByUsername(TEST_USERNAME);
+        verify(passwordEncoder).matches(request.getPassword(), user.getPassword());
         verify(jwtService, never()).generateToken(anyString());
     }
 

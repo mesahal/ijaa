@@ -9,4 +9,6 @@ import java.io.Serializable;
 @Setter
 public class CurrentUserContext implements Serializable {
     private String username;
+    private String userType;
+    private String role;
 }

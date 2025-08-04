@@ -41,28 +41,26 @@ public class AuthService {
 
         userRepository.save(user);
 
-        String token = jwtService.generateToken(request.getUsername());
+        String token = jwtService.generateUserToken(request.getUsername());
 
         return new AuthResponse(token, userId);
     }
 
     public AuthResponse verify(SignInRequest request) {
         try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getUsername(),
-                            request.getPassword()
-                    )
-            );
-
-            // Get user details to include userId in response
+            // Find user by username
             User user = userRepository.findByUsername(request.getUsername())
                     .orElseThrow(() -> new AuthenticationFailedException("User not found"));
 
-            String token = jwtService.generateToken(request.getUsername());
+            // Verify password manually
+            if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+                throw new AuthenticationFailedException("Invalid credentials");
+            }
+
+            String token = jwtService.generateUserToken(request.getUsername());
 
             return new AuthResponse(token, user.getUserId());
-        } catch (AuthenticationException e) {
+        } catch (Exception e) {
             throw new AuthenticationFailedException("Invalid credentials");
         }
     }

@@ -8,12 +8,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Entity
 @Table(name = "alumni_profiles")
 public class AlumniSearch {
 
@@ -35,7 +33,6 @@ public class AlumniSearch {
     @Column(columnDefinition = "TEXT")
     private String bio;
 
-    @Builder.Default
     private Integer connections = 0;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -43,7 +40,6 @@ public class AlumniSearch {
     @Column(name = "skill")
     private List<String> skills;
 
-    @Builder.Default
     private Boolean isVisible = true;
 
     @CreationTimestamp

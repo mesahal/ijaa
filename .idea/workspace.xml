@@ -8,20 +8,33 @@
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa.AVUxAA/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa.AVUxAA/schema/public.abK9xQ.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project_Context.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/edgeserver/domain/dto/CurrentUserContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/edgeserver/domain/dto/CurrentUserContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/edgeserver/filter/AuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/edgeserver/filter/AuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/edgeserver/utils/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/edgeserver/utils/JwtUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project-context.md" beforeDir="false" afterPath="$PROJECT_DIR$/project-context.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/UserServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/UserServiceApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/common/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/common/config/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/dto/ExperienceDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/dto/ExperienceDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/AlumniSearch.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/AlumniSearch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/Connection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/Experience.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/Experience.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/Interest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/Interest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/Profile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/UserPrincipal.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/UserPrincipal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/response/DashboardStatsResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/response/DashboardStatsResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/AuthResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/AuthResource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/ProfileResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/ProfileResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/repository/UserRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/AuthService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/JWTService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/JWTService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/ProfileServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/ProfileServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/UserDetailsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/UserDetailsServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/config/TestConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/config/TestConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/presenter/rest/api/AdminAuthResourceIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/presenter/rest/api/AdminAuthResourceIntegrationTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/presenter/rest/api/ProfileResourceIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/presenter/rest/api/ProfileResourceIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/AdminServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/AdminServiceTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/AuthServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/AuthServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/ProfileServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/ProfileServiceTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/util/TestDataBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/util/TestDataBuilder.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -167,7 +180,8 @@
       <workItem from="1753798210568" duration="8393000" />
       <workItem from="1753944124422" duration="13951000" />
       <workItem from="1753968143033" duration="17320000" />
-      <workItem from="1754064406024" duration="10873000" />
+      <workItem from="1754064406024" duration="36856000" />
+      <workItem from="1754291204122" duration="2573000" />
     </task>
     <task id="LOCAL-00001" summary="Profile page">
       <option name="closed" value="true" />
@@ -217,7 +231,15 @@
       <option name="project" value="LOCAL" />
       <updated>1754069531952</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="swagger">
+      <option name="closed" value="true" />
+      <created>1754114261835</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1754114261835</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -231,21 +253,5 @@
     <MESSAGE value="project context and test" />
     <MESSAGE value="swagger" />
     <option name="LAST_COMMIT_MESSAGE" value="swagger" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/edgeserver/validator/RouteValidator.java</url>
-          <line>14</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/AdminManagementResource.java</url>
-          <line>292</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

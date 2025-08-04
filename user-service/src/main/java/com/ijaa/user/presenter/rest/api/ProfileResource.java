@@ -25,7 +25,8 @@ public class ProfileResource {
 
     // Get user's profile by userId
     @GetMapping("/profile/{userId}")
-    public ResponseEntity<ApiResponse<ProfileDto>> getProfileByUserId(@PathVariable String userId) {
+    public ResponseEntity<ApiResponse<ProfileDto>> getProfileByUserId(
+            @PathVariable String userId) {
         ProfileDto profileDto = profileService.getProfileByUserId(userId);
         return ResponseEntity.ok(
                 new ApiResponse<>("Profile fetched successfully", "200", profileDto)

@@ -16,10 +16,6 @@ public class ExperienceDto {
     private String title;
     @NotBlank(message = "Company must not be blank")
     private String company;
-    @NotBlank(message = "Location must not be blank")
-    private String location;
-    @NotNull(message = "Start date must not be null")
-    private LocalDate startDate;
     private String period;
     @Size(max = 500, message = "Description must not exceed 500 characters")
     private String description;
