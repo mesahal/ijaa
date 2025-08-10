@@ -46,8 +46,8 @@ public class AuthResource {
                         summary = "Valid login credentials",
                         value = """
                             {
-                                "username": "john.doe",
-                                "password": "password123"
+                                "username": "mdsahal.info@gmail.com",
+                                "password": "Admin@123"
                             }
                             """
                     )

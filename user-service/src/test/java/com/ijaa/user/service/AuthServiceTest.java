@@ -8,7 +8,6 @@ import com.ijaa.user.domain.request.SignInRequest;
 import com.ijaa.user.domain.request.SignUpRequest;
 import com.ijaa.user.domain.response.AuthResponse;
 import com.ijaa.user.repository.UserRepository;
-import com.ijaa.user.util.TestDataBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -63,7 +62,7 @@ class AuthServiceTest {
         when(userRepository.existsByUserId(TEST_USER_ID)).thenReturn(false);
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
-        when(jwtService.generateToken(anyString())).thenReturn(TEST_JWT_TOKEN);
+        when(jwtService.generateUserToken(anyString())).thenReturn(TEST_JWT_TOKEN);
         when(idGenerator.generateUUID()).thenReturn(TEST_USER_ID);
 
         // Act
@@ -78,7 +77,7 @@ class AuthServiceTest {
         verify(userRepository).existsByUserId(TEST_USER_ID);
         verify(userRepository).save(any(User.class));
         verify(passwordEncoder).encode(TEST_PASSWORD);
-        verify(jwtService).generateToken(TEST_USERNAME);
+        verify(jwtService).generateUserToken(TEST_USERNAME);
         verify(idGenerator).generateUUID();
     }
 
@@ -109,7 +108,7 @@ class AuthServiceTest {
         when(userRepository.existsByUserId(TEST_USER_ID)).thenReturn(true, false); // First attempt fails, second succeeds
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
-        when(jwtService.generateToken(anyString())).thenReturn(TEST_JWT_TOKEN);
+        when(jwtService.generateUserToken(anyString())).thenReturn(TEST_JWT_TOKEN);
         when(idGenerator.generateUUID()).thenReturn(TEST_USER_ID);
 
         // Act
@@ -152,7 +151,7 @@ class AuthServiceTest {
         
         when(userRepository.findByUsername(TEST_USERNAME)).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(request.getPassword(), user.getPassword())).thenReturn(true);
-        when(jwtService.generateToken(anyString())).thenReturn(TEST_JWT_TOKEN);
+        when(jwtService.generateUserToken(anyString())).thenReturn(TEST_JWT_TOKEN);
 
         // Act
         AuthResponse response = authService.verify(request);
@@ -164,7 +163,7 @@ class AuthServiceTest {
 
         verify(userRepository).findByUsername(TEST_USERNAME);
         verify(passwordEncoder).matches(request.getPassword(), user.getPassword());
-        verify(jwtService).generateToken(TEST_USERNAME);
+        verify(jwtService).generateUserToken(TEST_USERNAME);
     }
 
     @Test
@@ -181,9 +180,9 @@ class AuthServiceTest {
                 () -> authService.verify(request)
         );
 
-        assertEquals("User not found", exception.getMessage());
+        assertEquals("Invalid credentials", exception.getMessage());
         verify(userRepository).findByUsername(TEST_USERNAME);
-        verify(jwtService, never()).generateToken(anyString());
+        verify(jwtService, never()).generateUserToken(anyString());
     }
 
     @Test
@@ -219,6 +218,6 @@ class AuthServiceTest {
     @DisplayName("Should handle null request gracefully in verify method")
     void verify_NullRequest() {
         // Act & Assert
-        assertThrows(NullPointerException.class, () -> authService.verify(null));
+        assertThrows(AuthenticationFailedException.class, () -> authService.verify(null));
     }
 } 

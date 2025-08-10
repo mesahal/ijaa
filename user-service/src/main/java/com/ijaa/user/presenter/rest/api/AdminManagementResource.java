@@ -5,16 +5,16 @@ import com.ijaa.user.domain.common.ApiResponse;
 import com.ijaa.user.domain.entity.FeatureFlag;
 import com.ijaa.user.domain.enums.AdminRole;
 import com.ijaa.user.domain.request.AnnouncementRequest;
-import com.ijaa.user.domain.request.EventRequest;
+
 import com.ijaa.user.domain.request.ReportRequest;
 import com.ijaa.user.domain.response.AdminProfileResponse;
 import com.ijaa.user.domain.response.AnnouncementResponse;
-import com.ijaa.user.domain.response.EventResponse;
+
 import com.ijaa.user.domain.response.ReportResponse;
 import com.ijaa.user.domain.response.UserResponse;
 import com.ijaa.user.service.AdminService;
 import com.ijaa.user.service.AnnouncementService;
-import com.ijaa.user.service.EventService;
+
 import com.ijaa.user.service.FeatureFlagService;
 import com.ijaa.user.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,15 +36,13 @@ import java.util.List;
 @RestController
 @RequestMapping(AppUtils.ADMIN_BASE_URL)
 @RequiredArgsConstructor
-@Tag(name = "Admin Management", description = "APIs for admin management, user management, events, announcements, reports, and feature flags")
+@Tag(name = "Admin Management", description = "APIs for admin management, user management, announcements, reports, and feature flags")
 public class AdminManagementResource {
 
     private final AdminService adminService;
-    private final EventService eventService;
+
     private final AnnouncementService announcementService;
     private final ReportService reportService;
-    private final FeatureFlagService featureFlagService;
-
     // Admin Management (ADMIN only)
     @GetMapping("/admins")
     @PreAuthorize("hasRole('ADMIN')")
@@ -542,342 +540,7 @@ public class AdminManagementResource {
         return ResponseEntity.ok(new ApiResponse<>("User deleted successfully", "200", null));
     }
 
-    // Event Management (ADMIN only)
-    @GetMapping("/events")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(
-        summary = "Get All Events",
-        description = "Retrieve all events (ADMIN only)",
-        security = @SecurityRequirement(name = "Bearer Authentication")
-    )
-    @ApiResponses(value = {
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "200",
-            description = "Events retrieved successfully",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = com.ijaa.user.domain.common.ApiResponse.class),
-                examples = {
-                    @ExampleObject(
-                        name = "Success Response",
-                        value = """
-                            {
-                                "message": "Events retrieved successfully",
-                                "code": "200",
-                                "data": [
-                                    {
-                                        "id": 1,
-                                        "title": "New Year Celebration",
-                                        "description": "Celebrate the new year with fireworks and music.",
-                                        "startDate": "2025-01-01T10:00:00",
-                                        "endDate": "2025-01-01T12:00:00",
-                                        "location": "Central Park",
-                                        "createdAt": "2025-07-31T01:51:12.870989",
-                                        "updatedAt": "2025-07-31T01:51:12.871015"
-                                    }
-                                ]
-                            }
-                            """
-                    )
-                }
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "401",
-            description = "Unauthorized - Missing or invalid token",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Unauthorized",
-                        value = """
-                            {
-                                "message": "Missing Authorization Header",
-                                "code": "401",
-                                "data": null
-                            }
-                            """
-                    )
-                }
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "403",
-            description = "Forbidden - Insufficient privileges (ADMIN required)",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Forbidden",
-                        value = """
-                            {
-                                "message": "Access denied",
-                                "code": "403",
-                                "data": null
-                            }
-                            """
-                    )
-                }
-            )
-        )
-    })
-    public ResponseEntity<ApiResponse<List<EventResponse>>> getAllEvents() {
-        List<EventResponse> events = eventService.getAllEvents();
-        return ResponseEntity.ok(new ApiResponse<>("Events retrieved successfully", "200", events));
-    }
 
-    @PostMapping("/events")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(
-        summary = "Create Event",
-        description = "Create a new event (ADMIN only)",
-        security = @SecurityRequirement(name = "Bearer Authentication")
-    )
-    @ApiResponses(value = {
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "201",
-            description = "Event created successfully",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = com.ijaa.user.domain.common.ApiResponse.class),
-                examples = {
-                    @ExampleObject(
-                        name = "Success Response",
-                        value = """
-                            {
-                                "message": "Event created successfully",
-                                "code": "201",
-                                "data": {
-                                    "id": 1,
-                                    "title": "New Year Celebration",
-                                    "description": "Celebrate the new year with fireworks and music.",
-                                    "startDate": "2025-01-01T10:00:00",
-                                    "endDate": "2025-01-01T12:00:00",
-                                    "location": "Central Park",
-                                    "createdAt": "2025-07-31T01:51:12.870989",
-                                    "updatedAt": "2025-07-31T01:51:12.871015"
-                                }
-                            }
-                            """
-                    )
-                }
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "400",
-            description = "Invalid event request",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Invalid Event Request",
-                        value = """
-                            {
-                                "message": "Invalid event request",
-                                "code": "400",
-                                "data": null
-                            }
-                            """
-                    )
-                }
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "403",
-            description = "Forbidden - Insufficient privileges (ADMIN required)",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Forbidden",
-                        value = """
-                            {
-                                "message": "Access denied",
-                                "code": "403",
-                                "data": null
-                            }
-                            """
-                    )
-                }
-            )
-        )
-    })
-    public ResponseEntity<ApiResponse<EventResponse>> createEvent(@Valid @RequestBody EventRequest eventRequest) {
-        EventResponse event = eventService.createEvent(eventRequest);
-        return ResponseEntity.ok(new ApiResponse<>("Event created successfully", "201", event));
-    }
-
-    @PutMapping("/events/{eventId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(
-        summary = "Update Event",
-        description = "Update an existing event (ADMIN only)",
-        security = @SecurityRequirement(name = "Bearer Authentication")
-    )
-    @ApiResponses(value = {
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "200",
-            description = "Event updated successfully",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = com.ijaa.user.domain.common.ApiResponse.class),
-                examples = {
-                    @ExampleObject(
-                        name = "Success Response",
-                        value = """
-                            {
-                                "message": "Event updated successfully",
-                                "code": "200",
-                                "data": {
-                                    "id": 1,
-                                    "title": "New Year Celebration",
-                                    "description": "Celebrate the new year with fireworks and music.",
-                                    "startDate": "2025-01-01T10:00:00",
-                                    "endDate": "2025-01-01T12:00:00",
-                                    "location": "Central Park",
-                                    "createdAt": "2025-07-31T01:51:12.870989",
-                                    "updatedAt": "2025-07-31T01:51:12.871015"
-                                }
-                            }
-                            """
-                    )
-                }
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "404",
-            description = "Event not found",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Event Not Found",
-                        value = """
-                            {
-                                "message": "Event not found with id: 1",
-                                "code": "404",
-                                "data": null
-                            }
-                            """
-                    )
-                }
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "400",
-            description = "Invalid event request",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Invalid Event Request",
-                        value = """
-                            {
-                                "message": "Invalid event request",
-                                "code": "400",
-                                "data": null
-                            }
-                            """
-                    )
-                }
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "403",
-            description = "Forbidden - Insufficient privileges (ADMIN required)",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Forbidden",
-                        value = """
-                            {
-                                "message": "Access denied",
-                                "code": "403",
-                                "data": null
-                            }
-                            """
-                    )
-                }
-            )
-        )
-    })
-    public ResponseEntity<ApiResponse<EventResponse>> updateEvent(@PathVariable Long eventId, @Valid @RequestBody EventRequest eventRequest) {
-        EventResponse event = eventService.updateEvent(eventId, eventRequest);
-        return ResponseEntity.ok(new ApiResponse<>("Event updated successfully", "200", event));
-    }
-
-    @DeleteMapping("/events/{eventId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(
-        summary = "Delete Event",
-        description = "Delete an event (ADMIN only)",
-        security = @SecurityRequirement(name = "Bearer Authentication")
-    )
-    @ApiResponses(value = {
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "200",
-            description = "Event deleted successfully",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = com.ijaa.user.domain.common.ApiResponse.class),
-                examples = {
-                    @ExampleObject(
-                        name = "Success Response",
-                        value = """
-                            {
-                                "message": "Event deleted successfully",
-                                "code": "200",
-                                "data": null
-                            }
-                            """
-                    )
-                }
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "404",
-            description = "Event not found",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Event Not Found",
-                        value = """
-                            {
-                                "message": "Event not found with id: 1",
-                                "code": "404",
-                                "data": null
-                            }
-                            """
-                    )
-                }
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "403",
-            description = "Forbidden - Insufficient privileges (ADMIN required)",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Forbidden",
-                        value = """
-                            {
-                                "message": "Access denied",
-                                "code": "403",
-                                "data": null
-                            }
-                            """
-                    )
-                }
-            )
-        )
-    })
-    public ResponseEntity<ApiResponse<Void>> deleteEvent(@PathVariable Long eventId) {
-        eventService.deleteEvent(eventId);
-        return ResponseEntity.ok(new ApiResponse<>("Event deleted successfully", "200", null));
-    }
 
     // Announcement Management (ADMIN only)
     @GetMapping("/announcements")
@@ -965,7 +628,58 @@ public class AdminManagementResource {
     @Operation(
         summary = "Create Announcement",
         description = "Create a new announcement (ADMIN only)",
-        security = @SecurityRequirement(name = "Bearer Authentication")
+        security = @SecurityRequirement(name = "Bearer Authentication"),
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Announcement details",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = AnnouncementRequest.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Regular Announcement",
+                        summary = "Create a regular announcement",
+                        value = """
+                            {
+                                "title": "Important Alumni Update",
+                                "content": "We are pleased to announce the launch of our new alumni portal. All alumni are encouraged to register and update their profiles.",
+                                "category": "GENERAL",
+                                "isUrgent": false,
+                                "authorName": "Alumni Association",
+                                "authorEmail": "alumni@ijaa.com",
+                                "imageUrl": "https://example.com/announcement-image.jpg"
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "Urgent Announcement",
+                        summary = "Create an urgent announcement",
+                        value = """
+                            {
+                                "title": "Emergency Alumni Meeting",
+                                "content": "There will be an emergency alumni meeting tomorrow at 2 PM. All alumni are requested to attend.",
+                                "category": "URGENT",
+                                "isUrgent": true,
+                                "authorName": "Alumni Association",
+                                "authorEmail": "alumni@ijaa.com"
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "Simple Announcement",
+                        summary = "Create a simple announcement",
+                        value = """
+                            {
+                                "title": "Welcome New Alumni",
+                                "content": "Welcome to all new alumni members! We look forward to your active participation.",
+                                "authorName": "Alumni Association",
+                                "authorEmail": "alumni@ijaa.com"
+                            }
+                            """
+                    )
+                }
+            )
+        )
     )
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
@@ -1198,7 +912,58 @@ public class AdminManagementResource {
     @Operation(
         summary = "Create Report",
         description = "Create a new report (ADMIN only)",
-        security = @SecurityRequirement(name = "Bearer Authentication")
+        security = @SecurityRequirement(name = "Bearer Authentication"),
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Report details",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ReportRequest.class),
+                examples = {
+                    @ExampleObject(
+                        name = "User Report",
+                        summary = "Create a user report",
+                        value = """
+                            {
+                                "title": "Inappropriate User Behavior",
+                                "description": "User has been posting inappropriate content in the alumni forum",
+                                "category": "USER_REPORT",
+                                "priority": "HIGH",
+                                "reporterName": "Admin User",
+                                "reporterEmail": "admin@ijaa.com",
+                                "attachmentUrl": "https://example.com/evidence.pdf"
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "System Report",
+                        summary = "Create a system report",
+                        value = """
+                            {
+                                "title": "System Performance Issue",
+                                "description": "The alumni portal is experiencing slow response times",
+                                "category": "SYSTEM_REPORT",
+                                "priority": "MEDIUM",
+                                "reporterName": "System Admin",
+                                "reporterEmail": "system@ijaa.com"
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "Simple Report",
+                        summary = "Create a simple report",
+                        value = """
+                            {
+                                "title": "General Feedback",
+                                "description": "General feedback about the alumni portal",
+                                "reporterName": "John Doe",
+                                "reporterEmail": "john.doe@example.com"
+                            }
+                            """
+                    )
+                }
+            )
+        )
     )
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
@@ -1353,162 +1118,4 @@ public class AdminManagementResource {
         return ResponseEntity.ok(new ApiResponse<>("Report resolved successfully", "200", report));
     }
 
-    // Feature Flag Management (ADMIN only)
-    @GetMapping("/feature-flags")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(
-        summary = "Get All Feature Flags",
-        description = "Retrieve all feature flags (ADMIN only)",
-        security = @SecurityRequirement(name = "Bearer Authentication")
-    )
-    @ApiResponses(value = {
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "200",
-            description = "Feature flags retrieved successfully",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = com.ijaa.user.domain.common.ApiResponse.class),
-                examples = {
-                    @ExampleObject(
-                        name = "Success Response",
-                        value = """
-                            {
-                                "message": "Feature flags retrieved successfully",
-                                "code": "200",
-                                "data": [
-                                    {
-                                        "id": 1,
-                                        "featureName": "NEW_UI",
-                                        "enabled": true,
-                                        "description": "Enable new user interface"
-                                    }
-                                ]
-                            }
-                            """
-                    )
-                }
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "401",
-            description = "Unauthorized - Missing or invalid token",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Unauthorized",
-                        value = """
-                            {
-                                "message": "Missing Authorization Header",
-                                "code": "401",
-                                "data": null
-                            }
-                            """
-                    )
-                }
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "403",
-            description = "Forbidden - Insufficient privileges (ADMIN required)",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Forbidden",
-                        value = """
-                            {
-                                "message": "Access denied",
-                                "code": "403",
-                                "data": null
-                            }
-                            """
-                    )
-                }
-            )
-        )
-    })
-    public ResponseEntity<ApiResponse<List<FeatureFlag>>> getAllFeatureFlags() {
-        List<FeatureFlag> featureFlags = featureFlagService.getAllFeatureFlags();
-        return ResponseEntity.ok(new ApiResponse<>("Feature flags retrieved successfully", "200", featureFlags));
-    }
-
-    @PutMapping("/feature-flags/{featureName}")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(
-        summary = "Update Feature Flag",
-        description = "Update a feature flag's enabled status (ADMIN only)",
-        security = @SecurityRequirement(name = "Bearer Authentication")
-    )
-    @ApiResponses(value = {
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "200",
-            description = "Feature flag updated successfully",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = com.ijaa.user.domain.common.ApiResponse.class),
-                examples = {
-                    @ExampleObject(
-                        name = "Success Response",
-                        value = """
-                            {
-                                "message": "Feature flag updated successfully",
-                                "code": "200",
-                                "data": {
-                                    "id": 1,
-                                    "featureName": "NEW_UI",
-                                    "enabled": true,
-                                    "description": "Enable new user interface"
-                                }
-                            }
-                            """
-                    )
-                }
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "404",
-            description = "Feature flag not found",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Feature Flag Not Found",
-                        value = """
-                            {
-                                "message": "Feature flag not found",
-                                "code": "404",
-                                "data": null
-                            }
-                            """
-                    )
-                }
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "403",
-            description = "Forbidden - Insufficient privileges (ADMIN required)",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Forbidden",
-                        value = """
-                            {
-                                "message": "Access denied",
-                                "code": "403",
-                                "data": null
-                            }
-                            """
-                    )
-                }
-            )
-        )
-    })
-    public ResponseEntity<ApiResponse<FeatureFlag>> updateFeatureFlag(
-            @Parameter(description = "Feature flag name", example = "NEW_UI") @PathVariable String featureName,
-            @Parameter(description = "Enable or disable the feature flag", example = "true") @RequestParam boolean enabled) {
-        FeatureFlag featureFlag = featureFlagService.updateFeatureFlag(featureName, enabled);
-        return ResponseEntity.ok(new ApiResponse<>("Feature flag updated successfully", "200", featureFlag));
-    }
 } 

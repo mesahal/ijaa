@@ -80,7 +80,7 @@ class AdminServiceTest {
         when(adminRepository.count()).thenReturn(0L);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(adminRepository.save(any(Admin.class))).thenReturn(testAdmin);
-        when(jwtService.generateToken(anyString())).thenReturn("jwtToken");
+        when(jwtService.generateAdminToken(anyString(), anyString())).thenReturn("jwtToken");
 
         // When
         AdminAuthResponse response = adminService.signup(signupRequest);
@@ -98,7 +98,7 @@ class AdminServiceTest {
         verify(adminRepository).count();
         verify(passwordEncoder).encode(signupRequest.getPassword());
         verify(adminRepository).save(any(Admin.class));
-        verify(jwtService).generateToken(testAdmin.getEmail());
+        verify(jwtService).generateAdminToken(testAdmin.getEmail(), testAdmin.getRole().getRole());
     }
 
     @Test
@@ -117,7 +117,7 @@ class AdminServiceTest {
         // Given
         when(adminRepository.findByEmailAndActiveTrue(anyString())).thenReturn(Optional.of(testAdmin));
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
-        when(jwtService.generateToken(anyString())).thenReturn("jwtToken");
+        when(jwtService.generateAdminToken(anyString(), anyString())).thenReturn("jwtToken");
 
         // When
         AdminAuthResponse response = adminService.login(loginRequest);
@@ -133,7 +133,7 @@ class AdminServiceTest {
 
         verify(adminRepository).findByEmailAndActiveTrue(loginRequest.getEmail());
         verify(passwordEncoder).matches(loginRequest.getPassword(), testAdmin.getPasswordHash());
-        verify(jwtService).generateToken(testAdmin.getEmail());
+        verify(jwtService).generateAdminToken(testAdmin.getEmail(), testAdmin.getRole().getRole());
     }
 
     @Test

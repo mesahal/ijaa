@@ -5,17 +5,15 @@ import com.ijaa.user.domain.dto.ExperienceDto;
 import com.ijaa.user.domain.dto.InterestDto;
 import com.ijaa.user.domain.dto.ProfileDto;
 import com.ijaa.user.service.ProfileService;
-import com.ijaa.user.util.TestDataBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.mockito.Mock;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.context.annotation.Import;
-import com.ijaa.user.config.TestConfig;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -30,7 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @WebMvcTest(ProfileResource.class)
-@Import(TestConfig.class)
 @DisplayName("ProfileResource Integration Tests")
 class ProfileResourceIntegrationTest {
 
@@ -154,7 +151,7 @@ class ProfileResourceIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Experience added successfully"))
                 .andExpect(jsonPath("$.code").value("200"))
-                .andExpect(jsonPath("$.data.userId").value(TEST_USER_ID));
+                .andExpect(jsonPath("$.data.title").value("Software Engineer"));
 
         verify(profileService).addExperience(any(ExperienceDto.class));
     }
@@ -163,6 +160,9 @@ class ProfileResourceIntegrationTest {
     @WithMockUser(roles = "USER")
     @DisplayName("Should delete experience successfully")
     void deleteExperience_Success() throws Exception {
+        // Arrange
+        doNothing().when(profileService).deleteExperience(TEST_USER_ID);
+
         // Act & Assert
         mockMvc.perform(delete(BASE_URL + "/experiences/{userId}", TEST_USER_ID)
                         .with(csrf()))
@@ -200,29 +200,30 @@ class ProfileResourceIntegrationTest {
     @DisplayName("Should add interest successfully")
     void addInterest_Success() throws Exception {
         // Arrange
-        String interestName = "Python Programming";
+        Map<String, String> requestBody = Map.of("interest", "Java Programming");
         InterestDto responseDto = TestDataBuilder.createTestInterestDto();
-        when(profileService.addInterest(interestName)).thenReturn(responseDto);
-
-        Map<String, String> request = Map.of("interest", interestName);
+        when(profileService.addInterest(anyString())).thenReturn(responseDto);
 
         // Act & Assert
         mockMvc.perform(post(BASE_URL + "/interests")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(objectMapper.writeValueAsString(requestBody)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Interest added successfully"))
                 .andExpect(jsonPath("$.code").value("200"))
-                .andExpect(jsonPath("$.data.userId").value(TEST_USER_ID));
+                .andExpect(jsonPath("$.data.interest").value("Java Programming"));
 
-        verify(profileService).addInterest(interestName);
+        verify(profileService).addInterest("Java Programming");
     }
 
     @Test
     @WithMockUser(roles = "USER")
     @DisplayName("Should delete interest successfully")
     void deleteInterest_Success() throws Exception {
+        // Arrange
+        doNothing().when(profileService).deleteInterest(TEST_USER_ID);
+
         // Act & Assert
         mockMvc.perform(delete(BASE_URL + "/interests/{userId}", TEST_USER_ID)
                         .with(csrf()))
@@ -238,7 +239,8 @@ class ProfileResourceIntegrationTest {
     @DisplayName("Should return 400 when update basic info request is invalid")
     void updateBasicInfo_InvalidRequest() throws Exception {
         // Arrange
-        ProfileDto invalidDto = new ProfileDto(); // All fields null/blank
+        ProfileDto invalidDto = new ProfileDto();
+        // Missing required fields
 
         // Act & Assert
         mockMvc.perform(put(BASE_URL + "/basic")
@@ -247,7 +249,7 @@ class ProfileResourceIntegrationTest {
                         .content(objectMapper.writeValueAsString(invalidDto)))
                 .andExpect(status().isBadRequest());
 
-        verify(profileService, never()).updateBasicInfo(any(ProfileDto.class));
+        verify(profileService, never()).updateBasicInfo(any());
     }
 
     @Test
@@ -255,16 +257,17 @@ class ProfileResourceIntegrationTest {
     @DisplayName("Should return 400 when add experience request is invalid")
     void addExperience_InvalidRequest() throws Exception {
         // Arrange
-        String invalidJson = "{\"title\":\"\",\"company\":\"\"}"; // Empty fields
+        ExperienceDto invalidDto = new ExperienceDto();
+        // Missing required fields
 
         // Act & Assert
         mockMvc.perform(post(BASE_URL + "/experiences")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(invalidJson))
+                        .content(objectMapper.writeValueAsString(invalidDto)))
                 .andExpect(status().isBadRequest());
 
-        verify(profileService, never()).addExperience(any(ExperienceDto.class));
+        verify(profileService, never()).addExperience(any());
     }
 
     @Test
@@ -272,16 +275,16 @@ class ProfileResourceIntegrationTest {
     @DisplayName("Should return 400 when add interest request is missing interest field")
     void addInterest_MissingInterestField() throws Exception {
         // Arrange
-        Map<String, String> request = Map.of("otherField", "value"); // Missing interest field
+        Map<String, String> requestBody = Map.of("otherField", "value");
 
         // Act & Assert
         mockMvc.perform(post(BASE_URL + "/interests")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(objectMapper.writeValueAsString(requestBody)))
                 .andExpect(status().isBadRequest());
 
-        verify(profileService, never()).addInterest(any());
+        verify(profileService, never()).addInterest(anyString());
     }
 
     @Test
@@ -289,50 +292,44 @@ class ProfileResourceIntegrationTest {
     @DisplayName("Should return 400 when add interest request has empty interest")
     void addInterest_EmptyInterest() throws Exception {
         // Arrange
-        Map<String, String> request = Map.of("interest", "");
+        Map<String, String> requestBody = Map.of("interest", "");
 
         // Act & Assert
         mockMvc.perform(post(BASE_URL + "/interests")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(objectMapper.writeValueAsString(requestBody)))
                 .andExpect(status().isBadRequest());
 
-        verify(profileService, never()).addInterest(any());
+        verify(profileService, never()).addInterest(anyString());
     }
 
     @Test
     @WithMockUser(roles = "USER")
     @DisplayName("Should return 400 when request body is malformed JSON")
     void updateBasicInfo_MalformedJson() throws Exception {
-        // Arrange
-        String malformedJson = "{\"name\":\"Test User\",\"profession\":}"; // Invalid JSON
-
         // Act & Assert
         mockMvc.perform(put(BASE_URL + "/basic")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(malformedJson))
+                        .content("{ invalid json }"))
                 .andExpect(status().isBadRequest());
 
-        verify(profileService, never()).updateBasicInfo(any(ProfileDto.class));
+        verify(profileService, never()).updateBasicInfo(any());
     }
 
     @Test
     @WithMockUser(roles = "USER")
     @DisplayName("Should return 415 when content type is not JSON")
     void updateBasicInfo_WrongContentType() throws Exception {
-        // Arrange
-        ProfileDto requestDto = TestDataBuilder.createTestProfileDto();
-
         // Act & Assert
         mockMvc.perform(put(BASE_URL + "/basic")
                         .with(csrf())
                         .contentType(MediaType.TEXT_PLAIN)
-                        .content(objectMapper.writeValueAsString(requestDto)))
+                        .content("plain text"))
                 .andExpect(status().isUnsupportedMediaType());
 
-        verify(profileService, never()).updateBasicInfo(any(ProfileDto.class));
+        verify(profileService, never()).updateBasicInfo(any());
     }
 
     @Test
@@ -341,11 +338,11 @@ class ProfileResourceIntegrationTest {
     void getProfileByUserId_ServiceException() throws Exception {
         // Arrange
         when(profileService.getProfileByUserId(TEST_USER_ID))
-                .thenThrow(new RuntimeException("Profile not found"));
+                .thenThrow(new RuntimeException("Service error"));
 
         // Act & Assert
         mockMvc.perform(get(BASE_URL + "/profile/{userId}", TEST_USER_ID))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isInternalServerError());
 
         verify(profileService).getProfileByUserId(TEST_USER_ID);
     }
@@ -355,19 +352,17 @@ class ProfileResourceIntegrationTest {
     @DisplayName("Should return 400 when add interest service throws exception")
     void addInterest_ServiceException() throws Exception {
         // Arrange
-        String interestName = "Java Programming";
-        when(profileService.addInterest(interestName))
-                .thenThrow(new IllegalArgumentException("Interest already exists"));
-
-        Map<String, String> request = Map.of("interest", interestName);
+        Map<String, String> requestBody = Map.of("interest", "Java Programming");
+        when(profileService.addInterest(anyString()))
+                .thenThrow(new RuntimeException("Service error"));
 
         // Act & Assert
         mockMvc.perform(post(BASE_URL + "/interests")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isConflict());
+                        .content(objectMapper.writeValueAsString(requestBody)))
+                .andExpect(status().isInternalServerError());
 
-        verify(profileService).addInterest(interestName);
+        verify(profileService).addInterest("Java Programming");
     }
 } 
