@@ -33,7 +33,7 @@ public interface AdminService {
     
     boolean hasSuperAdminPrivileges(Long adminId);
     
-    boolean hasEventManagerPrivileges(Long adminId);
+
     
     boolean hasContentManagerPrivileges(Long adminId);
     

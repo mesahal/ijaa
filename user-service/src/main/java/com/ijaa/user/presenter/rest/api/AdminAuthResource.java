@@ -345,8 +345,7 @@ public class AdminAuthResource {
                                     "blockedUsers": 5,
                                     "totalAdmins": 3,
                                     "activeAdmins": 2,
-                                    "totalEvents": 0,
-                                    "activeEvents": 0,
+
                                     "totalAnnouncements": 0,
                                     "pendingReports": 0,
                                     "topBatches": [],

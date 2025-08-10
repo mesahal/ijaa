@@ -16,9 +16,7 @@ public class DashboardStatsResponse {
     private Long totalAdmins;
     private Long activeAdmins;
     
-    // Event statistics
-    private Long totalEvents;
-    private Long activeEvents;
+
     
     // Announcement statistics
     private Long totalAnnouncements;

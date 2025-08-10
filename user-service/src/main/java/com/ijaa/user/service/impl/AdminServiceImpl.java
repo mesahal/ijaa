@@ -17,7 +17,7 @@ import com.ijaa.user.repository.AdminRepository;
 import com.ijaa.user.repository.UserRepository;
 import com.ijaa.user.service.AdminService;
 import com.ijaa.user.service.AnnouncementService;
-import com.ijaa.user.service.EventService;
+
 import com.ijaa.user.service.ReportService;
 import com.ijaa.user.service.JWTService;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class AdminServiceImpl implements AdminService {
 
     private final AdminRepository adminRepository;
     private final UserRepository userRepository;
-    private final EventService eventService;
+
     private final AnnouncementService announcementService;
     private final ReportService reportService;
     private final JWTService jwtService;
@@ -173,12 +173,7 @@ public class AdminServiceImpl implements AdminService {
         stats.setTotalAdmins(totalAdmins);
         stats.setActiveAdmins(activeAdmins);
         
-        // Event statistics - now with real data
-        long totalEvents = eventService.getTotalEvents();
-        long activeEvents = eventService.getActiveEventsCount();
-        
-        stats.setTotalEvents(totalEvents);
-        stats.setActiveEvents(activeEvents);
+
         
         // Announcement statistics - now with real data
         long totalAnnouncements = announcementService.getTotalAnnouncements();
@@ -214,11 +209,7 @@ public class AdminServiceImpl implements AdminService {
         return admin != null && admin.getRole() == AdminRole.ADMIN;
     }
 
-    @Override
-    public boolean hasEventManagerPrivileges(Long adminId) {
-        Admin admin = adminRepository.findById(adminId).orElse(null);
-        return admin != null && admin.getRole() == AdminRole.ADMIN;
-    }
+
 
     @Override
     public boolean hasContentManagerPrivileges(Long adminId) {
