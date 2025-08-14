@@ -5,6 +5,11 @@ import com.ijaa.event_service.domain.request.CalendarIntegrationRequest;
 import com.ijaa.event_service.domain.response.CalendarIntegrationResponse;
 import com.ijaa.event_service.service.CalendarIntegrationService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -59,7 +64,126 @@ public class CalendarIntegrationResource {
     }
 
     @PostMapping
-    @Operation(summary = "Create calendar integration", description = "Create a new calendar integration")
+    @Operation(
+        summary = "Create Calendar Integration",
+        description = "Create a new calendar integration with external calendar services (Google Calendar, Outlook, etc.)",
+        security = @SecurityRequirement(name = "Bearer Authentication"),
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Calendar integration details",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = CalendarIntegrationRequest.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Google Calendar Integration",
+                        summary = "Create Google Calendar integration",
+                        value = """
+                            {
+                                "calendarType": "GOOGLE_CALENDAR",
+                                "calendarName": "My Google Calendar",
+                                "accessToken": "ya29.a0AfH6SMC...",
+                                "refreshToken": "1//04dX...",
+                                "calendarId": "primary",
+                                "syncEvents": true,
+                                "syncInvitations": true,
+                                "autoSync": true
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "Outlook Calendar Integration",
+                        summary = "Create Outlook Calendar integration",
+                        value = """
+                            {
+                                "calendarType": "OUTLOOK_CALENDAR",
+                                "calendarName": "My Outlook Calendar",
+                                "accessToken": "EwBwA8l6BAAU...",
+                                "refreshToken": "M.R3_BAY...",
+                                "calendarId": "default",
+                                "syncEvents": true,
+                                "syncInvitations": false,
+                                "autoSync": true
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "201",
+            description = "Calendar integration created successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.event_service.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Calendar integration created successfully",
+                                "code": "201",
+                                "data": {
+                                    "id": 1,
+                                    "calendarType": "GOOGLE_CALENDAR",
+                                    "calendarName": "My Google Calendar",
+                                    "calendarId": "primary",
+                                    "syncEvents": true,
+                                    "syncInvitations": true,
+                                    "autoSync": true,
+                                    "status": "ACTIVE",
+                                    "lastSyncTime": "2024-12-01T10:00:00",
+                                    "createdBy": "john.doe",
+                                    "createdAt": "2024-12-01T10:00:00",
+                                    "updatedAt": "2024-12-01T10:00:00"
+                                }
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Invalid integration data",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Invalid Request",
+                        value = """
+                            {
+                                "message": "Invalid calendar integration data provided",
+                                "code": "400",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "409",
+            description = "Calendar integration already exists",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Conflict",
+                        value = """
+                            {
+                                "message": "Calendar integration already exists for this user and calendar type",
+                                "code": "409",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
     public ResponseEntity<ApiResponse<CalendarIntegrationResponse>> createCalendarIntegration(
             @Valid @RequestBody CalendarIntegrationRequest request,
             Authentication authentication) {

@@ -37,7 +37,6 @@ public class UserEventResource extends BaseService {
     }
 
     @GetMapping("/my-events")
-    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Get User's Events",
         description = "Retrieve all events created by the authenticated user",
@@ -123,12 +122,14 @@ public class UserEventResource extends BaseService {
     })
     public ResponseEntity<ApiResponse<List<EventResponse>>> getUserEvents() {
         String username = getCurrentUsername();
+        if (username == null) {
+            return ResponseEntity.status(401).body(new ApiResponse<>("Authentication required", "401", null));
+        }
         List<EventResponse> events = eventService.getEventsByUser(username);
         return ResponseEntity.ok(new ApiResponse<>("User events retrieved successfully", "200", events));
     }
 
     @GetMapping("/my-events/active")
-    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Get User's Active Events",
         description = "Retrieve all active events created by the authenticated user",
@@ -176,12 +177,14 @@ public class UserEventResource extends BaseService {
     })
     public ResponseEntity<ApiResponse<List<EventResponse>>> getUserActiveEvents() {
         String username = getCurrentUsername();
+        if (username == null) {
+            return ResponseEntity.status(401).body(new ApiResponse<>("Authentication required", "401", null));
+        }
         List<EventResponse> events = eventService.getActiveEventsByUser(username);
         return ResponseEntity.ok(new ApiResponse<>("User active events retrieved successfully", "200", events));
     }
 
     @GetMapping("/all-events")
-    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Get All Active Events",
         description = "Retrieve all active events created by all users (public events)",
@@ -233,7 +236,6 @@ public class UserEventResource extends BaseService {
     }
 
     @GetMapping("/all-events/{eventId}")
-    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Get Event by ID",
         description = "Retrieve a specific event by ID (public access)",
@@ -302,7 +304,6 @@ public class UserEventResource extends BaseService {
     }
 
     @GetMapping("/my-events/{eventId}")
-    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Get User's Event by ID",
         description = "Retrieve a specific event created by the authenticated user",
@@ -367,12 +368,14 @@ public class UserEventResource extends BaseService {
     })
     public ResponseEntity<ApiResponse<EventResponse>> getUserEventById(@PathVariable Long eventId) {
         String username = getCurrentUsername();
+        if (username == null) {
+            return ResponseEntity.status(401).body(new ApiResponse<>("Authentication required", "401", null));
+        }
         EventResponse event = eventService.getEventByIdForUser(eventId, username);
         return ResponseEntity.ok(new ApiResponse<>("User event retrieved successfully", "200", event));
     }
 
     @PostMapping("/create")
-    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Create Event",
         description = "Create a new event for the authenticated user",
@@ -504,12 +507,14 @@ public class UserEventResource extends BaseService {
     })
     public ResponseEntity<ApiResponse<EventResponse>> createEvent(@Valid @RequestBody EventRequest eventRequest) {
         String username = getCurrentUsername();
+        if (username == null) {
+            return ResponseEntity.status(401).body(new ApiResponse<>("Authentication required", "401", null));
+        }
         EventResponse event = eventService.createEventForUser(eventRequest, username);
         return ResponseEntity.ok(new ApiResponse<>("Event created successfully", "201", event));
     }
 
     @PutMapping("/my-events/{eventId}")
-    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Update User's Event",
         description = "Update an event created by the authenticated user",
@@ -628,12 +633,14 @@ public class UserEventResource extends BaseService {
             @PathVariable Long eventId, 
             @Valid @RequestBody EventRequest eventRequest) {
         String username = getCurrentUsername();
+        if (username == null) {
+            return ResponseEntity.status(401).body(new ApiResponse<>("Authentication required", "401", null));
+        }
         EventResponse event = eventService.updateEventForUser(eventId, eventRequest, username);
         return ResponseEntity.ok(new ApiResponse<>("Event updated successfully", "200", event));
     }
 
     @DeleteMapping("/my-events/{eventId}")
-    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Delete User's Event",
         description = "Delete an event created by the authenticated user",
@@ -682,17 +689,95 @@ public class UserEventResource extends BaseService {
     })
     public ResponseEntity<ApiResponse<Void>> deleteUserEvent(@PathVariable Long eventId) {
         String username = getCurrentUsername();
+        if (username == null) {
+            return ResponseEntity.status(401).body(new ApiResponse<>("Authentication required", "401", null));
+        }
         eventService.deleteEventForUser(eventId, username);
         return ResponseEntity.ok(new ApiResponse<>("Event deleted successfully", "200", null));
     }
 
     @PostMapping("/search")
-    @PreAuthorize("hasRole('USER')")
     @Operation(
-        summary = "Search Events",
-        description = "Search events by various criteria (location, date, type, etc.)",
+        summary = "Search Events (POST)",
+        description = "Search events by various criteria using POST method with query parameters",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Events found successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.event_service.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Events found successfully",
+                                "code": "200",
+                                "data": [
+                                    {
+                                        "id": 1,
+                                        "title": "Alumni Meet 2024",
+                                        "description": "Annual alumni gathering",
+                                        "startDate": "2024-12-25T18:00:00",
+                                        "endDate": "2024-12-25T22:00:00",
+                                        "location": "IIT Campus",
+                                        "eventType": "MEETING",
+                                        "active": true,
+                                        "isOnline": false,
+                                        "maxParticipants": 100,
+                                        "currentParticipants": 0,
+                                        "organizerName": "John Doe",
+                                        "organizerEmail": "john@example.com"
+                                    }
+                                ]
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Invalid search parameters",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Invalid Request",
+                        value = """
+                            {
+                                "message": "Invalid search parameters provided",
+                                "code": "400",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "401",
+            description = "Unauthorized - Missing or invalid token",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Unauthorized",
+                        value = """
+                            {
+                                "message": "Missing Authorization Header",
+                                "code": "401",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
     public ResponseEntity<ApiResponse<List<EventResponse>>> searchEvents(
             @RequestParam(required = false) String location,
             @RequestParam(required = false) String eventType,
@@ -715,18 +800,92 @@ public class UserEventResource extends BaseService {
         }
         
         List<EventResponse> events = eventService.searchEvents(location, eventType, startDateTime, 
-                                                             endDateTime, isOnline, organizerName, title, description);
-        
+                                                              endDateTime, isOnline, organizerName, title, description);
         return ResponseEntity.ok(new ApiResponse<>("Events found successfully", "200", events));
     }
 
     @GetMapping("/search")
-    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Search Events (GET)",
-        description = "Search events by various criteria using query parameters",
+        description = "Search events by various criteria using GET method with query parameters",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Events found successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.event_service.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Events found successfully",
+                                "code": "200",
+                                "data": [
+                                    {
+                                        "id": 1,
+                                        "title": "Alumni Meet 2024",
+                                        "description": "Annual alumni gathering",
+                                        "startDate": "2024-12-25T18:00:00",
+                                        "endDate": "2024-12-25T22:00:00",
+                                        "location": "IIT Campus",
+                                        "eventType": "MEETING",
+                                        "active": true,
+                                        "isOnline": false,
+                                        "maxParticipants": 100,
+                                        "currentParticipants": 0,
+                                        "organizerName": "John Doe",
+                                        "organizerEmail": "john@example.com"
+                                    }
+                                ]
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Invalid search parameters",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Invalid Request",
+                        value = """
+                            {
+                                "message": "Invalid search parameters provided",
+                                "code": "400",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "401",
+            description = "Unauthorized - Missing or invalid token",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Unauthorized",
+                        value = """
+                            {
+                                "message": "Missing Authorization Header",
+                                "code": "401",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
     public ResponseEntity<ApiResponse<List<EventResponse>>> searchEventsGet(
             @RequestParam(required = false) String location,
             @RequestParam(required = false) String eventType,
@@ -749,8 +908,7 @@ public class UserEventResource extends BaseService {
         }
         
         List<EventResponse> events = eventService.searchEvents(location, eventType, startDateTime, 
-                                                             endDateTime, isOnline, organizerName, title, description);
-        
+                                                              endDateTime, isOnline, organizerName, title, description);
         return ResponseEntity.ok(new ApiResponse<>("Events found successfully", "200", events));
     }
 } 

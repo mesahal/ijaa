@@ -1,7 +1,6 @@
 package com.ijaa.user.domain.enums;
 
 public enum AdminRole {
-    USER("USER", "Regular user access"),
     ADMIN("ADMIN", "Administrative access");
 
     private final String role;

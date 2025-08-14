@@ -1,6 +1,6 @@
 spring:
   application:
-    name: "edge"
+    name: "gateway"
 #  config:
 #    import: "configserver:http://localhost:8071/"
   cloud:

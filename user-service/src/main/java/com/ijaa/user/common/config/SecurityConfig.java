@@ -33,7 +33,7 @@ public class SecurityConfig {
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthFilter;
-
+    
     @Bean
     public SecurityFilterChain defaultFilterChain(HttpSecurity http) throws Exception {
 
@@ -71,6 +71,7 @@ public class SecurityConfig {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12); // 12 is a good strength
     }
+
 
 
 }

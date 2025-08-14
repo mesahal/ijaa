@@ -3,6 +3,7 @@ package com.ijaa.user.service;
 import com.ijaa.user.domain.entity.Admin;
 import com.ijaa.user.domain.enums.AdminRole;
 import com.ijaa.user.domain.request.AdminLoginRequest;
+import com.ijaa.user.domain.request.AdminPasswordChangeRequest;
 import com.ijaa.user.domain.request.AdminSignupRequest;
 import com.ijaa.user.domain.response.AdminAuthResponse;
 import com.ijaa.user.domain.response.AdminProfileResponse;
@@ -17,11 +18,13 @@ public interface AdminService {
     
     AdminAuthResponse login(AdminLoginRequest request);
     
+    AdminProfileResponse changePassword(AdminPasswordChangeRequest request);
+    
     AdminProfileResponse getProfile(Long adminId);
     
     List<AdminProfileResponse> getAllAdmins();
     
-    AdminProfileResponse updateAdminRole(Long adminId, AdminRole newRole);
+
     
     AdminProfileResponse deactivateAdmin(Long adminId);
     

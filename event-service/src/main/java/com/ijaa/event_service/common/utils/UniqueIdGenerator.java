@@ -1,4 +1,4 @@
-package com.ijaa.user.common.utils;
+package com.ijaa.event_service.common.utils;
 
 import org.springframework.stereotype.Component;
 

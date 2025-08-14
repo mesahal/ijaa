@@ -5,6 +5,11 @@ import com.ijaa.event_service.domain.request.EventTemplateRequest;
 import com.ijaa.event_service.domain.response.EventTemplateResponse;
 import com.ijaa.event_service.service.EventTemplateService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +30,87 @@ public class EventTemplateResource {
     private EventTemplateService eventTemplateService;
 
     @GetMapping
-    @Operation(summary = "Get all templates", description = "Retrieve all event templates")
+    @Operation(
+        summary = "Get All Templates",
+        description = "Retrieve all event templates available in the system",
+        security = @SecurityRequirement(name = "Bearer Authentication")
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "All templates retrieved successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.event_service.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "All templates retrieved successfully",
+                                "code": "200",
+                                "data": [
+                                    {
+                                        "id": 1,
+                                        "templateName": "Alumni Meet Template",
+                                        "title": "Annual Alumni Meet",
+                                        "description": "Standard template for annual alumni gatherings",
+                                        "location": "IIT Campus",
+                                        "eventType": "MEETING",
+                                        "isOnline": false,
+                                        "maxParticipants": 100,
+                                        "organizerName": "Alumni Association",
+                                        "organizerEmail": "alumni@iitj.ac.in",
+                                        "isPublic": true,
+                                        "isRecurring": true,
+                                        "createdBy": "admin",
+                                        "createdAt": "2024-01-01T10:00:00",
+                                        "updatedAt": "2024-01-01T10:00:00"
+                                    },
+                                    {
+                                        "id": 2,
+                                        "templateName": "Webinar Template",
+                                        "title": "Online Webinar",
+                                        "description": "Template for online webinars and virtual events",
+                                        "location": "Virtual",
+                                        "eventType": "WEBINAR",
+                                        "isOnline": true,
+                                        "maxParticipants": 50,
+                                        "organizerName": "Tech Group",
+                                        "organizerEmail": "tech@iitj.ac.in",
+                                        "isPublic": true,
+                                        "isRecurring": false,
+                                        "createdBy": "admin",
+                                        "createdAt": "2024-01-02T10:00:00",
+                                        "updatedAt": "2024-01-02T10:00:00"
+                                    }
+                                ]
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "401",
+            description = "Unauthorized - Missing or invalid token",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Unauthorized",
+                        value = """
+                            {
+                                "message": "Missing Authorization Header",
+                                "code": "401",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
     public ResponseEntity<ApiResponse<List<EventTemplateResponse>>> getAllTemplates() {
         List<EventTemplateResponse> templates = eventTemplateService.getAllTemplates();
         ApiResponse<List<EventTemplateResponse>> response = new ApiResponse<>();
@@ -82,7 +167,135 @@ public class EventTemplateResource {
     }
 
     @PostMapping
-    @Operation(summary = "Create template", description = "Create a new event template")
+    @Operation(
+        summary = "Create Event Template",
+        description = "Create a new event template with customizable settings and configurations",
+        security = @SecurityRequirement(name = "Bearer Authentication"),
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Event template creation details",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = EventTemplateRequest.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Alumni Meet Template",
+                        summary = "Create template for alumni meetings",
+                        value = """
+                            {
+                                "templateName": "Alumni Meet Template",
+                                "title": "Annual Alumni Meet",
+                                "description": "Standard template for annual alumni gatherings",
+                                "location": "IIT Campus",
+                                "eventType": "MEETING",
+                                "isOnline": false,
+                                "maxParticipants": 100,
+                                "organizerName": "Alumni Association",
+                                "organizerEmail": "alumni@iitj.ac.in",
+                                "isPublic": true,
+                                "isRecurring": true
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "Webinar Template",
+                        summary = "Create template for online webinars",
+                        value = """
+                            {
+                                "templateName": "Webinar Template",
+                                "title": "Online Webinar",
+                                "description": "Template for online webinars and virtual events",
+                                "location": "Virtual",
+                                "eventType": "WEBINAR",
+                                "isOnline": true,
+                                "maxParticipants": 50,
+                                "organizerName": "Tech Group",
+                                "organizerEmail": "tech@iitj.ac.in",
+                                "isPublic": true,
+                                "isRecurring": false
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "201",
+            description = "Template created successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.event_service.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Template created successfully",
+                                "code": "201",
+                                "data": {
+                                    "id": 1,
+                                    "templateName": "Alumni Meet Template",
+                                    "title": "Annual Alumni Meet",
+                                    "description": "Standard template for annual alumni gatherings",
+                                    "location": "IIT Campus",
+                                    "eventType": "MEETING",
+                                    "isOnline": false,
+                                    "maxParticipants": 100,
+                                    "organizerName": "Alumni Association",
+                                    "organizerEmail": "alumni@iitj.ac.in",
+                                    "isPublic": true,
+                                    "isRecurring": true,
+                                    "createdBy": "john.doe",
+                                    "createdAt": "2024-12-01T10:00:00",
+                                    "updatedAt": "2024-12-01T10:00:00"
+                                }
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Invalid template data",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Invalid Request",
+                        value = """
+                            {
+                                "message": "Invalid template data provided",
+                                "code": "400",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "409",
+            description = "Template name already exists",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Conflict",
+                        value = """
+                            {
+                                "message": "Template name already exists",
+                                "code": "409",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
     public ResponseEntity<ApiResponse<EventTemplateResponse>> createTemplate(
             @Valid @RequestBody EventTemplateRequest request,
             Authentication authentication) {

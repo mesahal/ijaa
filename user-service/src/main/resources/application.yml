@@ -4,7 +4,7 @@ spring:
 #  config:
 #    import: "configserver:http://localhost:8071/"
   datasource:
-    url: jdbc:postgresql://localhost:5432/ijaa
+    url: jdbc:postgresql://localhost:5432/ijaa_users
     username: root
     password: Admin@123
     driver-class-name: org.postgresql.Driver

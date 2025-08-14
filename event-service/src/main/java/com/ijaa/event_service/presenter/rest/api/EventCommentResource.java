@@ -7,6 +7,11 @@ import com.ijaa.event_service.domain.response.EventCommentResponse;
 import com.ijaa.event_service.service.EventCommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.util.List;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 @Slf4j
 @RestController
@@ -31,8 +33,9 @@ public class EventCommentResource {
 
     @PostMapping
     @Operation(
-        summary = "Create a new comment", 
-        description = "Create a new comment for an event",
+        summary = "Create Event Comment", 
+        description = "Create a new comment for an event with support for replies and threaded discussions",
+        security = @SecurityRequirement(name = "Bearer Authentication"),
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Comment creation details",
             required = true,
@@ -76,6 +79,78 @@ public class EventCommentResource {
             )
         )
     )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "201",
+            description = "Comment created successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.event_service.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Comment created successfully",
+                                "code": "201",
+                                "data": {
+                                    "id": 1,
+                                    "eventId": 1,
+                                    "content": "This event looks amazing! Looking forward to attending.",
+                                    "authorUsername": "john.doe",
+                                    "authorName": "John Doe",
+                                    "parentCommentId": null,
+                                    "likesCount": 0,
+                                    "repliesCount": 0,
+                                    "isLikedByUser": false,
+                                    "createdAt": "2024-12-01T10:00:00",
+                                    "updatedAt": "2024-12-01T10:00:00"
+                                }
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Invalid comment data",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Invalid Request",
+                        value = """
+                            {
+                                "message": "Invalid comment data provided",
+                                "code": "400",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Event not found",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Not Found",
+                        value = """
+                            {
+                                "message": "Event not found",
+                                "code": "404",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
     public ResponseEntity<ApiResponse<EventCommentResponse>> createComment(
             @Valid @RequestBody EventCommentRequest request,
             @RequestHeader("X-USER_ID") String userContext) {

@@ -1,40 +1,53 @@
 spring:
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
     username: sa
     password: 
-    driver-class-name: org.h2.Driver
   jpa:
     hibernate:
       ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
+        format_sql: true
         dialect: org.hibernate.dialect.H2Dialect
   h2:
     console:
       enabled: true
+      path: /h2-console
 
 server:
   port: 0
 
+logging:
+  level:
+    com.ijaa.event_service: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+
+jwt:
+  secret: test-secret-key-for-testing-purposes-only
+  expiration: 3600
+
+# Disable Eureka for testing
 eureka:
   client:
     enabled: false
+  instance:
+    enabled: false
 
-jwt:
-  secret: test-secret-key-for-testing-only
-  expiration: 3600
+# Test-specific configurations
+test:
+  data:
+    enabled: true
+  security:
+    enabled: false
 
+# Feign client configuration for testing
 feign:
   client:
     config:
       default:
         connectTimeout: 1000
         readTimeout: 1000
-        loggerLevel: basic
-
-logging:
-  level:
-    com.ijaa.event_service: DEBUG
-    org.springframework.cloud.openfeign: DEBUG

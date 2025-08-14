@@ -8,6 +8,7 @@ import com.ijaa.event_service.common.service.BaseService;
 import com.ijaa.event_service.service.RecurringEventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -87,21 +88,138 @@ public class RecurringEventResource extends BaseService {
     @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Create Recurring Event",
-        description = "Create a new recurring event",
-        security = @SecurityRequirement(name = "Bearer Authentication")
+        description = "Create a new recurring event with customizable recurrence patterns",
+        security = @SecurityRequirement(name = "Bearer Authentication"),
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Recurring event creation details",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = RecurringEventRequest.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Weekly Recurring Event",
+                        summary = "Create a weekly recurring event",
+                        value = """
+                            {
+                                "title": "Weekly Alumni Meet",
+                                "description": "Weekly alumni networking session",
+                                "startDate": "2024-12-25T18:00:00",
+                                "endDate": "2024-12-25T22:00:00",
+                                "location": "IIT Campus",
+                                "eventType": "MEETING",
+                                "isOnline": false,
+                                "maxParticipants": 50,
+                                "organizerName": "John Doe",
+                                "organizerEmail": "john@example.com",
+                                "recurrenceType": "WEEKLY",
+                                "recurrenceInterval": 1,
+                                "endAfterOccurrences": 12
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "Monthly Recurring Event",
+                        summary = "Create a monthly recurring event",
+                        value = """
+                            {
+                                "title": "Monthly Tech Talk",
+                                "description": "Monthly technology discussion",
+                                "startDate": "2024-12-30T14:00:00",
+                                "endDate": "2024-12-30T16:00:00",
+                                "location": "Virtual",
+                                "eventType": "WEBINAR",
+                                "isOnline": true,
+                                "meetingLink": "https://meet.google.com/abc-defg-hij",
+                                "maxParticipants": 100,
+                                "organizerName": "Tech Group",
+                                "organizerEmail": "tech@example.com",
+                                "recurrenceType": "MONTHLY",
+                                "recurrenceInterval": 1,
+                                "endDate": "2025-12-30T16:00:00"
+                            }
+                            """
+                    )
+                }
+            )
+        )
     )
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "200",
+            responseCode = "201",
             description = "Recurring event created successfully",
             content = @Content(
                 mediaType = "application/json",
-                schema = @Schema(implementation = RecurringEventResponse.class)
+                schema = @Schema(implementation = com.ijaa.event_service.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Recurring event created successfully",
+                                "code": "201",
+                                "data": {
+                                    "id": 1,
+                                    "title": "Weekly Alumni Meet",
+                                    "description": "Weekly alumni networking session",
+                                    "startDate": "2024-12-25T18:00:00",
+                                    "endDate": "2024-12-25T22:00:00",
+                                    "location": "IIT Campus",
+                                    "eventType": "MEETING",
+                                    "isOnline": false,
+                                    "maxParticipants": 50,
+                                    "organizerName": "John Doe",
+                                    "organizerEmail": "john@example.com",
+                                    "recurrenceType": "WEEKLY",
+                                    "recurrenceInterval": 1,
+                                    "endAfterOccurrences": 12,
+                                    "active": true,
+                                    "createdBy": "john.doe",
+                                    "createdAt": "2024-12-01T10:00:00"
+                                }
+                            }
+                            """
+                    )
+                }
             )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
-            description = "Invalid request data"
+            description = "Invalid recurring event data",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Invalid Request",
+                        value = """
+                            {
+                                "message": "Invalid recurring event data provided",
+                                "code": "400",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "401",
+            description = "Unauthorized - Missing or invalid token",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Unauthorized",
+                        value = """
+                            {
+                                "message": "Missing Authorization Header",
+                                "code": "401",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
         )
     })
     public ResponseEntity<ApiResponse<RecurringEventResponse>> createRecurringEvent(

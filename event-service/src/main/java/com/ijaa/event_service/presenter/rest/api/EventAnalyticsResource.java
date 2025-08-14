@@ -5,6 +5,11 @@ import com.ijaa.event_service.domain.request.EventAnalyticsRequest;
 import com.ijaa.event_service.domain.response.EventAnalyticsResponse;
 import com.ijaa.event_service.service.EventAnalyticsService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +29,86 @@ public class EventAnalyticsResource {
     private EventAnalyticsService eventAnalyticsService;
 
     @GetMapping("/{eventId}")
-    @Operation(summary = "Get event analytics", description = "Retrieve analytics for a specific event")
+    @Operation(
+        summary = "Get Event Analytics",
+        description = "Retrieve comprehensive analytics for a specific event including attendance, response rates, and engagement metrics",
+        security = @SecurityRequirement(name = "Bearer Authentication")
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Event analytics retrieved successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.event_service.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Event analytics retrieved successfully",
+                                "code": "200",
+                                "data": {
+                                    "eventId": 1,
+                                    "totalInvitations": 150,
+                                    "totalResponses": 120,
+                                    "goingCount": 85,
+                                    "maybeCount": 25,
+                                    "notGoingCount": 10,
+                                    "actualAttendees": 78,
+                                    "noShows": 7,
+                                    "responseRate": 80.0,
+                                    "attendanceRate": 91.8,
+                                    "engagementScore": 85.5,
+                                    "averageResponseTime": "2.5 days",
+                                    "topEngagementFactors": ["Location", "Timing", "Content"],
+                                    "lastUpdated": "2024-12-01T15:30:00"
+                                }
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Event not found",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Not Found",
+                        value = """
+                            {
+                                "message": "Event not found",
+                                "code": "404",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "401",
+            description = "Unauthorized - Missing or invalid token",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Unauthorized",
+                        value = """
+                            {
+                                "message": "Missing Authorization Header",
+                                "code": "401",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
     public ResponseEntity<ApiResponse<EventAnalyticsResponse>> getEventAnalytics(@PathVariable Long eventId) {
         EventAnalyticsResponse analytics = eventAnalyticsService.getEventAnalytics(eventId);
         ApiResponse<EventAnalyticsResponse> response = new ApiResponse<>();
@@ -35,7 +119,128 @@ public class EventAnalyticsResource {
     }
 
     @PostMapping
-    @Operation(summary = "Update event analytics", description = "Create or update analytics for an event")
+    @Operation(
+        summary = "Update Event Analytics",
+        description = "Create or update analytics for an event with detailed metrics and tracking data",
+        security = @SecurityRequirement(name = "Bearer Authentication"),
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Event analytics data to create or update",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = EventAnalyticsRequest.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Create New Analytics",
+                        summary = "Create analytics for a new event",
+                        value = """
+                            {
+                                "eventId": 1,
+                                "totalInvitations": 100,
+                                "totalResponses": 75,
+                                "goingCount": 50,
+                                "maybeCount": 20,
+                                "notGoingCount": 5,
+                                "actualAttendees": 45,
+                                "noShows": 5,
+                                "engagementScore": 85.0,
+                                "averageResponseTime": "3.2 days",
+                                "topEngagementFactors": ["Location", "Timing"]
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "Update Existing Analytics",
+                        summary = "Update analytics with new attendance data",
+                        value = """
+                            {
+                                "eventId": 1,
+                                "actualAttendees": 48,
+                                "noShows": 2,
+                                "engagementScore": 88.0,
+                                "topEngagementFactors": ["Location", "Timing", "Content", "Networking"]
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "201",
+            description = "Event analytics created successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.event_service.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Event analytics updated successfully",
+                                "code": "201",
+                                "data": {
+                                    "eventId": 1,
+                                    "totalInvitations": 100,
+                                    "totalResponses": 75,
+                                    "goingCount": 50,
+                                    "maybeCount": 20,
+                                    "notGoingCount": 5,
+                                    "actualAttendees": 45,
+                                    "noShows": 5,
+                                    "responseRate": 75.0,
+                                    "attendanceRate": 90.0,
+                                    "engagementScore": 85.0,
+                                    "averageResponseTime": "3.2 days",
+                                    "topEngagementFactors": ["Location", "Timing"],
+                                    "lastUpdated": "2024-12-01T16:00:00"
+                                }
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Invalid analytics data",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Invalid Request",
+                        value = """
+                            {
+                                "message": "Invalid analytics data provided",
+                                "code": "400",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Event not found",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Not Found",
+                        value = """
+                            {
+                                "message": "Event not found",
+                                "code": "404",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
     public ResponseEntity<ApiResponse<EventAnalyticsResponse>> updateEventAnalytics(
             @Valid @RequestBody EventAnalyticsRequest analyticsRequest) {
         EventAnalyticsResponse analytics = eventAnalyticsService.updateEventAnalytics(analyticsRequest);
@@ -47,7 +252,85 @@ public class EventAnalyticsResource {
     }
 
     @GetMapping("/multiple")
-    @Operation(summary = "Get analytics for multiple events", description = "Retrieve analytics for multiple events")
+    @Operation(
+        summary = "Get Analytics for Multiple Events",
+        description = "Retrieve analytics for multiple events by providing a list of event IDs",
+        security = @SecurityRequirement(name = "Bearer Authentication")
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Multiple event analytics retrieved successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.event_service.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Multiple event analytics retrieved successfully",
+                                "code": "200",
+                                "data": [
+                                    {
+                                        "eventId": 1,
+                                        "totalInvitations": 150,
+                                        "totalResponses": 120,
+                                        "goingCount": 85,
+                                        "maybeCount": 25,
+                                        "notGoingCount": 10,
+                                        "actualAttendees": 78,
+                                        "noShows": 7,
+                                        "responseRate": 80.0,
+                                        "attendanceRate": 91.8,
+                                        "engagementScore": 85.5,
+                                        "averageResponseTime": "2.5 days",
+                                        "topEngagementFactors": ["Location", "Timing", "Content"],
+                                        "lastUpdated": "2024-12-01T15:30:00"
+                                    },
+                                    {
+                                        "eventId": 2,
+                                        "totalInvitations": 80,
+                                        "totalResponses": 65,
+                                        "goingCount": 45,
+                                        "maybeCount": 15,
+                                        "notGoingCount": 5,
+                                        "actualAttendees": 42,
+                                        "noShows": 3,
+                                        "responseRate": 81.3,
+                                        "attendanceRate": 93.3,
+                                        "engagementScore": 87.2,
+                                        "averageResponseTime": "1.8 days",
+                                        "topEngagementFactors": ["Content", "Networking"],
+                                        "lastUpdated": "2024-12-02T10:15:00"
+                                    }
+                                ]
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Invalid event IDs provided",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Invalid Request",
+                        value = """
+                            {
+                                "message": "Invalid event IDs provided",
+                                "code": "400",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
     public ResponseEntity<ApiResponse<List<EventAnalyticsResponse>>> getAnalyticsForEvents(
             @RequestParam List<Long> eventIds) {
         List<EventAnalyticsResponse> analytics = eventAnalyticsService.getAnalyticsForEvents(eventIds);

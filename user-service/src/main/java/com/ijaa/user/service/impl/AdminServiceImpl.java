@@ -1,13 +1,20 @@
 package com.ijaa.user.service.impl;
 
+import com.ijaa.user.common.exceptions.AdminAlreadyActiveException;
 import com.ijaa.user.common.exceptions.AdminAlreadyExistsException;
+import com.ijaa.user.common.exceptions.AdminAlreadyInactiveException;
 import com.ijaa.user.common.exceptions.AdminNotFoundException;
+import com.ijaa.user.common.exceptions.AdminSelfDeactivationException;
 import com.ijaa.user.common.exceptions.AuthenticationFailedException;
 import com.ijaa.user.common.exceptions.InsufficientPrivilegesException;
+import com.ijaa.user.common.exceptions.PasswordChangeException;
+import com.ijaa.user.common.exceptions.UserAlreadyBlockedException;
+import com.ijaa.user.common.exceptions.UserAlreadyUnblockedException;
 import com.ijaa.user.domain.entity.Admin;
 import com.ijaa.user.domain.entity.User;
 import com.ijaa.user.domain.enums.AdminRole;
 import com.ijaa.user.domain.request.AdminLoginRequest;
+import com.ijaa.user.domain.request.AdminPasswordChangeRequest;
 import com.ijaa.user.domain.request.AdminSignupRequest;
 import com.ijaa.user.domain.response.AdminAuthResponse;
 import com.ijaa.user.domain.response.AdminProfileResponse;
@@ -106,6 +113,39 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public AdminProfileResponse changePassword(AdminPasswordChangeRequest request) {
+        // Get current authenticated admin
+        Long currentAdminId = getCurrentAdminId();
+        if (currentAdminId == null) {
+            throw new AuthenticationFailedException("Authentication required to change password");
+        }
+
+        Admin admin = adminRepository.findById(currentAdminId)
+                .orElseThrow(() -> new AdminNotFoundException("Admin not found"));
+
+        // Verify current password
+        if (!passwordEncoder.matches(request.getCurrentPassword(), admin.getPasswordHash())) {
+            throw new PasswordChangeException("Current password is incorrect");
+        }
+
+        // Validate new password confirmation
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new PasswordChangeException("New password and confirm password do not match");
+        }
+
+        // Check if new password is same as current password
+        if (passwordEncoder.matches(request.getNewPassword(), admin.getPasswordHash())) {
+            throw new PasswordChangeException("New password must be different from current password");
+        }
+
+        // Update password
+        admin.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        Admin updatedAdmin = adminRepository.save(admin);
+
+        return createProfileResponse(updatedAdmin);
+    }
+
+    @Override
     public AdminProfileResponse getProfile(Long adminId) {
         Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
@@ -120,21 +160,25 @@ public class AdminServiceImpl implements AdminService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public AdminProfileResponse updateAdminRole(Long adminId, AdminRole newRole) {
-        Admin admin = adminRepository.findById(adminId)
-                .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
 
-        admin.setRole(newRole);
-        Admin updatedAdmin = adminRepository.save(admin);
-
-        return createProfileResponse(updatedAdmin);
-    }
 
     @Override
     public AdminProfileResponse deactivateAdmin(Long adminId) {
+        // Get the current authenticated admin
+        Long currentAdminId = getCurrentAdminId();
+        
+        // Check if admin is trying to deactivate themselves
+        if (currentAdminId != null && currentAdminId.equals(adminId)) {
+            throw new AdminSelfDeactivationException("Admin cannot deactivate their own account");
+        }
+        
         Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
+
+        // Check if admin is already inactive
+        if (!admin.getActive()) {
+            throw new AdminAlreadyInactiveException("Admin is already deactivated");
+        }
 
         admin.setActive(false);
         Admin updatedAdmin = adminRepository.save(admin);
@@ -146,6 +190,11 @@ public class AdminServiceImpl implements AdminService {
     public AdminProfileResponse activateAdmin(Long adminId) {
         Admin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
+
+        // Check if admin is already active
+        if (admin.getActive()) {
+            throw new AdminAlreadyActiveException("Admin is already activated");
+        }
 
         admin.setActive(true);
         Admin updatedAdmin = adminRepository.save(admin);
@@ -223,6 +272,25 @@ public class AdminServiceImpl implements AdminService {
         return admin != null && admin.getRole() == AdminRole.ADMIN;
     }
 
+    /**
+     * Gets the current authenticated admin's ID from the security context
+     * @return The current admin's ID, or null if not authenticated or not an admin
+     */
+    private Long getCurrentAdminId() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated()) {
+                String email = authentication.getName();
+                Admin admin = adminRepository.findByEmail(email).orElse(null);
+                return admin != null ? admin.getId() : null;
+            }
+        } catch (Exception e) {
+            // Log the error but don't throw exception to avoid breaking the flow
+            // In a production environment, you might want to log this properly
+        }
+        return null;
+    }
+
     // User Management Methods
     @Override
     public List<UserResponse> getAllUsers() {
@@ -236,6 +304,11 @@ public class AdminServiceImpl implements AdminService {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with userId: " + userId));
         
+        // Check if user is already blocked
+        if (!user.getActive()) {
+            throw new UserAlreadyBlockedException("User is already blocked");
+        }
+        
         user.setActive(false);
         User updatedUser = userRepository.save(user);
         
@@ -246,6 +319,11 @@ public class AdminServiceImpl implements AdminService {
     public UserResponse unblockUser(String userId) {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with userId: " + userId));
+        
+        // Check if user is already unblocked
+        if (user.getActive()) {
+            throw new UserAlreadyUnblockedException("User is already unblocked");
+        }
         
         user.setActive(true);
         User updatedUser = userRepository.save(user);

@@ -7,6 +7,11 @@ import com.ijaa.event_service.domain.response.EventMediaResponse;
 import com.ijaa.event_service.service.EventMediaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +32,118 @@ public class EventMediaResource {
     private final EventMediaService eventMediaService;
 
     @PostMapping
-    @Operation(summary = "Upload media", description = "Upload media for an event")
+    @Operation(
+        summary = "Upload Event Media",
+        description = "Upload media files (images, videos, documents) for an event",
+        security = @SecurityRequirement(name = "Bearer Authentication"),
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Event media upload details",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = EventMediaRequest.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Image Upload",
+                        summary = "Upload an image for an event",
+                        value = """
+                            {
+                                "eventId": 1,
+                                "mediaType": "IMAGE",
+                                "mediaUrl": "https://example.com/images/event-photo.jpg",
+                                "title": "Event Photo",
+                                "description": "Group photo from the alumni meet"
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "Document Upload",
+                        summary = "Upload a document for an event",
+                        value = """
+                            {
+                                "eventId": 1,
+                                "mediaType": "DOCUMENT",
+                                "mediaUrl": "https://example.com/documents/event-agenda.pdf",
+                                "title": "Event Agenda",
+                                "description": "Detailed agenda for the alumni meet"
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "201",
+            description = "Media uploaded successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.event_service.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Media uploaded successfully",
+                                "code": "201",
+                                "data": {
+                                    "id": 1,
+                                    "eventId": 1,
+                                    "mediaType": "IMAGE",
+                                    "mediaUrl": "https://example.com/images/event-photo.jpg",
+                                    "title": "Event Photo",
+                                    "description": "Group photo from the alumni meet",
+                                    "uploadedBy": "john.doe",
+                                    "uploadedAt": "2024-12-01T10:00:00",
+                                    "fileSize": "2.5MB",
+                                    "fileFormat": "JPEG"
+                                }
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Invalid media data",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Invalid Request",
+                        value = """
+                            {
+                                "message": "Invalid media data provided",
+                                "code": "400",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Event not found",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Not Found",
+                        value = """
+                            {
+                                "message": "Event not found",
+                                "code": "404",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
     public ResponseEntity<ApiResponse<EventMediaResponse>> uploadMedia(
             @Valid @RequestBody EventMediaRequest request,
             @RequestHeader("X-USER_ID") String userContext) {

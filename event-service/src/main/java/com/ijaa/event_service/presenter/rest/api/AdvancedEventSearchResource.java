@@ -7,6 +7,11 @@ import com.ijaa.event_service.domain.response.EventResponse;
 import com.ijaa.event_service.service.AdvancedEventSearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +30,132 @@ public class AdvancedEventSearchResource {
     private final AdvancedEventSearchService advancedEventSearchService;
 
     @PostMapping("/advanced")
-    @Operation(summary = "Advanced event search", description = "Search events with multiple filters and criteria")
+    @Operation(
+        summary = "Advanced Event Search",
+        description = "Search events with multiple filters and criteria including location, date range, event type, and more",
+        security = @SecurityRequirement(name = "Bearer Authentication"),
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Advanced search criteria",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = AdvancedEventSearchRequest.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Location and Date Search",
+                        summary = "Search events by location and date range",
+                        value = """
+                            {
+                                "location": "IIT Campus",
+                                "startDate": "2024-12-01T00:00:00",
+                                "endDate": "2024-12-31T23:59:59",
+                                "eventType": "MEETING",
+                                "isOnline": false,
+                                "page": 0,
+                                "size": 10
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "Online Events Search",
+                        summary = "Search for online events",
+                        value = """
+                            {
+                                "isOnline": true,
+                                "eventType": "WEBINAR",
+                                "startDate": "2024-12-01T00:00:00",
+                                "endDate": "2024-12-31T23:59:59",
+                                "page": 0,
+                                "size": 20
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Events found successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.event_service.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Events found successfully",
+                                "code": "200",
+                                "data": {
+                                    "content": [
+                                        {
+                                            "id": 1,
+                                            "title": "Alumni Meet 2024",
+                                            "description": "Annual alumni gathering",
+                                            "startDate": "2024-12-25T18:00:00",
+                                            "endDate": "2024-12-25T22:00:00",
+                                            "location": "IIT Campus",
+                                            "eventType": "MEETING",
+                                            "active": true,
+                                            "isOnline": false,
+                                            "maxParticipants": 100,
+                                            "currentParticipants": 0,
+                                            "organizerName": "John Doe",
+                                            "organizerEmail": "john@example.com"
+                                        }
+                                    ],
+                                    "totalElements": 1,
+                                    "totalPages": 1,
+                                    "currentPage": 0,
+                                    "size": 10
+                                }
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Invalid search criteria",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Invalid Request",
+                        value = """
+                            {
+                                "message": "Invalid search criteria provided",
+                                "code": "400",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "401",
+            description = "Unauthorized - Missing or invalid token",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Unauthorized",
+                        value = """
+                            {
+                                "message": "Missing Authorization Header",
+                                "code": "401",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
     public ResponseEntity<ApiResponse<PagedResponse<EventResponse>>> searchEvents(
             @RequestBody AdvancedEventSearchRequest request) {
         
@@ -35,7 +165,83 @@ public class AdvancedEventSearchResource {
     }
 
     @GetMapping("/recommendations")
-    @Operation(summary = "Get event recommendations", description = "Get personalized event recommendations for the user")
+    @Operation(
+        summary = "Get Event Recommendations",
+        description = "Get personalized event recommendations for the user based on their interests and past participation",
+        security = @SecurityRequirement(name = "Bearer Authentication")
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Event recommendations retrieved successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.event_service.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Event recommendations retrieved successfully",
+                                "code": "200",
+                                "data": [
+                                    {
+                                        "id": 1,
+                                        "title": "Tech Alumni Meet",
+                                        "description": "Technology-focused alumni gathering",
+                                        "startDate": "2024-12-20T18:00:00",
+                                        "endDate": "2024-12-20T22:00:00",
+                                        "location": "IIT Campus",
+                                        "eventType": "MEETING",
+                                        "active": true,
+                                        "isOnline": false,
+                                        "maxParticipants": 80,
+                                        "currentParticipants": 0,
+                                        "organizerName": "Jane Smith",
+                                        "organizerEmail": "jane@example.com"
+                                    },
+                                    {
+                                        "id": 2,
+                                        "title": "Career Development Webinar",
+                                        "description": "Career guidance and networking session",
+                                        "startDate": "2024-12-22T14:00:00",
+                                        "endDate": "2024-12-22T16:00:00",
+                                        "location": "Virtual",
+                                        "eventType": "WEBINAR",
+                                        "active": true,
+                                        "isOnline": true,
+                                        "maxParticipants": 100,
+                                        "currentParticipants": 0,
+                                        "organizerName": "Mike Johnson",
+                                        "organizerEmail": "mike@example.com"
+                                    }
+                                ]
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "401",
+            description = "Unauthorized - Missing or invalid token",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Unauthorized",
+                        value = """
+                            {
+                                "message": "Missing Authorization Header",
+                                "code": "401",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
     public ResponseEntity<ApiResponse<List<EventResponse>>> getEventRecommendations(
             @RequestHeader("X-USER_ID") String userContext) {
         
@@ -46,7 +252,83 @@ public class AdvancedEventSearchResource {
     }
 
     @GetMapping("/trending")
-    @Operation(summary = "Get trending events", description = "Get trending events based on engagement")
+    @Operation(
+        summary = "Get Trending Events",
+        description = "Get trending events based on engagement, participation rates, and popularity",
+        security = @SecurityRequirement(name = "Bearer Authentication")
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Trending events retrieved successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.event_service.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Trending events retrieved successfully",
+                                "code": "200",
+                                "data": [
+                                    {
+                                        "id": 1,
+                                        "title": "Annual Alumni Meet 2024",
+                                        "description": "Most popular annual gathering",
+                                        "startDate": "2024-12-25T18:00:00",
+                                        "endDate": "2024-12-25T22:00:00",
+                                        "location": "IIT Campus",
+                                        "eventType": "MEETING",
+                                        "active": true,
+                                        "isOnline": false,
+                                        "maxParticipants": 200,
+                                        "currentParticipants": 150,
+                                        "organizerName": "Alumni Association",
+                                        "organizerEmail": "alumni@iitj.ac.in"
+                                    },
+                                    {
+                                        "id": 2,
+                                        "title": "Tech Innovation Summit",
+                                        "description": "Technology innovation showcase",
+                                        "startDate": "2024-12-28T09:00:00",
+                                        "endDate": "2024-12-28T17:00:00",
+                                        "location": "IIT Campus",
+                                        "eventType": "CONFERENCE",
+                                        "active": true,
+                                        "isOnline": false,
+                                        "maxParticipants": 150,
+                                        "currentParticipants": 120,
+                                        "organizerName": "Tech Alumni Group",
+                                        "organizerEmail": "tech@iitj.ac.in"
+                                    }
+                                ]
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Invalid limit parameter",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Invalid Request",
+                        value = """
+                            {
+                                "message": "Invalid limit parameter",
+                                "code": "400",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
     public ResponseEntity<ApiResponse<List<EventResponse>>> getTrendingEvents(
             @Parameter(description = "Number of events to return") @RequestParam(defaultValue = "10") int limit) {
         
