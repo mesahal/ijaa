@@ -115,6 +115,30 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
     }
 
     @Override
+    public ExperienceDto updateExperience(Long experienceId, ExperienceDto experienceDto) {
+        String currentUserId = getCurrentUserId();
+        Experience experience = experienceRepository.findByIdAndUserId(experienceId, currentUserId)
+                .orElseThrow(() -> new RuntimeException("Experience not found or unauthorized"));
+
+        // Update experience fields
+        if (experienceDto.getTitle() != null) {
+            experience.setTitle(experienceDto.getTitle());
+        }
+        if (experienceDto.getCompany() != null) {
+            experience.setCompany(experienceDto.getCompany());
+        }
+        if (experienceDto.getPeriod() != null) {
+            experience.setPeriod(experienceDto.getPeriod());
+        }
+        if (experienceDto.getDescription() != null) {
+            experience.setDescription(experienceDto.getDescription());
+        }
+
+        Experience updatedExperience = experienceRepository.save(experience);
+        return experienceToDto(updatedExperience);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<InterestDto> getInterestsByUserId(String userId) {
         List<Interest> interests = interestRepository.findByUserIdOrderByCreatedAtDesc(userId);
@@ -157,10 +181,34 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
         interestRepository.delete(interest);
     }
 
+    @Override
+    public InterestDto updateInterest(Long interestId, String interestName) {
+        if (interestName == null || interestName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Interest cannot be empty");
+        }
+
+        String currentUserId = getCurrentUserId();
+        Interest interest = interestRepository.findByIdAndUserId(interestId, currentUserId)
+                .orElseThrow(() -> new RuntimeException("Interest not found or unauthorized"));
+
+        String cleanedInterest = interestName.trim();
+
+        // Check if the new interest name already exists for this user (excluding current interest)
+        boolean exists = interestRepository.existsByUserIdAndInterestIgnoreCase(currentUserId, cleanedInterest);
+        if (exists && !cleanedInterest.equalsIgnoreCase(interest.getInterest())) {
+            throw new IllegalArgumentException("Interest already exists");
+        }
+
+        interest.setInterest(cleanedInterest);
+        Interest updatedInterest = interestRepository.save(interest);
+        return interestToDto(updatedInterest);
+    }
+
     // Private helper methods
     private Profile createNewProfile(String username) {
         Profile profile = new Profile();
         profile.setUsername(username);
+        profile.setName(username);
         profile.setUserId(generateUserId());
         return profileRepository.save(profile);
     }

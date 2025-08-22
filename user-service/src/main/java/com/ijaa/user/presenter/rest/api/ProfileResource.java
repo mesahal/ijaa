@@ -43,7 +43,7 @@ public class ProfileResource {
         );
     }
 
-    @PutMapping("/basic")
+    @PutMapping("/profile")
     @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Update Basic Profile Info",
@@ -59,19 +59,25 @@ public class ProfileResource {
                         name = "Update Basic Info",
                         summary = "Update basic profile information",
                         value = """
-                            {
-                                "userId": "user123",
-                                "name": "John Doe",
-                                "profession": "Software Engineer",
-                                "location": "New York, NY",
-                                "bio": "Passionate software engineer with 5+ years of experience",
-                                "phone": "+1-555-123-4567",
-                                "linkedIn": "https://linkedin.com/in/johndoe",
-                                "website": "https://johndoe.com",
-                                "batch": "2018",
-                                "facebook": "https://facebook.com/johndoe",
-                                "email": "john.doe@example.com"
-                            }
+                                {
+                                   "userId": "user123",
+                                   "name": "John Doe",
+                                   "profession": "Software Engineer",
+                                   "location": "New York, NY",
+                                   "bio": "A passionate software developer with expertise in Java and Spring Boot.",
+                                   "phone": "+1-555-123-4567",
+                                   "linkedIn": "https://www.linkedin.com/in/johndoe/",
+                                   "website": "https://www.johndoe.dev",
+                                   "batch": "2020",
+                                   "facebook": "https://www.facebook.com/johndoe",
+                                   "email": "johndoe@example.com",
+                                   "showPhone": true,
+                                   "showLinkedIn": true,
+                                   "showWebsite": true,
+                                   "showEmail": true,
+                                   "showFacebook": false,
+                                   "connections": 150
+                                 }
                             """
                     ),
                     @ExampleObject(
@@ -267,6 +273,104 @@ public class ProfileResource {
         );
     }
 
+    @PutMapping("/experiences/{experienceId}")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(
+        summary = "Update Experience", 
+        description = "Update a specific experience by ID (USER role required)",
+        parameters = {
+            @Parameter(name = "experienceId", description = "ID of the experience to update", required = true)
+        },
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Experience update details",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ExperienceDto.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Update Experience",
+                        summary = "Update experience details",
+                        value = """
+                            {
+                                "title": "Senior Software Engineer",
+                                "company": "Tech Innovations Inc",
+                                "period": "2022-2024",
+                                "description": "Led development of microservices architecture"
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "Partial Update",
+                        summary = "Update only specific fields",
+                        value = """
+                            {
+                                "title": "Lead Developer",
+                                "company": "Updated Company Name"
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Experience updated successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.user.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Experience updated successfully",
+                                "code": "200",
+                                "data": {
+                                    "id": 1,
+                                    "title": "Senior Software Engineer",
+                                    "company": "Tech Innovations Inc",
+                                    "period": "2022-2024",
+                                    "description": "Led development of microservices architecture",
+                                    "createdAt": "2024-01-15T10:30:00"
+                                }
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Experience not found or not owned by user",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Not Found",
+                        value = """
+                            {
+                                "message": "Experience not found or unauthorized",
+                                "code": "404",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
+    public ResponseEntity<ApiResponse<ExperienceDto>> updateExperience(
+            @PathVariable Long experienceId,
+            @Valid @RequestBody ExperienceDto experienceDto) {
+        ExperienceDto updatedExperience = profileService.updateExperience(experienceId, experienceDto);
+        return ResponseEntity.ok(
+                new ApiResponse<>("Experience updated successfully", "200", updatedExperience)
+        );
+    }
+
     // Interest endpoints
     @GetMapping("/interests/{userId}")
     @Operation(summary = "Get User Interests", description = "Get user interests by userId")
@@ -372,6 +476,116 @@ public class ProfileResource {
         profileService.deleteInterest(interestId);
         return ResponseEntity.ok(
                 new ApiResponse<>("Interest deleted successfully", "200", null)
+        );
+    }
+
+    @PutMapping("/interests/{interestId}")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(
+        summary = "Update Interest", 
+        description = "Update a specific interest by ID (USER role required)",
+        parameters = {
+            @Parameter(name = "interestId", description = "ID of the interest to update", required = true)
+        },
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Interest update details",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = InterestRequest.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Update Interest",
+                        summary = "Update interest name",
+                        value = """
+                            {
+                                "interest": "Artificial Intelligence"
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "Update to Different Interest",
+                        summary = "Change interest completely",
+                        value = """
+                            {
+                                "interest": "Data Science"
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Interest updated successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.user.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Interest updated successfully",
+                                "code": "200",
+                                "data": {
+                                    "id": 1,
+                                    "interest": "Artificial Intelligence",
+                                    "createdAt": "2024-01-15T10:30:00"
+                                }
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Interest not found or not owned by user",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Not Found",
+                        value = """
+                            {
+                                "message": "Interest not found or unauthorized",
+                                "code": "404",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Interest already exists or invalid input",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Bad Request",
+                        value = """
+                            {
+                                "message": "Interest already exists",
+                                "code": "400",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
+    public ResponseEntity<ApiResponse<InterestDto>> updateInterest(
+            @PathVariable Long interestId,
+            @Valid @RequestBody InterestRequest request) {
+        InterestDto updatedInterest = profileService.updateInterest(interestId, request.getInterest());
+        return ResponseEntity.ok(
+                new ApiResponse<>("Interest updated successfully", "200", updatedInterest)
         );
     }
 }

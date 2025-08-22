@@ -16,7 +16,7 @@ public class GatewayConfig {
         return builder.routes()
                 // User service routes (excluding events which are handled by event service)
                 .route(p-> p
-                        .path("/ijaa/api/v1/user/signup", "/ijaa/api/v1/user/signin", "/ijaa/api/v1/user/profile/**", "/ijaa/api/v1/user/alumni/**", "/ijaa/api/v1/user/experiences/**", "/ijaa/api/v1/user/connections/**", "/ijaa/api/v1/user/interests/**")
+                        .path("/ijaa/api/v1/user/**")
                         .filters(f-> f
                                 .filter(filter.apply(new AuthenticationFilter.Config()))
                                 .rewritePath("/ijaa/(?<segment>.*)","/${segment}")

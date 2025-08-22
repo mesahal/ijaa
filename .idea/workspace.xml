@@ -4,82 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ce6d269-0e9e-4fa6-93e1-3e4fac090d6e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/dto/AlumniSearchDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/request/AlumniSearchRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/AlumniSearchResource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/AlumniSearchService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/AlumniSearchServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa.AVUxAA.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa.AVUxAA/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa.AVUxAA/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa.AVUxAA/schema/public.abK9xQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa_events.FxbuFg.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa_events.FxbuFg/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa_events.FxbuFg/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa_events.FxbuFg/schema/public.abK9xQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa_users.SsHGpg.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa_users.SsHGpg/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa_users.SsHGpg/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa_users.SsHGpg/schema/public.abK9xQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="9ce6d269-0e9e-4fa6-93e1-3e4fac090d6e" name="Changes" comment="sob elomelo">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ADMIN_API_INTEGRATION_GUIDE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ADMIN_PASSWORD_CHANGE_IMPLEMENTATION.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ADMIN_ROLE_UPDATE_REMOVAL_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ADMIN_SIGNUP_FRONTEND_GUIDE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ADMIN_VALIDATION_FIXES_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/API_TESTING_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/COMPREHENSIVE_TESTING_SUITE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DATABASE_SEPARATION_GUIDE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MICROSERVICES_DATABASE_STRATEGY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MIGRATION_COMPLETION_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SECURE_ADMIN_SIGNUP_IMPLEMENTATION.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SRS.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TESTING_SUITE_DELIVERABLES.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/USER_BLOCK_UNBLOCK_FIXES_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/database-diagram.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/database-migration.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/database-setup.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service-migration-plan.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/common/client/UserServiceClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/client/UserServiceClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventCommentResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventCommentResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventReminderResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventReminderResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/UserEventResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/UserEventResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/test/java/com/ijaa/event_service/service/EventServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/test/java/com/ijaa/event_service/service/EventServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event_data.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/feature-flag.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/gateway.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/validator/RouteValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/validator/RouteValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/config/GatewayConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/config/GatewayConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gateway-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ijaa_backup_20250811_022717.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/insert-test-data.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservice-architecture-diagram.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrate-data.sql" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/project-context.md" beforeDir="false" afterPath="$PROJECT_DIR$/project-context.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run-all-tests.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup-databases.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-admin-password-change.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-admin-validation.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-all-apis.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test-user-block-unblock-validation.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/app.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/common/config/SwaggerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/common/config/SwaggerConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/request/AdminPasswordChangeRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/request/AdminPasswordChangeRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/ProfileResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/ProfileResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/repository/ExperienceRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/repository/ExperienceRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/repository/InterestRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/repository/InterestRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/ProfileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/ProfileService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/ProfileServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/ProfileServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/ProfileServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/ProfileServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/user.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_data.sql" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -216,20 +149,38 @@
       <option name="presentableId" value="Default" />
       <updated>1755715941660</updated>
       <workItem from="1755715946487" duration="6724000" />
-      <workItem from="1755862071170" duration="3800000" />
+      <workItem from="1755862071170" duration="6176000" />
     </task>
+    <task id="LOCAL-00001" summary="sob elomelo">
+      <option name="closed" value="true" />
+      <created>1755866119697</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1755866119697</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="sob elomelo" />
+    <option name="LAST_COMMIT_MESSAGE" value="sob elomelo" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/ProfileResource.java</url>
-          <line>93</line>
-          <option name="timeStamp" value="1" />
+          <line>99</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/ProfileServiceImpl.java</url>
+          <line>59</line>
+          <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

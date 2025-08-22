@@ -16,10 +16,12 @@ public interface ProfileService {
     // Experience methods
     List<ExperienceDto> getExperiencesByUserId(String userId);
     ExperienceDto addExperience(ExperienceDto experienceDto);
+    ExperienceDto updateExperience(Long experienceId, ExperienceDto experienceDto);
     void deleteExperience(Long experienceId);
 
     // Interest methods
     List<InterestDto> getInterestsByUserId(String userId);
     InterestDto addInterest(String interest);
+    InterestDto updateInterest(Long interestId, String interestName);
     void deleteInterest(Long interestId);
 }

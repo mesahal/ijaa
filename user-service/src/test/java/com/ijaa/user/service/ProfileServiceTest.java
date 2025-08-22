@@ -383,4 +383,173 @@ class ProfileServiceTest {
         verify(interestRepository).findByIdAndUserId(999L, "USER_123456");
         verify(interestRepository, never()).delete(any(Interest.class));
     }
+
+    // Update Tests
+    @Test
+    void shouldUpdateExperienceWhenValidExperienceIdAndDtoProvided() {
+        // Given
+        ExperienceDto updateDto = new ExperienceDto();
+        updateDto.setTitle("Updated Title");
+        updateDto.setCompany("Updated Company");
+        updateDto.setPeriod("2023-2024");
+        updateDto.setDescription("Updated description");
+
+        Experience updatedExperience = new Experience();
+        updatedExperience.setId(1L);
+        updatedExperience.setUserId("USER_123456");
+        updatedExperience.setUsername("testuser");
+        updatedExperience.setTitle("Updated Title");
+        updatedExperience.setCompany("Updated Company");
+        updatedExperience.setPeriod("2023-2024");
+        updatedExperience.setDescription("Updated description");
+
+        when(experienceRepository.findByIdAndUserId(1L, "USER_123456")).thenReturn(Optional.of(testExperience));
+        when(experienceRepository.save(any(Experience.class))).thenReturn(updatedExperience);
+
+        // When
+        ExperienceDto result = profileService.updateExperience(1L, updateDto);
+
+        // Then
+        assertNotNull(result);
+        assertEquals("Updated Title", result.getTitle());
+        assertEquals("Updated Company", result.getCompany());
+        assertEquals("2023-2024", result.getPeriod());
+        assertEquals("Updated description", result.getDescription());
+        verify(experienceRepository).findByIdAndUserId(1L, "USER_123456");
+        verify(experienceRepository).save(any(Experience.class));
+    }
+
+    @Test
+    void shouldUpdateExperienceWithPartialData() {
+        // Given
+        ExperienceDto updateDto = new ExperienceDto();
+        updateDto.setTitle("Only Title Updated");
+
+        Experience updatedExperience = new Experience();
+        updatedExperience.setId(1L);
+        updatedExperience.setUserId("USER_123456");
+        updatedExperience.setUsername("testuser");
+        updatedExperience.setTitle("Only Title Updated");
+        updatedExperience.setCompany("Tech Corp"); // Original value
+        updatedExperience.setPeriod("2020-2024"); // Original value
+        updatedExperience.setDescription("Developed web applications"); // Original value
+
+        when(experienceRepository.findByIdAndUserId(1L, "USER_123456")).thenReturn(Optional.of(testExperience));
+        when(experienceRepository.save(any(Experience.class))).thenReturn(updatedExperience);
+
+        // When
+        ExperienceDto result = profileService.updateExperience(1L, updateDto);
+
+        // Then
+        assertNotNull(result);
+        assertEquals("Only Title Updated", result.getTitle());
+        verify(experienceRepository).findByIdAndUserId(1L, "USER_123456");
+        verify(experienceRepository).save(any(Experience.class));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUpdatingExperienceNotFound() {
+        // Given
+        ExperienceDto updateDto = new ExperienceDto();
+        updateDto.setTitle("Updated Title");
+        when(experienceRepository.findByIdAndUserId(999L, "USER_123456")).thenReturn(Optional.empty());
+
+        // When & Then
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            profileService.updateExperience(999L, updateDto);
+        });
+        assertEquals("Experience not found or unauthorized", exception.getMessage());
+        verify(experienceRepository).findByIdAndUserId(999L, "USER_123456");
+        verify(experienceRepository, never()).save(any(Experience.class));
+    }
+
+    @Test
+    void shouldUpdateInterestWhenValidInterestIdAndNameProvided() {
+        // Given
+        String newInterestName = "Updated Interest";
+        Interest updatedInterest = new Interest();
+        updatedInterest.setId(1L);
+        updatedInterest.setUserId("USER_123456");
+        updatedInterest.setUsername("testuser");
+        updatedInterest.setInterest("Updated Interest");
+
+        when(interestRepository.findByIdAndUserId(1L, "USER_123456")).thenReturn(Optional.of(testInterest));
+        when(interestRepository.existsByUserIdAndInterestIgnoreCase("USER_123456", "Updated Interest")).thenReturn(false);
+        when(interestRepository.save(any(Interest.class))).thenReturn(updatedInterest);
+
+        // When
+        InterestDto result = profileService.updateInterest(1L, newInterestName);
+
+        // Then
+        assertNotNull(result);
+        assertEquals("Updated Interest", result.getInterest());
+        verify(interestRepository).findByIdAndUserId(1L, "USER_123456");
+        verify(interestRepository).existsByUserIdAndInterestIgnoreCase("USER_123456", "Updated Interest");
+        verify(interestRepository).save(any(Interest.class));
+    }
+
+    @Test
+    void shouldUpdateInterestToSameName() {
+        // Given
+        String sameInterestName = "Programming"; // Same as original
+        when(interestRepository.findByIdAndUserId(1L, "USER_123456")).thenReturn(Optional.of(testInterest));
+        when(interestRepository.existsByUserIdAndInterestIgnoreCase("USER_123456", "Programming")).thenReturn(true);
+        when(interestRepository.save(any(Interest.class))).thenReturn(testInterest);
+
+        // When
+        InterestDto result = profileService.updateInterest(1L, sameInterestName);
+
+        // Then
+        assertNotNull(result);
+        assertEquals("Programming", result.getInterest());
+        verify(interestRepository).findByIdAndUserId(1L, "USER_123456");
+        verify(interestRepository).existsByUserIdAndInterestIgnoreCase("USER_123456", "Programming");
+        verify(interestRepository).save(any(Interest.class));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUpdatingInterestToExistingName() {
+        // Given
+        String existingInterestName = "Existing Interest";
+        when(interestRepository.findByIdAndUserId(1L, "USER_123456")).thenReturn(Optional.of(testInterest));
+        when(interestRepository.existsByUserIdAndInterestIgnoreCase("USER_123456", "Existing Interest")).thenReturn(true);
+
+        // When & Then
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            profileService.updateInterest(1L, existingInterestName);
+        });
+        assertEquals("Interest already exists", exception.getMessage());
+        verify(interestRepository).findByIdAndUserId(1L, "USER_123456");
+        verify(interestRepository).existsByUserIdAndInterestIgnoreCase("USER_123456", "Existing Interest");
+        verify(interestRepository, never()).save(any(Interest.class));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUpdatingInterestNotFound() {
+        // Given
+        String newInterestName = "New Interest";
+        when(interestRepository.findByIdAndUserId(999L, "USER_123456")).thenReturn(Optional.empty());
+
+        // When & Then
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            profileService.updateInterest(999L, newInterestName);
+        });
+        assertEquals("Interest not found or unauthorized", exception.getMessage());
+        verify(interestRepository).findByIdAndUserId(999L, "USER_123456");
+        verify(interestRepository, never()).save(any(Interest.class));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUpdatingInterestWithEmptyName() {
+        // When & Then
+        assertThrows(IllegalArgumentException.class, () -> {
+            profileService.updateInterest(1L, "");
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            profileService.updateInterest(1L, null);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            profileService.updateInterest(1L, "   ");
+        });
+    }
 }
