@@ -4,7 +4,7 @@ import com.ijaa.event_service.domain.entity.Event;
 import com.ijaa.event_service.domain.request.EventRequest;
 import com.ijaa.event_service.domain.response.EventResponse;
 import com.ijaa.event_service.repository.EventRepository;
-import com.ijaa.event_service.common.client.UserServiceClient;
+import com.ijaa.event_service.presenter.rest.client.UserServiceClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +18,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

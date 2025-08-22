@@ -32,50 +32,6 @@ public class SwaggerConfig {
                                 "1. Click the **🔒 Authorize** button at the top\n" +
                                 "2. Enter your token: `Bearer <your-token-here>`\n" +
                                 "3. Click **Authorize** and close the popup\n\n" +
-                                "### Step 3: Test Protected APIs\n" +
-                                "Now you can test all protected endpoints automatically!\n\n" +
-                                "## 🧪 Testing Credentials\n" +
-                                "- **Admin Email**: `admin@ijaa.com`\n" +
-                                "- **Admin Password**: `admin123`\n" +
-                                "- **Role**: `SUPER_ADMIN`\n\n" +
-                                "## 📋 API Groups\n" +
-                                "- **User Authentication**: Public endpoints for user registration/login\n" +
-                                "- **Admin Authentication**: Admin login, signup, profile, dashboard\n" +
-                                "- **Admin Management**: Complete admin management functionality\n" +
-
-
-                                "## 👥 Sample Users\n" +
-                                "Test with these usernames:\n" +
-                                "- **john.doe**: Software Engineer\n" +
-                                "- **jane.smith**: Data Scientist\n" +
-                                "- **mike.johnson**: Product Manager\n" +
-                                "- **sarah.wilson**: UX Designer\n" +
-                                "- **david.brown**: DevOps Engineer\n\n" +
-                                "## 📝 Sample Request Examples\n\n" +
-                                "### Admin Login\n" +
-                                "```json\n" +
-                                "{\n" +
-                                "  \"email\": \"admin@ijaa.com\",\n" +
-                                "  \"password\": \"admin123\"\n" +
-                                "}\n" +
-                                "```\n\n" +
-                                "### Create Announcement\n" +
-                                "```json\n" +
-                                "{\n" +
-                                "  \"title\": \"Important Update\",\n" +
-                                "  \"content\": \"We have important news to share with all alumni.\",\n" +
-                                "  \"category\": \"GENERAL\",\n" +
-                                "  \"isUrgent\": false\n" +
-                                "}\n" +
-                                "```\n\n" +
-                                "### Create Report\n" +
-                                "```json\n" +
-                                "{\n" +
-                                "  \"title\": \"User Report\",\n" +
-                                "  \"description\": \"User has been posting inappropriate content\",\n" +
-                                "  \"category\": \"USER_REPORT\",\n" +
-                                "  \"priority\": \"HIGH\"\n" +
-                                "}\n" +
                                 "```")
                         .version("1.0.0")
                         .contact(new Contact()

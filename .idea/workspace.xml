@@ -4,70 +4,87 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f42d6cc7-8da8-44af-908e-b96ee33f899a" name="Changes" comment="event revamp">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa.AVUxAA/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa.AVUxAA/schema/public.abK9xQ.meta" afterDir="false" />
+    <list default="true" id="9ce6d269-0e9e-4fa6-93e1-3e4fac090d6e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/dto/AlumniSearchDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/request/AlumniSearchRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/AlumniSearchResource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/AlumniSearchService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/AlumniSearchServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa.AVUxAA.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa.AVUxAA/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa.AVUxAA/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa.AVUxAA/schema/public.abK9xQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa_events.FxbuFg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa_events.FxbuFg/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa_events.FxbuFg/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa_events.FxbuFg/schema/public.abK9xQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa_users.SsHGpg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa_users.SsHGpg/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa_users.SsHGpg/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97/storage_v2/_src_/database/ijaa_users.SsHGpg/schema/public.abK9xQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/EventServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/EventServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/common/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/common/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/common/service/BaseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/common/service/BaseService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/common/utils/UniqueIdGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/common/utils/UniqueIdGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/AdvancedEventSearchResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/AdvancedEventSearchResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/CalendarIntegrationResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/CalendarIntegrationResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventAnalyticsResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventAnalyticsResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ADMIN_API_INTEGRATION_GUIDE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ADMIN_PASSWORD_CHANGE_IMPLEMENTATION.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ADMIN_ROLE_UPDATE_REMOVAL_SUMMARY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ADMIN_SIGNUP_FRONTEND_GUIDE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ADMIN_VALIDATION_FIXES_SUMMARY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/API_TESTING_SUMMARY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/COMPREHENSIVE_TESTING_SUITE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DATABASE_SEPARATION_GUIDE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MICROSERVICES_DATABASE_STRATEGY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MIGRATION_COMPLETION_SUMMARY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SECURE_ADMIN_SIGNUP_IMPLEMENTATION.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SRS.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TESTING_SUITE_DELIVERABLES.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/USER_BLOCK_UNBLOCK_FIXES_SUMMARY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/database-diagram.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/database-migration.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/database-setup.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/event-service-migration-plan.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/common/client/UserServiceClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/client/UserServiceClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventCommentResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventCommentResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventMediaResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventMediaResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventParticipationResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventParticipationResource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventReminderResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventReminderResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventTemplateResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventTemplateResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/RecurringEventResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/RecurringEventResource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/UserEventResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/UserEventResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/resources/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/test/resources/application-test.yml" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/test/resources/application-test.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/edgeserver/EdgeServerApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/EdgeServerApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/edgeserver/config/GatewayConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/config/GatewayConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/edgeserver/domain/common/ApiResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/domain/common/ApiResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/edgeserver/domain/dto/CurrentUserContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/domain/dto/CurrentUserContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/edgeserver/domain/enums/JwtClaimsEnum.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/domain/enums/JwtClaimsEnum.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/edgeserver/exceptions/MissingAuthorizationHeaderException.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/exceptions/MissingAuthorizationHeaderException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/edgeserver/filter/AuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/filter/AuthenticationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/edgeserver/handler/BaseExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/handler/BaseExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/edgeserver/handler/GatewayExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/handler/GatewayExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/edgeserver/utils/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/utils/JwtUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/edgeserver/utils/SerializationUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/utils/SerializationUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/edgeserver/validator/RouteValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/validator/RouteValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/event-service/src/test/java/com/ijaa/event_service/service/EventServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/test/java/com/ijaa/event_service/service/EventServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/event_data.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/feature-flag.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-service/gateway.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/validator/RouteValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/validator/RouteValidator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gateway-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/test/java/com/ijaa/edgeserver/EdgeserverApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/test/java/com/ijaa/gateway/EdgeserverApplicationTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/common/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/common/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/common/handler/AdminExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/common/handler/AdminExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/enums/AdminRole.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/enums/AdminRole.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/AdminAuthResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/AdminAuthResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/AdminManagementResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/AdminManagementResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/AdminService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/AdminService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/AdminServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/AdminServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/test/resources/application-test.yml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/resources/application-test.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ijaa_backup_20250811_022717.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/insert-test-data.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservice-architecture-diagram.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrate-data.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project-context.md" beforeDir="false" afterPath="$PROJECT_DIR$/project-context.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run-all-tests.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup-databases.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-admin-password-change.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-admin-validation.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-all-apis.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-user-block-unblock-validation.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/app.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/common/config/SwaggerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/common/config/SwaggerConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/request/AdminPasswordChangeRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/request/AdminPasswordChangeRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/ProfileResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/ProfileResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/repository/ExperienceRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/repository/ExperienceRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/repository/InterestRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/repository/InterestRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/ProfileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/ProfileService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/ProfileServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/ProfileServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/ProfileServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/ProfileServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/user.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_data.sql" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="ChangesViewManager">
-    <option name="groupingKeys">
-      <option value="module" />
-      <option value="repository" />
-    </option>
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-      </list>
-    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -84,42 +101,30 @@
     &quot;accountId&quot;: &quot;545eaa2a-bad2-439f-aaef-b22daae57a1f&quot;
   }
 }</component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
-  </component>
   <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 6
 }</component>
-  <component name="ProjectId" id="30OxU41jBAB7M4Z98eJPxPArPl6" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="ProjectId" id="31YzjpShvLxETgrwoyuLU4WPp7i" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;Maven.discovery-service [clean,install].executor&quot;: &quot;Run&quot;,
     &quot;Maven.gateway-service [clean,install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.user-service [clean,install].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
     &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
     &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
     &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;Spring Boot.ConfigserverApplication.executor&quot;: &quot;Debug&quot;,
     &quot;Spring Boot.DiscoveryServerApplication.executor&quot;: &quot;Debug&quot;,
     &quot;Spring Boot.EdgeServerApplication.executor&quot;: &quot;Debug&quot;,
     &quot;Spring Boot.EventServiceApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;Spring Boot.GatewayApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;Spring Boot.GatewayServiceApplication.executor&quot;: &quot;Debug&quot;,
     &quot;Spring Boot.UserServiceApplication.executor&quot;: &quot;Debug&quot;,
     &quot;git-widget-placeholder&quot;: &quot;feature/event&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/sahal/my/ijaa/event-service&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -127,11 +132,6 @@
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
-  },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
-    ]
   }
 }</component>
   <component name="ReactorSettings">
@@ -152,8 +152,8 @@
           <value>
             <map>
               <entry key="DiscoveryServerApplication" value="STOPPED" />
+              <entry key="EdgeServerApplication" value="STOPPED" />
               <entry key="EventServiceApplication" value="STOPPED" />
-              <entry key="GatewayServiceApplication" value="STOPPED" />
               <entry key="UserServiceApplication" value="STOPPED" />
             </map>
           </value>
@@ -161,7 +161,7 @@
       </map>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.EventServiceApplication">
+  <component name="RunManager" selected="Spring Boot.UserServiceApplication">
     <configuration name="ConfigserverApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="config-service" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.wallet.configserver.ConfigserverApplication" />
@@ -176,17 +176,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="EventServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <module name="event-service" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ijaa.event_service.EventServiceApplication" />
+    <configuration name="EdgeServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="gateway-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ijaa.gateway.EdgeServerApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GatewayServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
-      <module name="gateway-service" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ijaa.gateway.EdgeServerApplication" />
+    <configuration name="EventServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="event-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ijaa.event_service.EventServiceApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -199,13 +199,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <list>
-      <item itemvalue="Spring Boot.ConfigserverApplication" />
-      <item itemvalue="Spring Boot.DiscoveryServerApplication" />
-      <item itemvalue="Spring Boot.GatewayServiceApplication" />
-      <item itemvalue="Spring Boot.EventServiceApplication" />
-      <item itemvalue="Spring Boot.UserServiceApplication" />
-    </list>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -217,150 +210,26 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="f42d6cc7-8da8-44af-908e-b96ee33f899a" name="Changes" comment="" />
-      <created>1753512433111</created>
+      <changelist id="9ce6d269-0e9e-4fa6-93e1-3e4fac090d6e" name="Changes" comment="" />
+      <created>1755715941660</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1753512433111</updated>
-      <workItem from="1753512434673" duration="55482000" />
-      <workItem from="1753709154843" duration="15311000" />
-      <workItem from="1753798210568" duration="8393000" />
-      <workItem from="1753944124422" duration="13951000" />
-      <workItem from="1753968143033" duration="17320000" />
-      <workItem from="1754064406024" duration="36856000" />
-      <workItem from="1754291204122" duration="7038000" />
-      <workItem from="1754370267348" duration="3253000" />
-      <workItem from="1754405144182" duration="2033000" />
-      <workItem from="1754463792463" duration="401000" />
-      <workItem from="1754504886487" duration="2205000" />
-      <workItem from="1754551646988" duration="6072000" />
-      <workItem from="1754634597593" duration="608000" />
-      <workItem from="1754642265968" duration="20686000" />
-      <workItem from="1754772471575" duration="16390000" />
-      <workItem from="1754851478572" duration="209000" />
-      <workItem from="1754856026411" duration="808000" />
-      <workItem from="1754858324506" duration="322000" />
-      <workItem from="1754860128954" duration="443000" />
-      <workItem from="1754862037348" duration="37000" />
-      <workItem from="1754862430595" duration="1617000" />
-      <workItem from="1754893532296" duration="605000" />
-      <workItem from="1754985709813" duration="1802000" />
-      <workItem from="1755067909496" duration="9541000" />
-      <workItem from="1755165067440" duration="346000" />
-      <workItem from="1755167328764" duration="1840000" />
-      <workItem from="1755172160520" duration="163000" />
-      <workItem from="1755177404553" duration="357000" />
-      <workItem from="1755179347174" duration="1203000" />
+      <updated>1755715941660</updated>
+      <workItem from="1755715946487" duration="6724000" />
+      <workItem from="1755862071170" duration="3800000" />
     </task>
-    <task id="LOCAL-00001" summary="Profile page">
-      <option name="closed" value="true" />
-      <created>1753554517580</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1753554517580</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Search page">
-      <option name="closed" value="true" />
-      <created>1753626689554</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1753626689554</updated>
-    </task>
-    <task id="LOCAL-00003" summary="search, profile view">
-      <option name="closed" value="true" />
-      <created>1753728107496</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1753728107496</updated>
-    </task>
-    <task id="LOCAL-00004" summary="project context">
-      <option name="closed" value="true" />
-      <created>1753734670811</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1753734670811</updated>
-    </task>
-    <task id="LOCAL-00005" summary="project context and test">
-      <option name="closed" value="true" />
-      <created>1753902631075</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1753902631075</updated>
-    </task>
-    <task id="LOCAL-00006" summary="swagger">
-      <option name="closed" value="true" />
-      <created>1754069531952</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1754069531952</updated>
-    </task>
-    <task id="LOCAL-00007" summary="swagger">
-      <option name="closed" value="true" />
-      <created>1754114261835</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1754114261835</updated>
-    </task>
-    <task id="LOCAL-00008" summary="event basic apis">
-      <option name="closed" value="true" />
-      <created>1754312623626</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1754312623627</updated>
-    </task>
-    <task id="LOCAL-00009" summary="event revamp">
-      <option name="closed" value="true" />
-      <created>1754818248367</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1754818248367</updated>
-    </task>
-    <task id="LOCAL-00010" summary="event revamp">
-      <option name="closed" value="true" />
-      <created>1754820469574</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1754820469574</updated>
-    </task>
-    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="Profile page" />
-    <MESSAGE value="Search page" />
-    <MESSAGE value="search, profile view" />
-    <MESSAGE value="project context" />
-    <MESSAGE value="project context and test" />
-    <MESSAGE value="swagger" />
-    <MESSAGE value="event basic apis" />
-    <MESSAGE value="event revamp" />
-    <option name="LAST_COMMIT_MESSAGE" value="event revamp" />
-  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/UserEventResource.java</url>
-          <line>127</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/UserEventResource.java</url>
-          <line>512</line>
-          <option name="timeStamp" value="8" />
+          <url>file://$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/ProfileResource.java</url>
+          <line>93</line>
+          <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

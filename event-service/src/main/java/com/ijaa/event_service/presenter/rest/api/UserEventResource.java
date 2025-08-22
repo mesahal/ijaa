@@ -37,9 +37,10 @@ public class UserEventResource extends BaseService {
     }
 
     @GetMapping("/my-events")
+    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Get User's Events",
-        description = "Retrieve all events created by the authenticated user",
+        description = "Retrieve all events created by the authenticated user (USER role required)",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {
@@ -99,28 +100,9 @@ public class UserEventResource extends BaseService {
                     )
                 }
             )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "403",
-            description = "Forbidden - Insufficient privileges",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Forbidden",
-                        value = """
-                            {
-                                "message": "Access denied",
-                                "code": "403",
-                                "data": null
-                            }
-                            """
-                    )
-                }
-            )
         )
     })
-    public ResponseEntity<ApiResponse<List<EventResponse>>> getUserEvents() {
+    public ResponseEntity<ApiResponse<List<EventResponse>>> getMyEvents() {
         String username = getCurrentUsername();
         if (username == null) {
             return ResponseEntity.status(401).body(new ApiResponse<>("Authentication required", "401", null));
@@ -130,9 +112,10 @@ public class UserEventResource extends BaseService {
     }
 
     @GetMapping("/my-events/active")
+    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Get User's Active Events",
-        description = "Retrieve all active events created by the authenticated user",
+        description = "Retrieve all active events created by the authenticated user (USER role required)",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {
@@ -175,7 +158,7 @@ public class UserEventResource extends BaseService {
             )
         )
     })
-    public ResponseEntity<ApiResponse<List<EventResponse>>> getUserActiveEvents() {
+    public ResponseEntity<ApiResponse<List<EventResponse>>> getMyActiveEvents() {
         String username = getCurrentUsername();
         if (username == null) {
             return ResponseEntity.status(401).body(new ApiResponse<>("Authentication required", "401", null));
@@ -304,9 +287,10 @@ public class UserEventResource extends BaseService {
     }
 
     @GetMapping("/my-events/{eventId}")
+    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Get User's Event by ID",
-        description = "Retrieve a specific event created by the authenticated user",
+        description = "Retrieve a specific event created by the authenticated user (USER role required)",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {
@@ -376,9 +360,10 @@ public class UserEventResource extends BaseService {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Create Event",
-        description = "Create a new event for the authenticated user",
+        description = "Create a new event for the authenticated user (USER role required)",
         security = @SecurityRequirement(name = "Bearer Authentication"),
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Event creation details",
@@ -515,9 +500,10 @@ public class UserEventResource extends BaseService {
     }
 
     @PutMapping("/my-events/{eventId}")
+    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Update User's Event",
-        description = "Update an event created by the authenticated user",
+        description = "Update an event created by the authenticated user (USER role required)",
         security = @SecurityRequirement(name = "Bearer Authentication"),
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Updated event details",
@@ -641,9 +627,10 @@ public class UserEventResource extends BaseService {
     }
 
     @DeleteMapping("/my-events/{eventId}")
+    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Delete User's Event",
-        description = "Delete an event created by the authenticated user",
+        description = "Delete an event created by the authenticated user (USER role required)",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {
@@ -697,9 +684,10 @@ public class UserEventResource extends BaseService {
     }
 
     @PostMapping("/search")
+    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Search Events (POST)",
-        description = "Search events by various criteria using POST method with query parameters",
+        description = "Search events by various criteria using POST method with query parameters (USER role required)",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {
@@ -805,9 +793,10 @@ public class UserEventResource extends BaseService {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Search Events (GET)",
-        description = "Search events by various criteria using GET method with query parameters",
+        description = "Search events by various criteria using GET method with query parameters (USER role required)",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {

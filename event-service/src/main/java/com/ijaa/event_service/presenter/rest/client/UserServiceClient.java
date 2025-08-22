@@ -1,4 +1,4 @@
-package com.ijaa.event_service.common.client;
+package com.ijaa.event_service.presenter.rest.client;
 
 import com.ijaa.event_service.domain.dto.ProfileDto;
 import org.springframework.cloud.openfeign.FeignClient;

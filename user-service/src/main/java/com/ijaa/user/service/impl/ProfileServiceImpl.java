@@ -7,9 +7,11 @@ import com.ijaa.user.domain.dto.ProfileDto;
 import com.ijaa.user.domain.entity.Experience;
 import com.ijaa.user.domain.entity.Interest;
 import com.ijaa.user.domain.entity.Profile;
+import com.ijaa.user.domain.entity.User;
 import com.ijaa.user.repository.ExperienceRepository;
 import com.ijaa.user.repository.InterestRepository;
 import com.ijaa.user.repository.ProfileRepository;
+import com.ijaa.user.repository.UserRepository;
 import com.ijaa.user.service.BaseService;
 import com.ijaa.user.service.ProfileService;
 import org.springframework.stereotype.Service;
@@ -25,15 +27,18 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
     private final ProfileRepository profileRepository;
     private final ExperienceRepository experienceRepository;
     private final InterestRepository interestRepository;
+    private final UserRepository userRepository;
 
     public ProfileServiceImpl(ProfileRepository profileRepository,
                               ObjectMapper objectMapper,
                               ExperienceRepository experienceRepository,
-                              InterestRepository interestRepository) {
+                              InterestRepository interestRepository,
+                              UserRepository userRepository) {
         super(objectMapper);
         this.profileRepository = profileRepository;
         this.experienceRepository = experienceRepository;
         this.interestRepository = interestRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -101,9 +106,9 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
     }
 
     @Override
-    public void deleteExperience(String userId) {
+    public void deleteExperience(Long experienceId) {
         String currentUserId = getCurrentUserId();
-        Experience experience = experienceRepository.findByUserIdAndUserId(userId, currentUserId)
+        Experience experience = experienceRepository.findByIdAndUserId(experienceId, currentUserId)
                 .orElseThrow(() -> new RuntimeException("Experience not found or unauthorized"));
 
         experienceRepository.delete(experience);
@@ -144,9 +149,9 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
     }
 
     @Override
-    public void deleteInterest(String userId) {
+    public void deleteInterest(Long interestId) {
         String currentUserId = getCurrentUserId();
-        Interest interest = interestRepository.findByUserIdAndUserId(userId, currentUserId)
+        Interest interest = interestRepository.findByIdAndUserId(interestId, currentUserId)
                 .orElseThrow(() -> new RuntimeException("Interest not found or unauthorized"));
 
         interestRepository.delete(interest);
@@ -244,11 +249,10 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
     }
 
     public String getCurrentUserId() {
-        // Implement logic to get current user's ID
-        // This should be derived from the current username or security context
+        // Get current user's ID from User entity (not Profile entity)
         String username = getCurrentUsername();
-        return profileRepository.findByUsername(username)
-                .map(Profile::getUserId)
-                .orElseThrow(() -> new RuntimeException("User profile not found"));
+        return userRepository.findByUsername(username)
+                .map(User::getUserId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }

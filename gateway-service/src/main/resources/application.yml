@@ -1,8 +1,8 @@
 spring:
   application:
     name: "gateway"
-#  config:
-#    import: "configserver:http://localhost:8071/"
+  #  config:
+  #    import: "configserver:http://localhost:8071/"
   cloud:
     gateway:
       discovery:
@@ -24,6 +24,7 @@ spring:
               - PUT
               - DELETE
               - OPTIONS
+              - PATCH
             allowedHeaders: "*"
             allowCredentials: true
 
@@ -50,6 +51,19 @@ management:
   info:
     env:
       enabled: true
+
+# Add Swagger/OpenAPI configuration
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - url: /v3/api-docs
+        name: Gateway API
 
 info:
   app:

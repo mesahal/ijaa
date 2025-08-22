@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface ExperienceRepository extends JpaRepository<Experience, Long> {
     List<Experience> findByUserIdOrderByCreatedAtDesc(String userId);
-    Optional<Experience> findByUserIdAndUserId(String experienceUserId, String currentUserId);
+    Optional<Experience> findByIdAndUserId(Long id, String userId);
 }

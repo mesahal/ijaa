@@ -9,6 +9,7 @@ import com.ijaa.user.domain.dto.ProfileDto;
 import com.ijaa.user.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -16,9 +17,11 @@ import com.ijaa.user.domain.request.InterestRequest;
 import java.util.List;
 import java.util.Map;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -29,7 +32,7 @@ public class ProfileResource {
 
     private final ProfileService profileService;
 
-    // Get user's profile by userId
+    // Get user's profile by userId - Public endpoint
     @GetMapping("/profile/{userId}")
     @Operation(summary = "Get User Profile", description = "Get user profile by userId")
     public ResponseEntity<ApiResponse<ProfileDto>> getProfileByUserId(
@@ -41,9 +44,10 @@ public class ProfileResource {
     }
 
     @PutMapping("/basic")
+    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Update Basic Profile Info",
-        description = "Update basic profile information",
+        description = "Update basic profile information (USER role required)",
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Profile update details",
             required = true,
@@ -94,9 +98,10 @@ public class ProfileResource {
     }
 
     @PutMapping("/visibility")
+    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Update Profile Visibility",
-        description = "Update profile visibility settings",
+        description = "Update profile visibility settings (USER role required)",
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Visibility settings",
             required = true,
@@ -154,9 +159,10 @@ public class ProfileResource {
     }
 
     @PostMapping("/experiences")
+    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Add Experience",
-        description = "Add a new experience to user profile",
+        description = "Add a new experience to user profile (USER role required)",
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Experience details",
             required = true,
@@ -204,10 +210,58 @@ public class ProfileResource {
         );
     }
 
-    @DeleteMapping("/experiences/{userId}")
-    @Operation(summary = "Delete Experience", description = "Delete user experience")
-    public ResponseEntity<ApiResponse<Void>> deleteExperience(@PathVariable String userId) {
-        profileService.deleteExperience(userId);
+    @DeleteMapping("/experiences/{experienceId}")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(
+        summary = "Delete Experience", 
+        description = "Delete a specific experience by ID (USER role required)",
+        parameters = {
+            @Parameter(name = "experienceId", description = "ID of the experience to delete", required = true)
+        }
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Experience deleted successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.user.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Experience deleted successfully",
+                                "code": "200",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Experience not found or not owned by user",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Not Found",
+                        value = """
+                            {
+                                "message": "Experience not found or unauthorized",
+                                "code": "404",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
+    public ResponseEntity<ApiResponse<Void>> deleteExperience(@PathVariable Long experienceId) {
+        profileService.deleteExperience(experienceId);
         return ResponseEntity.ok(
                 new ApiResponse<>("Experience deleted successfully", "200", null)
         );
@@ -224,9 +278,10 @@ public class ProfileResource {
     }
 
     @PostMapping("/interests")
+    @PreAuthorize("hasRole('USER')")
     @Operation(
         summary = "Add Interest",
-        description = "Add a new interest to user profile",
+        description = "Add a new interest to user profile (USER role required)",
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Interest details",
             required = true,
@@ -263,10 +318,58 @@ public class ProfileResource {
         );
     }
 
-    @DeleteMapping("/interests/{userId}")
-    @Operation(summary = "Delete Interest", description = "Delete user interest")
-    public ResponseEntity<ApiResponse<Void>> deleteInterest(@PathVariable String userId) {
-        profileService.deleteInterest(userId);
+    @DeleteMapping("/interests/{interestId}")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(
+        summary = "Delete Interest", 
+        description = "Delete a specific interest by ID (USER role required)",
+        parameters = {
+            @Parameter(name = "interestId", description = "ID of the interest to delete", required = true)
+        }
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Interest deleted successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.user.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Interest deleted successfully",
+                                "code": "200",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Interest not found or not owned by user",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Not Found",
+                        value = """
+                            {
+                                "message": "Interest not found or unauthorized",
+                                "code": "404",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
+    public ResponseEntity<ApiResponse<Void>> deleteInterest(@PathVariable Long interestId) {
+        profileService.deleteInterest(interestId);
         return ResponseEntity.ok(
                 new ApiResponse<>("Interest deleted successfully", "200", null)
         );
