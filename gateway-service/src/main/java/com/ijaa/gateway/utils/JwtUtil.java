@@ -71,4 +71,8 @@ public class JwtUtil {
     public String extractEmail(String token, String jwtSecret) {
         return extractClaimByKey(token, jwtSecret, "email", String.class);
     }
+
+    public String extractUserId(String token, String jwtSecret) {
+        return extractClaimByKey(token, jwtSecret, "userId", String.class);
+    }
 }

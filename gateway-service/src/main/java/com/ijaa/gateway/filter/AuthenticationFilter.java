@@ -80,11 +80,14 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
             if ("ADMIN".equals(userType)) {
                 String email = jwtUtil.extractEmail(token, jwtSecret);
                 currentUserContext.setUsername(email);
+                currentUserContext.setUserId(email); // For admin, use email as userId
                 currentUserContext.setUserType("ADMIN");
                 currentUserContext.setRole(role);
             } else {
                 String username = jwtUtil.extractUsername(token, jwtSecret);
+                String userId = jwtUtil.extractUserId(token, jwtSecret);
                 currentUserContext.setUsername(username);
+                currentUserContext.setUserId(userId);
                 currentUserContext.setUserType("USER");
                 currentUserContext.setRole(role);
             }

@@ -72,7 +72,7 @@ class AuthServiceTest {
         when(userRepository.existsByUserId("USER_123456")).thenReturn(false);
         when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(testUser);
-        when(jwtService.generateUserToken("testuser")).thenReturn("test-jwt-token");
+        when(jwtService.generateUserToken("testuser", "USER_123456")).thenReturn("test-jwt-token");
 
         // When
         AuthResponse result = authService.registerUser(signUpRequest);
@@ -84,7 +84,7 @@ class AuthServiceTest {
         verify(userRepository).existsByUsername("testuser");
         verify(passwordEncoder).encode("password123");
         verify(userRepository).save(any(User.class));
-        verify(jwtService).generateUserToken("testuser");
+        verify(jwtService).generateUserToken("testuser", "USER_123456");
     }
 
     @Test
@@ -103,7 +103,7 @@ class AuthServiceTest {
         // Given
         when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(testUser));
         when(passwordEncoder.matches("password123", "encodedPassword")).thenReturn(true);
-        when(jwtService.generateUserToken("testuser")).thenReturn("test-jwt-token");
+        when(jwtService.generateUserToken("testuser", "USER_123456")).thenReturn("test-jwt-token");
 
         // When
         AuthResponse result = authService.verify(signInRequest);
@@ -114,7 +114,7 @@ class AuthServiceTest {
         assertEquals("USER_123456", result.getUserId());
         verify(userRepository).findByUsername("testuser");
         verify(passwordEncoder).matches("password123", "encodedPassword");
-        verify(jwtService).generateUserToken("testuser");
+        verify(jwtService).generateUserToken("testuser", "USER_123456");
     }
 
     @Test
@@ -138,6 +138,6 @@ class AuthServiceTest {
         assertThrows(RuntimeException.class, () -> authService.verify(signInRequest));
         verify(userRepository).findByUsername("testuser");
         verify(passwordEncoder).matches("password123", "encodedPassword");
-        verify(jwtService, never()).generateUserToken(anyString());
+        verify(jwtService, never()).generateUserToken(anyString(), anyString());
     }
 }

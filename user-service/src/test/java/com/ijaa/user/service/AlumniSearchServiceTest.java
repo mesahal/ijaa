@@ -60,6 +60,7 @@ class AlumniSearchServiceTest {
         // Create user context
         CurrentUserContext userContext = new CurrentUserContext();
         userContext.setUsername("testuser");
+        userContext.setUserId("USER_123456");
         
         try {
             // Convert to JSON and then Base64 encode

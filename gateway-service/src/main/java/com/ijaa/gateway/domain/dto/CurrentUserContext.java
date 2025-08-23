@@ -9,6 +9,7 @@ import java.io.Serializable;
 @Setter
 public class CurrentUserContext implements Serializable {
     private String username;
+    private String userId;
     private String userType;
     private String role;
 }

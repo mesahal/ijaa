@@ -68,6 +68,7 @@ class ProfileServiceTest {
         // Mock ObjectMapper for user context decoding
         com.ijaa.user.domain.entity.CurrentUserContext mockUserContext = new com.ijaa.user.domain.entity.CurrentUserContext();
         mockUserContext.setUsername("testuser");
+        mockUserContext.setUserId("USER_123456");
         lenient().when(objectMapper.readValue(any(String.class), eq(com.ijaa.user.domain.entity.CurrentUserContext.class)))
                 .thenReturn(mockUserContext);
 
@@ -144,7 +145,7 @@ class ProfileServiceTest {
     @Test
     void shouldUpdateBasicInfoWhenValidProfileDtoProvided() {
         // Given
-        when(profileRepository.findByUsername("testuser")).thenReturn(Optional.of(testProfile));
+        when(profileRepository.findByUserId("USER_123456")).thenReturn(Optional.of(testProfile));
         when(profileRepository.save(any(Profile.class))).thenReturn(testProfile);
 
         // When
@@ -155,14 +156,14 @@ class ProfileServiceTest {
         assertEquals("Jane Smith", result.getName());
         assertEquals("jane.smith@example.com", result.getEmail());
         assertEquals("Product Manager", result.getProfession());
-        verify(profileRepository, atLeastOnce()).findByUsername("testuser");
+        verify(profileRepository, atLeastOnce()).findByUserId("USER_123456");
         verify(profileRepository, atLeastOnce()).save(any(Profile.class));
     }
 
     @Test
     void shouldUpdateBasicInfoWhenProfileNotFoundCreatesNewProfile() {
         // Given
-        when(profileRepository.findByUsername("testuser")).thenReturn(Optional.empty());
+        when(profileRepository.findByUserId("USER_123456")).thenReturn(Optional.empty());
         when(profileRepository.save(any(Profile.class))).thenReturn(testProfile);
 
         // When
@@ -170,14 +171,14 @@ class ProfileServiceTest {
 
         // Then
         assertNotNull(result);
-        verify(profileRepository, atLeastOnce()).findByUsername("testuser");
+        verify(profileRepository, atLeastOnce()).findByUserId("USER_123456");
         verify(profileRepository, atLeastOnce()).save(any(Profile.class)); // Profile creation and update
     }
 
     @Test
     void shouldUpdateVisibilityWhenValidProfileDtoProvided() {
         // Given
-        when(profileRepository.findByUsername("testuser")).thenReturn(Optional.of(testProfile));
+        when(profileRepository.findByUserId("USER_123456")).thenReturn(Optional.of(testProfile));
         when(profileRepository.save(any(Profile.class))).thenReturn(testProfile);
 
         // When
@@ -187,7 +188,7 @@ class ProfileServiceTest {
         assertNotNull(result);
         assertTrue(result.getShowPhone());
         assertTrue(result.getShowEmail());
-        verify(profileRepository, atLeastOnce()).findByUsername("testuser");
+        verify(profileRepository, atLeastOnce()).findByUserId("USER_123456");
         verify(profileRepository, atLeastOnce()).save(any(Profile.class));
     }
 
@@ -210,7 +211,6 @@ class ProfileServiceTest {
         assertNotNull(result);
         assertEquals("Software Engineer", result.getTitle());
         assertEquals("Tech Corp", result.getCompany());
-        verify(userRepository, atLeastOnce()).findByUsername("testuser");
         verify(experienceRepository).save(any(Experience.class));
     }
 
@@ -231,7 +231,6 @@ class ProfileServiceTest {
         // Then
         assertNotNull(result);
         assertEquals("Software Engineer", result.getTitle());
-        verify(userRepository, atLeastOnce()).findByUsername("testuser");
         verify(experienceRepository).save(any(Experience.class));
     }
 
@@ -264,7 +263,6 @@ class ProfileServiceTest {
         // Then
         assertNotNull(result);
         assertEquals("Programming", result.getInterest());
-        verify(userRepository, atLeastOnce()).findByUsername("testuser");
         verify(interestRepository).existsByUserIdAndInterestIgnoreCase("USER_123456", "Programming");
         verify(interestRepository).save(any(Interest.class));
     }
@@ -281,7 +279,6 @@ class ProfileServiceTest {
         // Then
         assertNotNull(result);
         assertEquals("Programming", result.getInterest());
-        verify(userRepository, atLeastOnce()).findByUsername("testuser");
         verify(interestRepository).save(any(Interest.class));
     }
 
@@ -294,7 +291,6 @@ class ProfileServiceTest {
         assertThrows(IllegalArgumentException.class, () -> {
             profileService.addInterest("Programming");
         });
-        verify(userRepository, atLeastOnce()).findByUsername("testuser");
         verify(interestRepository).existsByUserIdAndInterestIgnoreCase("USER_123456", "Programming");
         verify(interestRepository, never()).save(any(Interest.class));
     }

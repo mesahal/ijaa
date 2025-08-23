@@ -19,9 +19,10 @@ public class JWTService {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    public String generateUserToken(String username) {
+    public String generateUserToken(String username, String userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", username);
+        claims.put("userId", userId);
         claims.put("role", "USER");
         claims.put("type", "USER");
         claims.put("userType", "ALUMNI");
@@ -57,7 +58,13 @@ public class JWTService {
 
     // Legacy method for backward compatibility
     public String generateToken(String username) {
-        return generateUserToken(username);
+        // For backward compatibility, we'll need to get userId from User entity
+        // This method should be updated to include userId parameter
+        throw new UnsupportedOperationException("Please use generateUserToken(username, userId) instead");
+    }
+
+    public String extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("userId", String.class));
     }
 
     public String extractUsername(String token) {

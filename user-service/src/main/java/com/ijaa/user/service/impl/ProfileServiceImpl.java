@@ -44,12 +44,12 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
     @Override
     @Transactional(readOnly = true)
     public ProfileDto getProfileByUserId(String userId) {
-        String currentUsername = getCurrentUsername();
+        String currentUserId = getCurrentUserId();
         Profile profile = profileRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Profile not found"));
 
         // Check if this is the current user viewing their own profile
-        boolean isOwnProfile = currentUsername.equals(profile.getUsername());
+        boolean isOwnProfile = currentUserId.equals(profile.getUserId());
 
         return toDto(profile, isOwnProfile);
     }
@@ -57,8 +57,9 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
     @Override
     public ProfileDto updateBasicInfo(ProfileDto dto) {
         String username = getCurrentUsername();
-        Profile entity = profileRepository.findByUsername(username)
-                .orElseGet(() -> createNewProfile(username));
+        String userId = getCurrentUserId();
+        Profile entity = profileRepository.findByUserId(userId)
+                .orElseGet(() -> createNewProfile(username, userId));
 
         updateProfileFields(entity, dto);
         updateVisibilitySettings(entity, dto);
@@ -69,8 +70,8 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
 
     @Override
     public ProfileDto updateVisibility(ProfileDto dto) {
-        String username = getCurrentUsername();
-        Profile entity = profileRepository.findByUsername(username)
+        String userId = getCurrentUserId();
+        Profile entity = profileRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Profile not found"));
 
         updateVisibilitySettings(entity, dto);
@@ -205,11 +206,11 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
     }
 
     // Private helper methods
-    private Profile createNewProfile(String username) {
+    private Profile createNewProfile(String username, String userId) {
         Profile profile = new Profile();
         profile.setUsername(username);
         profile.setName(username);
-        profile.setUserId(generateUserId());
+        profile.setUserId(userId);
         return profileRepository.save(profile);
     }
 
@@ -294,13 +295,5 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
     private String generateUserId() {
         // Implement your user ID generation logic here
         return java.util.UUID.randomUUID().toString();
-    }
-
-    public String getCurrentUserId() {
-        // Get current user's ID from User entity (not Profile entity)
-        String username = getCurrentUsername();
-        return userRepository.findByUsername(username)
-                .map(User::getUserId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }
