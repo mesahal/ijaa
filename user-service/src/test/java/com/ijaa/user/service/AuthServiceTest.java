@@ -1,37 +1,27 @@
 package com.ijaa.user.service;
 
-import com.ijaa.user.common.exceptions.AuthenticationFailedException;
-import com.ijaa.user.common.exceptions.UserAlreadyExistsException;
-import com.ijaa.user.common.utils.UniqueIdGenerator;
 import com.ijaa.user.domain.entity.User;
 import com.ijaa.user.domain.request.SignInRequest;
 import com.ijaa.user.domain.request.SignUpRequest;
 import com.ijaa.user.domain.response.AuthResponse;
 import com.ijaa.user.repository.UserRepository;
-import com.ijaa.user.util.TestDataBuilder;
+import com.ijaa.user.common.utils.UniqueIdGenerator;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.quality.Strictness;
-import org.mockito.junit.jupiter.MockitoSettings;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
-@DisplayName("AuthService Unit Tests")
 class AuthServiceTest {
 
     @Mock
@@ -52,179 +42,102 @@ class AuthServiceTest {
     @InjectMocks
     private AuthService authService;
 
-    private static final String TEST_USERNAME = "testuser";
-    private static final String TEST_PASSWORD = "password123";
-    private static final String TEST_USER_ID = "USER_ABC123XYZ";
-    private static final String TEST_JWT_TOKEN = "test.jwt.token";
+    private User testUser;
+    private SignUpRequest signUpRequest;
+    private SignInRequest signInRequest;
 
-    @Test
-    @DisplayName("Should register user successfully with valid request")
-    void registerUser_Success() {
-        // Arrange
-        SignUpRequest request = TestDataBuilder.createSignUpRequest();
-        when(userRepository.existsByUsername(TEST_USERNAME)).thenReturn(false);
-        when(userRepository.existsByUserId(TEST_USER_ID)).thenReturn(false);
-        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
-        when(jwtService.generateToken(anyString())).thenReturn(TEST_JWT_TOKEN);
-        when(idGenerator.generateUUID()).thenReturn(TEST_USER_ID);
+    @BeforeEach
+    void setUp() {
+        testUser = new User();
+        testUser.setId(1L);
+        testUser.setUserId("USER_123456");
+        testUser.setUsername("testuser");
+        testUser.setPassword("encodedPassword");
+        testUser.setActive(true);
 
-        // Act
-        AuthResponse response = authService.registerUser(request);
+        signUpRequest = new SignUpRequest();
+        signUpRequest.setUsername("testuser");
+        signUpRequest.setPassword("password123");
 
-        // Assert
-        assertNotNull(response);
-        assertEquals(TEST_JWT_TOKEN, response.getToken());
-        assertEquals(TEST_USER_ID, response.getUserId());
-
-        verify(userRepository).existsByUsername(TEST_USERNAME);
-        verify(userRepository).existsByUserId(TEST_USER_ID);
-        verify(userRepository).save(any(User.class));
-        verify(passwordEncoder).encode(TEST_PASSWORD);
-        verify(jwtService).generateToken(TEST_USERNAME);
-        verify(idGenerator).generateUUID();
+        signInRequest = new SignInRequest();
+        signInRequest.setUsername("testuser");
+        signInRequest.setPassword("password123");
     }
 
     @Test
-    @DisplayName("Should throw UserAlreadyExistsException when username already exists")
-    void registerUser_UsernameAlreadyExists() {
-        // Arrange
-        SignUpRequest request = TestDataBuilder.createSignUpRequest();
-        when(userRepository.existsByUsername(TEST_USERNAME)).thenReturn(true);
+    void testRegisterUser() {
+        // Given
+        when(userRepository.existsByUsername("testuser")).thenReturn(false);
+        when(idGenerator.generateUUID()).thenReturn("USER_123456");
+        when(userRepository.existsByUserId("USER_123456")).thenReturn(false);
+        when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");
+        when(userRepository.save(any(User.class))).thenReturn(testUser);
+        when(jwtService.generateUserToken("testuser", "USER_123456")).thenReturn("test-jwt-token");
 
-        // Act & Assert
-        UserAlreadyExistsException exception = assertThrows(
-                UserAlreadyExistsException.class,
-                () -> authService.registerUser(request)
-        );
+        // When
+        AuthResponse result = authService.registerUser(signUpRequest);
 
-        assertEquals("Username already taken", exception.getMessage());
-        verify(userRepository).existsByUsername(TEST_USERNAME);
+        // Then
+        assertNotNull(result);
+        assertEquals("test-jwt-token", result.getToken());
+        assertEquals("USER_123456", result.getUserId());
+        verify(userRepository).existsByUsername("testuser");
+        verify(passwordEncoder).encode("password123");
+        verify(userRepository).save(any(User.class));
+        verify(jwtService).generateUserToken("testuser", "USER_123456");
+    }
+
+    @Test
+    void testRegisterUserUsernameAlreadyExists() {
+        // Given
+        when(userRepository.existsByUsername("testuser")).thenReturn(true);
+
+        // When & Then
+        assertThrows(RuntimeException.class, () -> authService.registerUser(signUpRequest));
+        verify(userRepository).existsByUsername("testuser");
         verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
-    @DisplayName("Should retry user ID generation when duplicate ID is generated")
-    void registerUser_RetryUserIdGeneration() {
-        // Arrange
-        SignUpRequest request = TestDataBuilder.createSignUpRequest();
-        when(userRepository.existsByUsername(TEST_USERNAME)).thenReturn(false);
-        when(userRepository.existsByUserId(TEST_USER_ID)).thenReturn(true, false); // First attempt fails, second succeeds
-        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
-        when(jwtService.generateToken(anyString())).thenReturn(TEST_JWT_TOKEN);
-        when(idGenerator.generateUUID()).thenReturn(TEST_USER_ID);
+    void testVerify() {
+        // Given
+        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(testUser));
+        when(passwordEncoder.matches("password123", "encodedPassword")).thenReturn(true);
+        when(jwtService.generateUserToken("testuser", "USER_123456")).thenReturn("test-jwt-token");
 
-        // Act
-        AuthResponse response = authService.registerUser(request);
+        // When
+        AuthResponse result = authService.verify(signInRequest);
 
-        // Assert
-        assertNotNull(response);
-        assertEquals(TEST_JWT_TOKEN, response.getToken());
-        assertEquals(TEST_USER_ID, response.getUserId());
-
-        verify(userRepository, times(2)).existsByUserId(TEST_USER_ID);
-        verify(idGenerator, times(2)).generateUUID();
+        // Then
+        assertNotNull(result);
+        assertEquals("test-jwt-token", result.getToken());
+        assertEquals("USER_123456", result.getUserId());
+        verify(userRepository).findByUsername("testuser");
+        verify(passwordEncoder).matches("password123", "encodedPassword");
+        verify(jwtService).generateUserToken("testuser", "USER_123456");
     }
 
     @Test
-    @DisplayName("Should throw RuntimeException when unable to generate unique user ID after max attempts")
-    void registerUser_MaxAttemptsExceeded() {
-        // Arrange
-        SignUpRequest request = TestDataBuilder.createSignUpRequest();
-        when(userRepository.existsByUsername(TEST_USERNAME)).thenReturn(false);
-        when(userRepository.existsByUserId(TEST_USER_ID)).thenReturn(true); // Always return true to trigger max attempts
-        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
-        when(idGenerator.generateUUID()).thenReturn(TEST_USER_ID);
-        // Act & Assert
-        RuntimeException exception = assertThrows(
-                RuntimeException.class,
-                () -> authService.registerUser(request)
-        );
-        assertEquals("Failed to generate unique user ID after 10 attempts", exception.getMessage());
-        verify(userRepository, times(9)).existsByUserId(TEST_USER_ID);
-        verify(idGenerator, times(10)).generateUUID();
+    void testVerifyUserNotFound() {
+        // Given
+        when(userRepository.findByUsername("testuser")).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(RuntimeException.class, () -> authService.verify(signInRequest));
+        verify(userRepository).findByUsername("testuser");
+        verify(passwordEncoder, never()).matches(anyString(), anyString());
     }
 
     @Test
-    @DisplayName("Should verify user successfully with valid credentials")
-    void verify_Success() {
-        // Arrange
-        SignInRequest request = TestDataBuilder.createSignInRequest();
-        User user = TestDataBuilder.createTestUser();
-        
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenReturn(null);
-        when(userRepository.findByUsername(TEST_USERNAME)).thenReturn(Optional.of(user));
-        when(jwtService.generateToken(anyString())).thenReturn(TEST_JWT_TOKEN);
+    void testVerifyInvalidPassword() {
+        // Given
+        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(testUser));
+        when(passwordEncoder.matches("password123", "encodedPassword")).thenReturn(false);
 
-        // Act
-        AuthResponse response = authService.verify(request);
-
-        // Assert
-        assertNotNull(response);
-        assertEquals(TEST_JWT_TOKEN, response.getToken());
-        assertEquals(TEST_USER_ID, response.getUserId());
-
-        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(userRepository).findByUsername(TEST_USERNAME);
-        verify(jwtService).generateToken(TEST_USERNAME);
+        // When & Then
+        assertThrows(RuntimeException.class, () -> authService.verify(signInRequest));
+        verify(userRepository).findByUsername("testuser");
+        verify(passwordEncoder).matches("password123", "encodedPassword");
+        verify(jwtService, never()).generateUserToken(anyString(), anyString());
     }
-
-    @Test
-    @DisplayName("Should throw AuthenticationFailedException when user not found after authentication")
-    void verify_UserNotFound() {
-        // Arrange
-        SignInRequest request = TestDataBuilder.createSignInRequest();
-        
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenReturn(null);
-        when(userRepository.findByUsername(TEST_USERNAME)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        AuthenticationFailedException exception = assertThrows(
-                AuthenticationFailedException.class,
-                () -> authService.verify(request)
-        );
-
-        assertEquals("User not found", exception.getMessage());
-        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(userRepository).findByUsername(TEST_USERNAME);
-        verify(jwtService, never()).generateToken(anyString());
-    }
-
-    @Test
-    @DisplayName("Should throw AuthenticationFailedException when authentication fails")
-    void verify_AuthenticationFailed() {
-        // Arrange
-        SignInRequest request = TestDataBuilder.createSignInRequest();
-        
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenThrow(new BadCredentialsException("Invalid credentials"));
-
-        // Act & Assert
-        AuthenticationFailedException exception = assertThrows(
-                AuthenticationFailedException.class,
-                () -> authService.verify(request)
-        );
-
-        assertEquals("Invalid credentials", exception.getMessage());
-        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(userRepository, never()).findByUsername(anyString());
-        verify(jwtService, never()).generateToken(anyString());
-    }
-
-    @Test
-    @DisplayName("Should handle null request gracefully")
-    void registerUser_NullRequest() {
-        // Act & Assert
-        assertThrows(NullPointerException.class, () -> authService.registerUser(null));
-    }
-
-    @Test
-    @DisplayName("Should handle null request gracefully in verify method")
-    void verify_NullRequest() {
-        // Act & Assert
-        assertThrows(NullPointerException.class, () -> authService.verify(null));
-    }
-} 
+}

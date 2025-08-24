@@ -7,9 +7,11 @@ import com.ijaa.user.domain.dto.ProfileDto;
 import com.ijaa.user.domain.entity.Experience;
 import com.ijaa.user.domain.entity.Interest;
 import com.ijaa.user.domain.entity.Profile;
+import com.ijaa.user.domain.entity.User;
 import com.ijaa.user.repository.ExperienceRepository;
 import com.ijaa.user.repository.InterestRepository;
 import com.ijaa.user.repository.ProfileRepository;
+import com.ijaa.user.repository.UserRepository;
 import com.ijaa.user.service.BaseService;
 import com.ijaa.user.service.ProfileService;
 import org.springframework.stereotype.Service;
@@ -25,26 +27,29 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
     private final ProfileRepository profileRepository;
     private final ExperienceRepository experienceRepository;
     private final InterestRepository interestRepository;
+    private final UserRepository userRepository;
 
     public ProfileServiceImpl(ProfileRepository profileRepository,
                               ObjectMapper objectMapper,
                               ExperienceRepository experienceRepository,
-                              InterestRepository interestRepository) {
+                              InterestRepository interestRepository,
+                              UserRepository userRepository) {
         super(objectMapper);
         this.profileRepository = profileRepository;
         this.experienceRepository = experienceRepository;
         this.interestRepository = interestRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     @Transactional(readOnly = true)
     public ProfileDto getProfileByUserId(String userId) {
-        String currentUsername = getCurrentUsername();
+        String currentUserId = getCurrentUserId();
         Profile profile = profileRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Profile not found"));
 
         // Check if this is the current user viewing their own profile
-        boolean isOwnProfile = currentUsername.equals(profile.getUsername());
+        boolean isOwnProfile = currentUserId.equals(profile.getUserId());
 
         return toDto(profile, isOwnProfile);
     }
@@ -52,8 +57,9 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
     @Override
     public ProfileDto updateBasicInfo(ProfileDto dto) {
         String username = getCurrentUsername();
-        Profile entity = profileRepository.findByUsername(username)
-                .orElseGet(() -> createNewProfile(username));
+        String userId = getCurrentUserId();
+        Profile entity = profileRepository.findByUserId(userId)
+                .orElseGet(() -> createNewProfile(username, userId));
 
         updateProfileFields(entity, dto);
         updateVisibilitySettings(entity, dto);
@@ -64,8 +70,8 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
 
     @Override
     public ProfileDto updateVisibility(ProfileDto dto) {
-        String username = getCurrentUsername();
-        Profile entity = profileRepository.findByUsername(username)
+        String userId = getCurrentUserId();
+        Profile entity = profileRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Profile not found"));
 
         updateVisibilitySettings(entity, dto);
@@ -88,26 +94,49 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
         String username = getCurrentUsername();
         String userId = getCurrentUserId();
 
-        Experience experience = Experience.builder()
-                .username(username)
-                .userId(userId)
-                .title(experienceDto.getTitle())
-                .company(experienceDto.getCompany())
-                .period(experienceDto.getPeriod())
-                .description(experienceDto.getDescription())
-                .build();
+        Experience experience = new Experience();
+        experience.setUsername(username);
+        experience.setUserId(userId);
+        experience.setTitle(experienceDto.getTitle());
+        experience.setCompany(experienceDto.getCompany());
+        experience.setPeriod(experienceDto.getPeriod());
+        experience.setDescription(experienceDto.getDescription());
 
         Experience savedExperience = experienceRepository.save(experience);
         return experienceToDto(savedExperience);
     }
 
     @Override
-    public void deleteExperience(String userId) {
+    public void deleteExperience(Long experienceId) {
         String currentUserId = getCurrentUserId();
-        Experience experience = experienceRepository.findByUserIdAndUserId(userId, currentUserId)
+        Experience experience = experienceRepository.findByIdAndUserId(experienceId, currentUserId)
                 .orElseThrow(() -> new RuntimeException("Experience not found or unauthorized"));
 
         experienceRepository.delete(experience);
+    }
+
+    @Override
+    public ExperienceDto updateExperience(Long experienceId, ExperienceDto experienceDto) {
+        String currentUserId = getCurrentUserId();
+        Experience experience = experienceRepository.findByIdAndUserId(experienceId, currentUserId)
+                .orElseThrow(() -> new RuntimeException("Experience not found or unauthorized"));
+
+        // Update experience fields
+        if (experienceDto.getTitle() != null) {
+            experience.setTitle(experienceDto.getTitle());
+        }
+        if (experienceDto.getCompany() != null) {
+            experience.setCompany(experienceDto.getCompany());
+        }
+        if (experienceDto.getPeriod() != null) {
+            experience.setPeriod(experienceDto.getPeriod());
+        }
+        if (experienceDto.getDescription() != null) {
+            experience.setDescription(experienceDto.getDescription());
+        }
+
+        Experience updatedExperience = experienceRepository.save(experience);
+        return experienceToDto(updatedExperience);
     }
 
     @Override
@@ -135,31 +164,54 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
             throw new IllegalArgumentException("Interest already exists");
         }
 
-        Interest interest = Interest.builder()
-                .username(username)
-                .userId(userId)
-                .interest(cleanedInterest)
-                .build();
+        Interest interest = new Interest();
+        interest.setUsername(username);
+        interest.setUserId(userId);
+        interest.setInterest(cleanedInterest);
 
         Interest savedInterest = interestRepository.save(interest);
         return interestToDto(savedInterest);
     }
 
     @Override
-    public void deleteInterest(String userId) {
+    public void deleteInterest(Long interestId) {
         String currentUserId = getCurrentUserId();
-        Interest interest = interestRepository.findByUserIdAndUserId(userId, currentUserId)
+        Interest interest = interestRepository.findByIdAndUserId(interestId, currentUserId)
                 .orElseThrow(() -> new RuntimeException("Interest not found or unauthorized"));
 
         interestRepository.delete(interest);
     }
 
+    @Override
+    public InterestDto updateInterest(Long interestId, String interestName) {
+        if (interestName == null || interestName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Interest cannot be empty");
+        }
+
+        String currentUserId = getCurrentUserId();
+        Interest interest = interestRepository.findByIdAndUserId(interestId, currentUserId)
+                .orElseThrow(() -> new RuntimeException("Interest not found or unauthorized"));
+
+        String cleanedInterest = interestName.trim();
+
+        // Check if the new interest name already exists for this user (excluding current interest)
+        boolean exists = interestRepository.existsByUserIdAndInterestIgnoreCase(currentUserId, cleanedInterest);
+        if (exists && !cleanedInterest.equalsIgnoreCase(interest.getInterest())) {
+            throw new IllegalArgumentException("Interest already exists");
+        }
+
+        interest.setInterest(cleanedInterest);
+        Interest updatedInterest = interestRepository.save(interest);
+        return interestToDto(updatedInterest);
+    }
+
     // Private helper methods
-    private Profile createNewProfile(String username) {
-        return profileRepository.save(Profile.builder()
-                .username(username)
-                .userId(generateUserId())
-                .build());
+    private Profile createNewProfile(String username, String userId) {
+        Profile profile = new Profile();
+        profile.setUsername(username);
+        profile.setName(username);
+        profile.setUserId(userId);
+        return profileRepository.save(profile);
     }
 
     private void updateProfileFields(Profile entity, ProfileDto dto) {
@@ -243,14 +295,5 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
     private String generateUserId() {
         // Implement your user ID generation logic here
         return java.util.UUID.randomUUID().toString();
-    }
-
-    public String getCurrentUserId() {
-        // Implement logic to get current user's ID
-        // This should be derived from the current username or security context
-        String username = getCurrentUsername();
-        return profileRepository.findByUsername(username)
-                .map(Profile::getUserId)
-                .orElseThrow(() -> new RuntimeException("User profile not found"));
     }
 }

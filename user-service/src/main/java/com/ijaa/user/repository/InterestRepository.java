@@ -12,5 +12,5 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
     List<Interest> findByUserIdOrderByCreatedAtDesc(String userId);
     List<Interest> findByUserIdIn(List<String> userIds); // New method for bulk fetching
     boolean existsByUserIdAndInterestIgnoreCase(String userId, String interest);
-    Optional<Interest> findByUserIdAndUserId(String interestUserId, String currentUserId);
+    Optional<Interest> findByIdAndUserId(Long id, String userId);
 }

@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: file-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ijaa_files
+    username: root
+    password: Admin@123
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+  cloud:
+    compatibility-verifier:
+      enabled: false
+
+server:
+  port: 8083
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+# File storage configuration
+file:
+  storage:
+    base-path: /uploads
+    profile-photos-path: /uploads/profile
+    cover-photos-path: /uploads/cover
+    allowed-image-types: jpg,jpeg,png,webp
+    max-file-size-mb: 5
+
+# Feign client configuration
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+
+# Logging configuration
+logging:
+  level:
+    com.ijaa.file_service: DEBUG
+    org.springframework.web: DEBUG
+
+# Swagger/OpenAPI Configuration
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  packages-to-scan: com.ijaa.file_service.controller
+
+

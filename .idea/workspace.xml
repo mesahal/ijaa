@@ -4,29 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f42d6cc7-8da8-44af-908e-b96ee33f899a" name="Changes" comment="project context">
-      <change afterPath="$PROJECT_DIR$/Project_Context.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SRS.md" afterDir="false" />
+    <list default="true" id="9ce6d269-0e9e-4fa6-93e1-3e4fac090d6e" name="Changes" comment="profile fixed">
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/common/handler/UserExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/common/handler/UserExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/dto/ExperienceDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/dto/ExperienceDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/dto/ProfileDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/dto/ProfileDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/request/SignInRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/request/SignInRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/request/SignUpRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/request/SignUpRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/ProfileResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/ProfileResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/ProfileServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/ProfileServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/config/GatewayConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/config/GatewayConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/validator/RouteValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/validator/RouteValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project-context.md" beforeDir="false" afterPath="$PROJECT_DIR$/project-context.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/Profile.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-      </list>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="module" />
+      <option value="repository" />
     </option>
   </component>
   <component name="Git.Settings">
@@ -45,20 +41,19 @@
   }
 }</component>
   <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 6
 }</component>
-  <component name="ProjectId" id="30OxU41jBAB7M4Z98eJPxPArPl6" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="ProjectId" id="31YzjpShvLxETgrwoyuLU4WPp7i" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;Maven.user-service [clean,install].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Maven.file-service [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.file-service [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.gateway-service [clean,install].executor&quot;: &quot;Run&quot;,
     &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
     &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
     &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
@@ -67,8 +62,12 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;Spring Boot.DiscoveryServerApplication.executor&quot;: &quot;Debug&quot;,
     &quot;Spring Boot.EdgeServerApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.EventServiceApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.FileServiceApplication.executor&quot;: &quot;Debug&quot;,
     &quot;Spring Boot.UserServiceApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/event&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/sahal/my/ijaa/file-service&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -76,11 +75,6 @@
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
-  },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
-    ]
   }
 }</component>
   <component name="ReactorSettings">
@@ -95,8 +89,23 @@
         <option value="SpringBootApplicationConfigurationType" />
       </set>
     </option>
+    <option name="configurationStatuses">
+      <map>
+        <entry key="SpringBootApplicationConfigurationType">
+          <value>
+            <map>
+              <entry key="DiscoveryServerApplication" value="STOPPED" />
+              <entry key="EdgeServerApplication" value="STOPPED" />
+              <entry key="EventServiceApplication" value="STOPPED" />
+              <entry key="FileServiceApplication" value="STOPPED" />
+              <entry key="UserServiceApplication" value="STOPPED" />
+            </map>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.UserServiceApplication">
+  <component name="RunManager" selected="Spring Boot.FileServiceApplication">
     <configuration name="ConfigserverApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="config-service" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.wallet.configserver.ConfigserverApplication" />
@@ -114,7 +123,21 @@
     <configuration name="EdgeServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="gateway-service" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ijaa.edgeserver.EdgeServerApplication" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ijaa.gateway.EdgeServerApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="EventServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="event-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ijaa.event_service.EventServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FileServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="file-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ijaa.file_service.FileServiceApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -131,65 +154,58 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.27812.49" />
-        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-IU-251.27812.49" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.23892.409" />
+        <option value="bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-IU-252.23892.409" />
       </set>
     </attachedChunks>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="f42d6cc7-8da8-44af-908e-b96ee33f899a" name="Changes" comment="" />
-      <created>1753512433111</created>
+      <changelist id="9ce6d269-0e9e-4fa6-93e1-3e4fac090d6e" name="Changes" comment="" />
+      <created>1755715941660</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1753512433111</updated>
-      <workItem from="1753512434673" duration="55482000" />
-      <workItem from="1753709154843" duration="15311000" />
-      <workItem from="1753798210568" duration="4903000" />
+      <updated>1755715941660</updated>
+      <workItem from="1755715946487" duration="6724000" />
+      <workItem from="1755862071170" duration="13312000" />
+      <workItem from="1755926221240" duration="2992000" />
+      <workItem from="1755967922561" duration="10058000" />
+      <workItem from="1756012158753" duration="1794000" />
     </task>
-    <task id="LOCAL-00001" summary="Profile page">
+    <task id="LOCAL-00001" summary="sob elomelo">
       <option name="closed" value="true" />
-      <created>1753554517580</created>
+      <created>1755866119697</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1753554517580</updated>
+      <updated>1755866119697</updated>
     </task>
-    <task id="LOCAL-00002" summary="Search page">
+    <task id="LOCAL-00002" summary="profile working">
       <option name="closed" value="true" />
-      <created>1753626689554</created>
+      <created>1755868261453</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1753626689554</updated>
+      <updated>1755868261453</updated>
     </task>
-    <task id="LOCAL-00003" summary="search, profile view">
+    <task id="LOCAL-00003" summary="profile fixed">
       <option name="closed" value="true" />
-      <created>1753728107496</created>
+      <created>1755929073522</created>
       <option name="number" value="00003" />
       <option name="presentableId" value="LOCAL-00003" />
       <option name="project" value="LOCAL" />
-      <updated>1753728107496</updated>
+      <updated>1755929073522</updated>
     </task>
-    <task id="LOCAL-00004" summary="project context">
-      <option name="closed" value="true" />
-      <created>1753734670811</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1753734670811</updated>
-    </task>
-    <option name="localTasksCounter" value="5" />
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Profile page" />
-    <MESSAGE value="Search page" />
-    <MESSAGE value="search, profile view" />
-    <MESSAGE value="project context" />
-    <option name="LAST_COMMIT_MESSAGE" value="project context" />
+    <MESSAGE value="sob elomelo" />
+    <MESSAGE value="profile working" />
+    <MESSAGE value="profile fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="profile fixed" />
   </component>
 </project>

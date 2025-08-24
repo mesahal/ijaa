@@ -7,12 +7,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@Builder
-@Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 @Table(name = "profiles")
 public class Profile {
 
@@ -56,22 +54,22 @@ public class Profile {
     @Column(length = 255)
     private String facebook;
 
-    @Builder.Default
+    @Column(length = 255)
+    private String profilePhotoPath;
+
+    @Column(length = 255)
+    private String coverPhotoPath;
+
     private Boolean showPhone = true;
 
-    @Builder.Default
     private Boolean showLinkedIn = true;
 
-    @Builder.Default
     private Boolean showWebsite = true;
 
-    @Builder.Default
     private Boolean showEmail = true;
 
-    @Builder.Default
     private Boolean showFacebook = true;
 
-    @Builder.Default
     private Integer connections = 0;
 
     @CreationTimestamp

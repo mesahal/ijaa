@@ -1,8 +1,6 @@
 spring:
   application:
-    name: "edge"
-#  config:
-#    import: "configserver:http://localhost:8071/"
+    name: "gateway"
   cloud:
     gateway:
       discovery:
@@ -10,20 +8,25 @@ spring:
           enabled: true
           lower-case-service-id: true
       globalcors:
+        add-to-simple-url-handler-mapping: true
         corsConfigurations:
           '[/**]':
-            allowedOrigins:
-              - "http://localhost:3000"
-              - "https://c4c7f3750389.ngrok-free.app"
-              - "https://ijaa-frontend.vercel.app"
+            allowedOriginPatterns:
+              - "*"
             allowedMethods:
               - GET
               - POST
               - PUT
               - DELETE
               - OPTIONS
-            allowedHeaders: "*"
+              - PATCH
+              - HEAD
+            allowedHeaders:
+              - "*"
+            exposedHeaders:
+              - "*"
             allowCredentials: true
+            maxAge: 3600
 
 server:
   port: 8000
@@ -48,6 +51,19 @@ management:
   info:
     env:
       enabled: true
+
+# Add Swagger/OpenAPI configuration
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - url: /v3/api-docs
+        name: Gateway API
 
 info:
   app:

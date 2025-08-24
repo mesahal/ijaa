@@ -3,6 +3,7 @@ import com.ijaa.user.domain.entity.User;
 import com.ijaa.user.domain.entity.UserPrincipal;
 import com.ijaa.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,7 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Service
+@Service("userDetailsServiceImpl")
+@Primary
 public class UserDetailsServiceImpl implements  UserDetailsService {
 
     @Autowired

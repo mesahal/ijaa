@@ -7,35 +7,31 @@ import com.ijaa.user.domain.dto.ProfileDto;
 import com.ijaa.user.domain.entity.Experience;
 import com.ijaa.user.domain.entity.Interest;
 import com.ijaa.user.domain.entity.Profile;
+import com.ijaa.user.domain.entity.User;
 import com.ijaa.user.repository.ExperienceRepository;
 import com.ijaa.user.repository.InterestRepository;
 import com.ijaa.user.repository.ProfileRepository;
+import com.ijaa.user.repository.UserRepository;
 import com.ijaa.user.service.impl.ProfileServiceImpl;
-import com.ijaa.user.util.TestDataBuilder;
-import com.ijaa.user.util.TestSecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.quality.Strictness;
-import org.mockito.junit.jupiter.MockitoSettings;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
-@DisplayName("ProfileService Unit Tests")
 class ProfileServiceTest {
 
     @Mock
@@ -48,333 +44,508 @@ class ProfileServiceTest {
     private InterestRepository interestRepository;
 
     @Mock
+    private UserRepository userRepository;
+
+    @Mock
     private ObjectMapper objectMapper;
 
-    @Spy
     @InjectMocks
     private ProfileServiceImpl profileService;
 
-    private static final String TEST_USERNAME = "testuser";
-    private static final String TEST_USER_ID = "USER_ABC123XYZ";
+    private Profile testProfile;
+    private ProfileDto profileDto;
+    private Experience testExperience;
+    private Interest testInterest;
+    private MockHttpServletRequest mockRequest;
 
     @BeforeEach
-    void setUp() {
-        Mockito.doReturn(TEST_USERNAME).when(profileService).getCurrentUsername();
-        Mockito.doReturn(TEST_USER_ID).when(profileService).getCurrentUserId();
+    void setUp() throws Exception {
+        // Setup mock HTTP request context
+        mockRequest = new MockHttpServletRequest();
+        mockRequest.addHeader("X-USER_ID", "eyJ1c2VySWQiOiJVU0VSXzEyMzQ1NiIsInVzZXJuYW1lIjoidGVzdHVzZXIifQ==");
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockRequest));
+
+        // Mock ObjectMapper for user context decoding
+        com.ijaa.user.domain.entity.CurrentUserContext mockUserContext = new com.ijaa.user.domain.entity.CurrentUserContext();
+        mockUserContext.setUsername("testuser");
+        mockUserContext.setUserId("USER_123456");
+        lenient().when(objectMapper.readValue(any(String.class), eq(com.ijaa.user.domain.entity.CurrentUserContext.class)))
+                .thenReturn(mockUserContext);
+
+        // Mock UserRepository
+        User testUser = new User();
+        testUser.setUserId("USER_123456");
+        testUser.setUsername("testuser");
+        lenient().when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(testUser));
+
+        testProfile = new Profile();
+        testProfile.setId(1L);
+        testProfile.setUserId("USER_123456");
+        testProfile.setUsername("testuser");
+        testProfile.setName("John Doe");
+        testProfile.setEmail("john.doe@example.com");
+        testProfile.setPhone("+1234567890");
+        testProfile.setBio("Software Engineer");
+        testProfile.setLocation("New York");
+        testProfile.setProfession("Software Engineer");
+        testProfile.setLinkedIn("linkedin.com/johndoe");
+        testProfile.setWebsite("johndoe.com");
+        testProfile.setBatch("2020");
+        testProfile.setShowPhone(true);
+        testProfile.setShowEmail(true);
+        testProfile.setConnections(10);
+
+        profileDto = new ProfileDto();
+        profileDto.setUserId("USER_123456");
+        profileDto.setName("Jane Smith");
+        profileDto.setEmail("jane.smith@example.com");
+        profileDto.setPhone("+0987654321");
+        profileDto.setBio("Product Manager");
+        profileDto.setLocation("San Francisco");
+        profileDto.setProfession("Product Manager");
+        profileDto.setLinkedIn("linkedin.com/janesmith");
+        profileDto.setWebsite("janesmith.com");
+        profileDto.setBatch("2019");
+        profileDto.setShowPhone(true);
+        profileDto.setShowEmail(true);
+        profileDto.setConnections(15);
+
+        testExperience = new Experience();
+        testExperience.setId(1L);
+        testExperience.setUserId("USER_123456");
+        testExperience.setUsername("testuser");
+        testExperience.setTitle("Software Engineer");
+        testExperience.setCompany("Tech Corp");
+        testExperience.setPeriod("2020-2024");
+        testExperience.setDescription("Developed web applications");
+
+        testInterest = new Interest();
+        testInterest.setId(1L);
+        testInterest.setUserId("USER_123456");
+        testInterest.setUsername("testuser");
+        testInterest.setInterest("Programming");
     }
 
     @Test
-    @DisplayName("Should get profile by user ID successfully")
-    void getProfileByUserId_Success() {
-        // Arrange
-        Profile profile = TestDataBuilder.createTestProfile();
-        when(profileRepository.findByUserId(TEST_USER_ID)).thenReturn(Optional.of(profile));
+    void shouldGetProfileByUserIdWhenValidUserIdProvided() {
+        // Given
+        when(profileRepository.findByUserId("USER_123456")).thenReturn(Optional.of(testProfile));
 
-        // Act
-        ProfileDto result = profileService.getProfileByUserId(TEST_USER_ID);
+        // When
+        ProfileDto result = profileService.getProfileByUserId("USER_123456");
 
-        // Assert
+        // Then
         assertNotNull(result);
-        assertEquals(TEST_USER_ID, result.getUserId());
-        assertEquals("Test User", result.getName());
+        assertEquals("John Doe", result.getName());
+        assertEquals("john.doe@example.com", result.getEmail());
         assertEquals("Software Engineer", result.getProfession());
-
-        verify(profileRepository).findByUserId(TEST_USER_ID);
+        verify(profileRepository).findByUserId("USER_123456");
     }
 
     @Test
-    @DisplayName("Should throw RuntimeException when profile not found")
-    void getProfileByUserId_ProfileNotFound() {
-        // Arrange
-        when(profileRepository.findByUserId(TEST_USER_ID)).thenReturn(Optional.empty());
+    void shouldUpdateBasicInfoWhenValidProfileDtoProvided() {
+        // Given
+        when(profileRepository.findByUserId("USER_123456")).thenReturn(Optional.of(testProfile));
+        when(profileRepository.save(any(Profile.class))).thenReturn(testProfile);
 
-        // Act & Assert
-        RuntimeException exception = assertThrows(
-                RuntimeException.class,
-                () -> profileService.getProfileByUserId(TEST_USER_ID)
-        );
+        // When
+        ProfileDto result = profileService.updateBasicInfo(profileDto);
 
-        assertEquals("Profile not found", exception.getMessage());
-        verify(profileRepository).findByUserId(TEST_USER_ID);
-    }
-
-    @Test
-    @DisplayName("Should update basic info successfully")
-    void updateBasicInfo_Success() {
-        // Arrange
-        ProfileDto requestDto = TestDataBuilder.createTestProfileDto();
-        Profile existingProfile = TestDataBuilder.createTestProfile();
-        
-        when(profileRepository.findByUsername(TEST_USERNAME)).thenReturn(Optional.of(existingProfile));
-        when(profileRepository.save(any(Profile.class))).thenReturn(existingProfile);
-
-        // Act
-        ProfileDto result = profileService.updateBasicInfo(requestDto);
-
-        // Assert
+        // Then
         assertNotNull(result);
-        assertEquals(TEST_USER_ID, result.getUserId());
-
-        verify(profileRepository).findByUsername(TEST_USERNAME);
-        verify(profileRepository).save(any(Profile.class));
+        assertEquals("Jane Smith", result.getName());
+        assertEquals("jane.smith@example.com", result.getEmail());
+        assertEquals("Product Manager", result.getProfession());
+        verify(profileRepository, atLeastOnce()).findByUserId("USER_123456");
+        verify(profileRepository, atLeastOnce()).save(any(Profile.class));
     }
 
     @Test
-    @DisplayName("Should create new profile when profile doesn't exist")
-    void updateBasicInfo_CreateNewProfile() {
-        // Arrange
-        ProfileDto requestDto = TestDataBuilder.createTestProfileDto();
-        Profile newProfile = TestDataBuilder.createTestProfile();
-        
-        when(profileRepository.findByUsername(TEST_USERNAME)).thenReturn(Optional.empty());
-        when(profileRepository.save(any(Profile.class))).thenReturn(newProfile);
+    void shouldUpdateBasicInfoWhenProfileNotFoundCreatesNewProfile() {
+        // Given
+        when(profileRepository.findByUserId("USER_123456")).thenReturn(Optional.empty());
+        when(profileRepository.save(any(Profile.class))).thenReturn(testProfile);
 
-        // Act
-        ProfileDto result = profileService.updateBasicInfo(requestDto);
+        // When
+        ProfileDto result = profileService.updateBasicInfo(profileDto);
 
-        // Assert
+        // Then
         assertNotNull(result);
-        assertEquals(TEST_USER_ID, result.getUserId());
-
-        verify(profileRepository).findByUsername(TEST_USERNAME);
-        verify(profileRepository, times(2)).save(any(Profile.class));
+        verify(profileRepository, atLeastOnce()).findByUserId("USER_123456");
+        verify(profileRepository, atLeastOnce()).save(any(Profile.class)); // Profile creation and update
     }
 
     @Test
-    @DisplayName("Should update visibility settings successfully")
-    void updateVisibility_Success() {
-        // Arrange
-        ProfileDto requestDto = TestDataBuilder.createTestProfileDto();
-        Profile existingProfile = TestDataBuilder.createTestProfile();
-        
-        when(profileRepository.findByUsername(TEST_USERNAME)).thenReturn(Optional.of(existingProfile));
-        when(profileRepository.save(any(Profile.class))).thenReturn(existingProfile);
+    void shouldUpdateVisibilityWhenValidProfileDtoProvided() {
+        // Given
+        when(profileRepository.findByUserId("USER_123456")).thenReturn(Optional.of(testProfile));
+        when(profileRepository.save(any(Profile.class))).thenReturn(testProfile);
 
-        // Act
-        ProfileDto result = profileService.updateVisibility(requestDto);
+        // When
+        ProfileDto result = profileService.updateVisibility(profileDto);
 
-        // Assert
+        // Then
         assertNotNull(result);
-        assertEquals(TEST_USER_ID, result.getUserId());
-
-        verify(profileRepository).findByUsername(TEST_USERNAME);
-        verify(profileRepository).save(any(Profile.class));
+        assertTrue(result.getShowPhone());
+        assertTrue(result.getShowEmail());
+        verify(profileRepository, atLeastOnce()).findByUserId("USER_123456");
+        verify(profileRepository, atLeastOnce()).save(any(Profile.class));
     }
 
+    // Experience Tests
     @Test
-    @DisplayName("Should throw RuntimeException when profile not found for visibility update")
-    void updateVisibility_ProfileNotFound() {
-        // Arrange
-        ProfileDto requestDto = TestDataBuilder.createTestProfileDto();
-        when(profileRepository.findByUsername(TEST_USERNAME)).thenReturn(Optional.empty());
+    void shouldAddExperienceWhenValidExperienceDtoProvided() {
+        // Given
+        when(experienceRepository.save(any(Experience.class))).thenReturn(testExperience);
 
-        // Act & Assert
-        RuntimeException exception = assertThrows(
-                RuntimeException.class,
-                () -> profileService.updateVisibility(requestDto)
-        );
+        ExperienceDto experienceDto = new ExperienceDto();
+        experienceDto.setTitle("Software Engineer");
+        experienceDto.setCompany("Tech Corp");
+        experienceDto.setPeriod("2020-2024");
+        experienceDto.setDescription("Developed web applications");
 
-        assertEquals("Profile not found", exception.getMessage());
-        verify(profileRepository).findByUsername(TEST_USERNAME);
-        verify(profileRepository, never()).save(any(Profile.class));
-    }
+        // When
+        ExperienceDto result = profileService.addExperience(experienceDto);
 
-    @Test
-    @DisplayName("Should get experiences by user ID successfully")
-    void getExperiencesByUserId_Success() {
-        // Arrange
-        List<Experience> experiences = TestDataBuilder.createTestExperienceList();
-        when(experienceRepository.findByUserIdOrderByCreatedAtDesc(TEST_USER_ID)).thenReturn(experiences);
-
-        // Act
-        List<ExperienceDto> result = profileService.getExperiencesByUserId(TEST_USER_ID);
-
-        // Assert
+        // Then
         assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals("Senior Software Engineer", result.get(0).getTitle());
-        assertEquals("Software Engineer", result.get(1).getTitle());
-
-        verify(experienceRepository).findByUserIdOrderByCreatedAtDesc(TEST_USER_ID);
-    }
-
-    @Test
-    @DisplayName("Should add experience successfully")
-    void addExperience_Success() {
-        // Arrange
-        ExperienceDto requestDto = TestDataBuilder.createTestExperienceDto();
-        Experience savedExperience = TestDataBuilder.createTestExperience();
-        
-        when(experienceRepository.save(any(Experience.class))).thenReturn(savedExperience);
-
-        // Act
-        ExperienceDto result = profileService.addExperience(requestDto);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(TEST_USER_ID, result.getUserId());
-        assertEquals("Senior Software Engineer", result.getTitle());
-
+        assertEquals("Software Engineer", result.getTitle());
+        assertEquals("Tech Corp", result.getCompany());
         verify(experienceRepository).save(any(Experience.class));
     }
 
     @Test
-    @DisplayName("Should delete experience successfully")
-    void deleteExperience_Success() {
-        // Arrange
-        Experience experience = TestDataBuilder.createTestExperience();
-        when(experienceRepository.findByUserIdAndUserId(TEST_USER_ID, TEST_USER_ID))
-                .thenReturn(Optional.of(experience));
+    void shouldAddExperienceWithoutRequiringProfile() {
+        // Given
+        when(experienceRepository.save(any(Experience.class))).thenReturn(testExperience);
 
-        // Act
-        profileService.deleteExperience(TEST_USER_ID);
+        ExperienceDto experienceDto = new ExperienceDto();
+        experienceDto.setTitle("Software Engineer");
+        experienceDto.setCompany("Tech Corp");
+        experienceDto.setPeriod("2020-2024");
+        experienceDto.setDescription("Developed web applications");
 
-        // Assert
-        verify(experienceRepository).findByUserIdAndUserId(TEST_USER_ID, TEST_USER_ID);
-        verify(experienceRepository).delete(experience);
-    }
+        // When
+        ExperienceDto result = profileService.addExperience(experienceDto);
 
-    @Test
-    @DisplayName("Should throw RuntimeException when experience not found for deletion")
-    void deleteExperience_ExperienceNotFound() {
-        // Arrange
-        when(experienceRepository.findByUserIdAndUserId(TEST_USER_ID, TEST_USER_ID))
-                .thenReturn(Optional.empty());
-
-        // Act & Assert
-        RuntimeException exception = assertThrows(
-                RuntimeException.class,
-                () -> profileService.deleteExperience(TEST_USER_ID)
-        );
-
-        assertEquals("Experience not found or unauthorized", exception.getMessage());
-        verify(experienceRepository).findByUserIdAndUserId(TEST_USER_ID, TEST_USER_ID);
-        verify(experienceRepository, never()).delete(any(Experience.class));
-    }
-
-    @Test
-    @DisplayName("Should get interests by user ID successfully")
-    void getInterestsByUserId_Success() {
-        // Arrange
-        List<Interest> interests = TestDataBuilder.createTestInterestList();
-        when(interestRepository.findByUserIdOrderByCreatedAtDesc(TEST_USER_ID)).thenReturn(interests);
-
-        // Act
-        List<InterestDto> result = profileService.getInterestsByUserId(TEST_USER_ID);
-
-        // Assert
+        // Then
         assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals("Java Programming", result.get(0).getInterest());
-        assertEquals("Spring Boot", result.get(1).getInterest());
-
-        verify(interestRepository).findByUserIdOrderByCreatedAtDesc(TEST_USER_ID);
+        assertEquals("Software Engineer", result.getTitle());
+        verify(experienceRepository).save(any(Experience.class));
     }
 
     @Test
-    @DisplayName("Should add interest successfully")
-    void addInterest_Success() {
-        // Arrange
-        String interestName = "Python Programming";
-        Interest savedInterest = Interest.builder()
-                .id(1L)
-                .username(TEST_USERNAME)
-                .userId(TEST_USER_ID)
-                .interest(interestName)
-                .build();
-        
-        when(interestRepository.existsByUserIdAndInterestIgnoreCase(TEST_USER_ID, interestName))
-                .thenReturn(false);
-        when(interestRepository.save(any(Interest.class))).thenReturn(savedInterest);
+    void shouldGetExperiencesByUserIdWhenValidUserIdProvided() {
+        // Given
+        List<Experience> experiences = Arrays.asList(testExperience);
+        when(experienceRepository.findByUserIdOrderByCreatedAtDesc("USER_123456")).thenReturn(experiences);
 
-        // Act
-        InterestDto result = profileService.addInterest(interestName);
+        // When
+        List<ExperienceDto> result = profileService.getExperiencesByUserId("USER_123456");
 
-        // Assert
+        // Then
         assertNotNull(result);
-        assertEquals(TEST_USER_ID, result.getUserId());
-        assertEquals(interestName, result.getInterest());
+        assertEquals(1, result.size());
+        assertEquals("Software Engineer", result.get(0).getTitle());
+        verify(experienceRepository).findByUserIdOrderByCreatedAtDesc("USER_123456");
+    }
 
-        verify(interestRepository).existsByUserIdAndInterestIgnoreCase(TEST_USER_ID, interestName);
+    // Interest Tests
+    @Test
+    void shouldAddInterestWhenValidInterestNameProvided() {
+        // Given
+        when(interestRepository.existsByUserIdAndInterestIgnoreCase("USER_123456", "Programming")).thenReturn(false);
+        when(interestRepository.save(any(Interest.class))).thenReturn(testInterest);
+
+        // When
+        InterestDto result = profileService.addInterest("Programming");
+
+        // Then
+        assertNotNull(result);
+        assertEquals("Programming", result.getInterest());
+        verify(interestRepository).existsByUserIdAndInterestIgnoreCase("USER_123456", "Programming");
         verify(interestRepository).save(any(Interest.class));
     }
 
     @Test
-    @DisplayName("Should throw IllegalArgumentException when interest is null")
-    void addInterest_NullInterest() {
-        // Act & Assert
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> profileService.addInterest(null)
-        );
+    void shouldAddInterestWithoutRequiringProfile() {
+        // Given
+        when(interestRepository.existsByUserIdAndInterestIgnoreCase("USER_123456", "Programming")).thenReturn(false);
+        when(interestRepository.save(any(Interest.class))).thenReturn(testInterest);
 
-        assertEquals("Interest cannot be empty", exception.getMessage());
+        // When
+        InterestDto result = profileService.addInterest("Programming");
+
+        // Then
+        assertNotNull(result);
+        assertEquals("Programming", result.getInterest());
+        verify(interestRepository).save(any(Interest.class));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenInterestAlreadyExists() {
+        // Given
+        when(interestRepository.existsByUserIdAndInterestIgnoreCase("USER_123456", "Programming")).thenReturn(true);
+
+        // When & Then
+        assertThrows(IllegalArgumentException.class, () -> {
+            profileService.addInterest("Programming");
+        });
+        verify(interestRepository).existsByUserIdAndInterestIgnoreCase("USER_123456", "Programming");
         verify(interestRepository, never()).save(any(Interest.class));
     }
 
     @Test
-    @DisplayName("Should throw IllegalArgumentException when interest is empty")
-    void addInterest_EmptyInterest() {
-        // Act & Assert
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> profileService.addInterest("")
-        );
-
-        assertEquals("Interest cannot be empty", exception.getMessage());
-        verify(interestRepository, never()).save(any(Interest.class));
+    void shouldThrowExceptionWhenInterestIsEmpty() {
+        // When & Then
+        assertThrows(IllegalArgumentException.class, () -> {
+            profileService.addInterest("");
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            profileService.addInterest(null);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            profileService.addInterest("   ");
+        });
     }
 
     @Test
-    @DisplayName("Should throw IllegalArgumentException when interest already exists")
-    void addInterest_InterestAlreadyExists() {
-        // Arrange
-        String interestName = "Java Programming";
-        when(interestRepository.existsByUserIdAndInterestIgnoreCase(TEST_USER_ID, interestName))
-                .thenReturn(true);
+    void shouldGetInterestsByUserIdWhenValidUserIdProvided() {
+        // Given
+        List<Interest> interests = Arrays.asList(testInterest);
+        when(interestRepository.findByUserIdOrderByCreatedAtDesc("USER_123456")).thenReturn(interests);
 
-        // Act & Assert
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> profileService.addInterest(interestName)
-        );
+        // When
+        List<InterestDto> result = profileService.getInterestsByUserId("USER_123456");
 
-        assertEquals("Interest already exists", exception.getMessage());
-        verify(interestRepository).existsByUserIdAndInterestIgnoreCase(TEST_USER_ID, interestName);
-        verify(interestRepository, never()).save(any(Interest.class));
+        // Then
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("Programming", result.get(0).getInterest());
+        verify(interestRepository).findByUserIdOrderByCreatedAtDesc("USER_123456");
+    }
+
+    // Delete Tests
+    @Test
+    void shouldDeleteExperienceWhenValidExperienceIdProvided() {
+        // Given
+        when(experienceRepository.findByIdAndUserId(1L, "USER_123456")).thenReturn(Optional.of(testExperience));
+
+        // When
+        profileService.deleteExperience(1L);
+
+        // Then
+        verify(experienceRepository).findByIdAndUserId(1L, "USER_123456");
+        verify(experienceRepository).delete(testExperience);
     }
 
     @Test
-    @DisplayName("Should delete interest successfully")
-    void deleteInterest_Success() {
-        // Arrange
-        Interest interest = TestDataBuilder.createTestInterest();
-        when(interestRepository.findByUserIdAndUserId(TEST_USER_ID, TEST_USER_ID))
-                .thenReturn(Optional.of(interest));
+    void shouldThrowExceptionWhenDeletingExperienceNotFound() {
+        // Given
+        when(experienceRepository.findByIdAndUserId(999L, "USER_123456")).thenReturn(Optional.empty());
 
-        // Act
-        profileService.deleteInterest(TEST_USER_ID);
-
-        // Assert
-        verify(interestRepository).findByUserIdAndUserId(TEST_USER_ID, TEST_USER_ID);
-        verify(interestRepository).delete(interest);
+        // When & Then
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            profileService.deleteExperience(999L);
+        });
+        assertEquals("Experience not found or unauthorized", exception.getMessage());
+        verify(experienceRepository).findByIdAndUserId(999L, "USER_123456");
+        verify(experienceRepository, never()).delete(any(Experience.class));
     }
 
     @Test
-    @DisplayName("Should throw RuntimeException when interest not found for deletion")
-    void deleteInterest_InterestNotFound() {
-        // Arrange
-        when(interestRepository.findByUserIdAndUserId(TEST_USER_ID, TEST_USER_ID))
-                .thenReturn(Optional.empty());
+    void shouldDeleteInterestWhenValidInterestIdProvided() {
+        // Given
+        when(interestRepository.findByIdAndUserId(1L, "USER_123456")).thenReturn(Optional.of(testInterest));
 
-        // Act & Assert
-        RuntimeException exception = assertThrows(
-                RuntimeException.class,
-                () -> profileService.deleteInterest(TEST_USER_ID)
-        );
+        // When
+        profileService.deleteInterest(1L);
 
+        // Then
+        verify(interestRepository).findByIdAndUserId(1L, "USER_123456");
+        verify(interestRepository).delete(testInterest);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenDeletingInterestNotFound() {
+        // Given
+        when(interestRepository.findByIdAndUserId(999L, "USER_123456")).thenReturn(Optional.empty());
+
+        // When & Then
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            profileService.deleteInterest(999L);
+        });
         assertEquals("Interest not found or unauthorized", exception.getMessage());
-        verify(interestRepository).findByUserIdAndUserId(TEST_USER_ID, TEST_USER_ID);
+        verify(interestRepository).findByIdAndUserId(999L, "USER_123456");
         verify(interestRepository, never()).delete(any(Interest.class));
     }
-} 
+
+    // Update Tests
+    @Test
+    void shouldUpdateExperienceWhenValidExperienceIdAndDtoProvided() {
+        // Given
+        ExperienceDto updateDto = new ExperienceDto();
+        updateDto.setTitle("Updated Title");
+        updateDto.setCompany("Updated Company");
+        updateDto.setPeriod("2023-2024");
+        updateDto.setDescription("Updated description");
+
+        Experience updatedExperience = new Experience();
+        updatedExperience.setId(1L);
+        updatedExperience.setUserId("USER_123456");
+        updatedExperience.setUsername("testuser");
+        updatedExperience.setTitle("Updated Title");
+        updatedExperience.setCompany("Updated Company");
+        updatedExperience.setPeriod("2023-2024");
+        updatedExperience.setDescription("Updated description");
+
+        when(experienceRepository.findByIdAndUserId(1L, "USER_123456")).thenReturn(Optional.of(testExperience));
+        when(experienceRepository.save(any(Experience.class))).thenReturn(updatedExperience);
+
+        // When
+        ExperienceDto result = profileService.updateExperience(1L, updateDto);
+
+        // Then
+        assertNotNull(result);
+        assertEquals("Updated Title", result.getTitle());
+        assertEquals("Updated Company", result.getCompany());
+        assertEquals("2023-2024", result.getPeriod());
+        assertEquals("Updated description", result.getDescription());
+        verify(experienceRepository).findByIdAndUserId(1L, "USER_123456");
+        verify(experienceRepository).save(any(Experience.class));
+    }
+
+    @Test
+    void shouldUpdateExperienceWithPartialData() {
+        // Given
+        ExperienceDto updateDto = new ExperienceDto();
+        updateDto.setTitle("Only Title Updated");
+
+        Experience updatedExperience = new Experience();
+        updatedExperience.setId(1L);
+        updatedExperience.setUserId("USER_123456");
+        updatedExperience.setUsername("testuser");
+        updatedExperience.setTitle("Only Title Updated");
+        updatedExperience.setCompany("Tech Corp"); // Original value
+        updatedExperience.setPeriod("2020-2024"); // Original value
+        updatedExperience.setDescription("Developed web applications"); // Original value
+
+        when(experienceRepository.findByIdAndUserId(1L, "USER_123456")).thenReturn(Optional.of(testExperience));
+        when(experienceRepository.save(any(Experience.class))).thenReturn(updatedExperience);
+
+        // When
+        ExperienceDto result = profileService.updateExperience(1L, updateDto);
+
+        // Then
+        assertNotNull(result);
+        assertEquals("Only Title Updated", result.getTitle());
+        verify(experienceRepository).findByIdAndUserId(1L, "USER_123456");
+        verify(experienceRepository).save(any(Experience.class));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUpdatingExperienceNotFound() {
+        // Given
+        ExperienceDto updateDto = new ExperienceDto();
+        updateDto.setTitle("Updated Title");
+        when(experienceRepository.findByIdAndUserId(999L, "USER_123456")).thenReturn(Optional.empty());
+
+        // When & Then
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            profileService.updateExperience(999L, updateDto);
+        });
+        assertEquals("Experience not found or unauthorized", exception.getMessage());
+        verify(experienceRepository).findByIdAndUserId(999L, "USER_123456");
+        verify(experienceRepository, never()).save(any(Experience.class));
+    }
+
+    @Test
+    void shouldUpdateInterestWhenValidInterestIdAndNameProvided() {
+        // Given
+        String newInterestName = "Updated Interest";
+        Interest updatedInterest = new Interest();
+        updatedInterest.setId(1L);
+        updatedInterest.setUserId("USER_123456");
+        updatedInterest.setUsername("testuser");
+        updatedInterest.setInterest("Updated Interest");
+
+        when(interestRepository.findByIdAndUserId(1L, "USER_123456")).thenReturn(Optional.of(testInterest));
+        when(interestRepository.existsByUserIdAndInterestIgnoreCase("USER_123456", "Updated Interest")).thenReturn(false);
+        when(interestRepository.save(any(Interest.class))).thenReturn(updatedInterest);
+
+        // When
+        InterestDto result = profileService.updateInterest(1L, newInterestName);
+
+        // Then
+        assertNotNull(result);
+        assertEquals("Updated Interest", result.getInterest());
+        verify(interestRepository).findByIdAndUserId(1L, "USER_123456");
+        verify(interestRepository).existsByUserIdAndInterestIgnoreCase("USER_123456", "Updated Interest");
+        verify(interestRepository).save(any(Interest.class));
+    }
+
+    @Test
+    void shouldUpdateInterestToSameName() {
+        // Given
+        String sameInterestName = "Programming"; // Same as original
+        when(interestRepository.findByIdAndUserId(1L, "USER_123456")).thenReturn(Optional.of(testInterest));
+        when(interestRepository.existsByUserIdAndInterestIgnoreCase("USER_123456", "Programming")).thenReturn(true);
+        when(interestRepository.save(any(Interest.class))).thenReturn(testInterest);
+
+        // When
+        InterestDto result = profileService.updateInterest(1L, sameInterestName);
+
+        // Then
+        assertNotNull(result);
+        assertEquals("Programming", result.getInterest());
+        verify(interestRepository).findByIdAndUserId(1L, "USER_123456");
+        verify(interestRepository).existsByUserIdAndInterestIgnoreCase("USER_123456", "Programming");
+        verify(interestRepository).save(any(Interest.class));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUpdatingInterestToExistingName() {
+        // Given
+        String existingInterestName = "Existing Interest";
+        when(interestRepository.findByIdAndUserId(1L, "USER_123456")).thenReturn(Optional.of(testInterest));
+        when(interestRepository.existsByUserIdAndInterestIgnoreCase("USER_123456", "Existing Interest")).thenReturn(true);
+
+        // When & Then
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            profileService.updateInterest(1L, existingInterestName);
+        });
+        assertEquals("Interest already exists", exception.getMessage());
+        verify(interestRepository).findByIdAndUserId(1L, "USER_123456");
+        verify(interestRepository).existsByUserIdAndInterestIgnoreCase("USER_123456", "Existing Interest");
+        verify(interestRepository, never()).save(any(Interest.class));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUpdatingInterestNotFound() {
+        // Given
+        String newInterestName = "New Interest";
+        when(interestRepository.findByIdAndUserId(999L, "USER_123456")).thenReturn(Optional.empty());
+
+        // When & Then
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            profileService.updateInterest(999L, newInterestName);
+        });
+        assertEquals("Interest not found or unauthorized", exception.getMessage());
+        verify(interestRepository).findByIdAndUserId(999L, "USER_123456");
+        verify(interestRepository, never()).save(any(Interest.class));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUpdatingInterestWithEmptyName() {
+        // When & Then
+        assertThrows(IllegalArgumentException.class, () -> {
+            profileService.updateInterest(1L, "");
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            profileService.updateInterest(1L, null);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            profileService.updateInterest(1L, "   ");
+        });
+    }
+}

@@ -56,6 +56,16 @@ public class BaseService {
     }
 
     /**
+     * Gets the current user ID from the user context
+     *
+     * @return user ID of the currently authenticated user
+     */
+    public String getCurrentUserId() {
+        CurrentUserContext userContext = getCurrentUserContext();
+        return userContext.getUserId();
+    }
+
+    /**
      * Checks if a user context exists in the current request
      *
      * @return true if user context is available, false otherwise

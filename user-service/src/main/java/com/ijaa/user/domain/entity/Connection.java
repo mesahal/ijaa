@@ -6,12 +6,10 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Entity
 @Table(name = "connections")
 public class Connection {
 
@@ -26,7 +24,6 @@ public class Connection {
     private String receiverUsername;
 
     @Enumerated(EnumType.STRING)
-    @Builder.Default
     private ConnectionStatus status = ConnectionStatus.PENDING;
 
     @CreationTimestamp
