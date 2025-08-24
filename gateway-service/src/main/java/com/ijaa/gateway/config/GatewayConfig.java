@@ -117,6 +117,14 @@ public class GatewayConfig {
                                 .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://EVENT"))
+                // File service routes - for user profile and cover photo management
+                .route(p-> p
+                        .path("/ijaa/api/v1/users/**")
+                        .filters(f-> f
+                                .filter(filter.apply(new AuthenticationFilter.Config()))
+                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
+                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
+                        .uri("lb://FILE-SERVICE"))
                 .build();
     }
 }

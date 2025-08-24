@@ -54,6 +54,12 @@ public class Profile {
     @Column(length = 255)
     private String facebook;
 
+    @Column(length = 255)
+    private String profilePhotoPath;
+
+    @Column(length = 255)
+    private String coverPhotoPath;
+
     private Boolean showPhone = true;
 
     private Boolean showLinkedIn = true;

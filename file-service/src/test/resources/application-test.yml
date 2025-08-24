@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password: 
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+# File storage configuration for testing
+file:
+  storage:
+    base-path: ./test-uploads
+    profile-photos-path: ./test-uploads/profile
+    cover-photos-path: ./test-uploads/cover
+    allowed-image-types: jpg,jpeg,png,webp
+    max-file-size-mb: 5
+
+# Disable Eureka for testing
+eureka:
+  client:
+    enabled: false

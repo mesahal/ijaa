@@ -19,6 +19,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="config-service" />
         <module name="event-service" />
+        <module name="file-service" />
         <module name="gateway-service" />
         <module name="discovery-service" />
       </profile>
@@ -29,6 +30,7 @@
       <module name="config-service" options="-parameters" />
       <module name="discovery-service" options="-parameters" />
       <module name="event-service" options="-parameters" />
+      <module name="file-service" options="-parameters" />
       <module name="gateway-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>

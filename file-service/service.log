@@ -1,0 +1,539 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< com.ijaa:file-service >------------------------
+[INFO] Building file-service 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.4.3:run (default-cli) > test-compile @ file-service >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ file-service ---
+[INFO] Copying 2 resources from src/main/resources to target/classes
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ file-service ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 16 source files with javac [debug parameters release 17] to target/classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ file-service ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ file-service ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 4 source files with javac [debug parameters release 17] to target/test-classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[WARNING] /home/sahal/my/ijaa/file-service/src/test/java/com/ijaa/file_service/controller/FileControllerIntegrationTest.java:[35,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[WARNING] /home/sahal/my/ijaa/file-service/src/test/java/com/ijaa/file_service/controller/FileControllerIntegrationTest.java:[35,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[WARNING] /home/sahal/my/ijaa/file-service/src/test/java/com/ijaa/file_service/controller/FileControllerIntegrationTest.java:[35,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[WARNING] /home/sahal/my/ijaa/file-service/src/test/java/com/ijaa/file_service/controller/FileControllerIntegrationTest.java:[35,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[WARNING] /home/sahal/my/ijaa/file-service/src/test/java/com/ijaa/file_service/controller/FileControllerIntegrationTest.java:[35,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[WARNING] /home/sahal/my/ijaa/file-service/src/test/java/com/ijaa/file_service/controller/GatewayIntegrationTest.java:[38,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[WARNING] /home/sahal/my/ijaa/file-service/src/test/java/com/ijaa/file_service/controller/GatewayIntegrationTest.java:[38,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[WARNING] /home/sahal/my/ijaa/file-service/src/test/java/com/ijaa/file_service/controller/GatewayIntegrationTest.java:[38,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[WARNING] /home/sahal/my/ijaa/file-service/src/test/java/com/ijaa/file_service/controller/GatewayIntegrationTest.java:[38,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[WARNING] /home/sahal/my/ijaa/file-service/src/test/java/com/ijaa/file_service/controller/GatewayIntegrationTest.java:[38,6] org.springframework.boot.test.mock.mockito.MockBean in org.springframework.boot.test.mock.mockito has been deprecated and marked for removal
+[INFO] 
+[INFO] <<< spring-boot:3.4.3:run (default-cli) < test-compile @ file-service <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.4.3:run (default-cli) @ file-service ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.3)
+
+2025-08-24T03:09:46.436+06:00  INFO 272423 --- [file-service] [           main] c.i.file_service.FileServiceApplication  : Starting FileServiceApplication using Java 21.0.3 with PID 272423 (/home/sahal/my/ijaa/file-service/target/classes started by sahal in /home/sahal/my/ijaa/file-service)
+2025-08-24T03:09:46.438+06:00 DEBUG 272423 --- [file-service] [           main] c.i.file_service.FileServiceApplication  : Running with Spring Boot v3.4.3, Spring v6.2.3
+2025-08-24T03:09:46.439+06:00  INFO 272423 --- [file-service] [           main] c.i.file_service.FileServiceApplication  : No active profile set, falling back to 1 default profile: "default"
+2025-08-24T03:09:47.312+06:00  INFO 272423 --- [file-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-24T03:09:47.424+06:00  INFO 272423 --- [file-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 105 ms. Found 1 JPA repository interface.
+2025-08-24T03:09:47.591+06:00  INFO 272423 --- [file-service] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=67192b5a-36e4-3e4b-baee-d83acdcdd8b9
+2025-08-24T03:09:47.824+06:00  WARN 272423 --- [file-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$LoadBalancerInterceptorConfig' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$LoadBalancerInterceptorConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [lbRestClientPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-08-24T03:09:47.828+06:00  WARN 272423 --- [file-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.loadbalancer.config.BlockingLoadBalancerClientAutoConfiguration' of type [org.springframework.cloud.loadbalancer.config.BlockingLoadBalancerClientAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-08-24T03:09:47.830+06:00  WARN 272423 --- [file-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.loadbalancer.config.LoadBalancerAutoConfiguration' of type [org.springframework.cloud.loadbalancer.config.LoadBalancerAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-08-24T03:09:47.840+06:00  WARN 272423 --- [file-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration' of type [org.springframework.cloud.commons.config.CommonsConfigAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-08-24T03:09:47.843+06:00  WARN 272423 --- [file-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-08-24T03:09:47.844+06:00  WARN 272423 --- [file-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'loadBalancerClientsDefaultsMappingsProvider' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerDefaultMappingsProviderAutoConfiguration$$Lambda/0x00007f1d944be7e8] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-08-24T03:09:47.846+06:00  WARN 272423 --- [file-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'defaultsBindHandlerAdvisor' of type [org.springframework.cloud.commons.config.DefaultsBindHandlerAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-08-24T03:09:47.854+06:00  WARN 272423 --- [file-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'spring.cloud.loadbalancer-org.springframework.cloud.client.loadbalancer.LoadBalancerClientsProperties' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerClientsProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-08-24T03:09:47.861+06:00  WARN 272423 --- [file-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'default.org.springframework.cloud.loadbalancer.config.LoadBalancerAutoConfiguration.LoadBalancerClientSpecification' of type [org.springframework.cloud.loadbalancer.annotation.LoadBalancerClientSpecification] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-08-24T03:09:47.863+06:00  WARN 272423 --- [file-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'default.org.springframework.cloud.loadbalancer.config.BlockingLoadBalancerClientAutoConfiguration.LoadBalancerClientSpecification' of type [org.springframework.cloud.loadbalancer.annotation.LoadBalancerClientSpecification] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-08-24T03:09:47.864+06:00  WARN 272423 --- [file-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'default.org.springframework.cloud.netflix.eureka.loadbalancer.LoadBalancerEurekaAutoConfiguration.LoadBalancerClientSpecification' of type [org.springframework.cloud.loadbalancer.annotation.LoadBalancerClientSpecification] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-08-24T03:09:47.866+06:00  WARN 272423 --- [file-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'loadBalancerClientFactory' of type [org.springframework.cloud.loadbalancer.support.LoadBalancerClientFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-08-24T03:09:47.875+06:00  WARN 272423 --- [file-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'blockingLoadBalancerClient' of type [org.springframework.cloud.loadbalancer.blocking.client.BlockingLoadBalancerClient] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-08-24T03:09:47.884+06:00  WARN 272423 --- [file-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'loadBalancerServiceInstanceCookieTransformer' of type [org.springframework.cloud.loadbalancer.core.LoadBalancerServiceInstanceCookieTransformer] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-08-24T03:09:47.888+06:00  WARN 272423 --- [file-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'xForwarderHeadersTransformer' of type [org.springframework.cloud.loadbalancer.blocking.XForwardedHeadersTransformer] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-08-24T03:09:47.890+06:00  WARN 272423 --- [file-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-08-24T03:09:47.893+06:00  WARN 272423 --- [file-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'loadBalancerRequestFactory' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerRequestFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-08-24T03:09:47.895+06:00  WARN 272423 --- [file-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'loadBalancerInterceptor' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerInterceptor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected/applied to a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies/advisors. If this bean does not have to be post-processed, declare it with ROLE_INFRASTRUCTURE.
+2025-08-24T03:09:48.115+06:00  INFO 272423 --- [file-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8083 (http)
+2025-08-24T03:09:48.125+06:00  INFO 272423 --- [file-service] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-08-24T03:09:48.126+06:00  INFO 272423 --- [file-service] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.36]
+2025-08-24T03:09:48.164+06:00  INFO 272423 --- [file-service] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-08-24T03:09:48.165+06:00  INFO 272423 --- [file-service] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1686 ms
+2025-08-24T03:09:48.342+06:00 DEBUG 272423 --- [file-service] [           main] o.s.w.f.ServerHttpObservationFilter      : Filter 'webMvcObservationFilter' configured for use
+2025-08-24T03:09:48.441+06:00  INFO 272423 --- [file-service] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-24T03:09:48.476+06:00  INFO 272423 --- [file-service] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.8.Final
+2025-08-24T03:09:48.500+06:00  INFO 272423 --- [file-service] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-08-24T03:09:48.698+06:00  INFO 272423 --- [file-service] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-24T03:09:48.722+06:00  INFO 272423 --- [file-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-08-24T03:09:48.932+06:00  INFO 272423 --- [file-service] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@46290193
+2025-08-24T03:09:48.933+06:00  INFO 272423 --- [file-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-08-24T03:09:48.961+06:00  WARN 272423 --- [file-service] [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-24T03:09:48.976+06:00  INFO 272423 --- [file-service] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 12.22
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-24T03:09:49.621+06:00  INFO 272423 --- [file-service] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-24T03:09:49.660+06:00  INFO 272423 --- [file-service] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-24T03:09:50.064+06:00  WARN 272423 --- [file-service] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-24T03:09:50.186+06:00 DEBUG 272423 --- [file-service] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 12 mappings in 'requestMappingHandlerMapping'
+2025-08-24T03:09:50.357+06:00 DEBUG 272423 --- [file-service] [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /uploads/**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2025-08-24T03:09:50.394+06:00 DEBUG 272423 --- [file-service] [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-08-24T03:09:50.441+06:00 DEBUG 272423 --- [file-service] [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-08-24T03:09:50.944+06:00  INFO 272423 --- [file-service] [           main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2025-08-24T03:09:50.971+06:00  WARN 272423 --- [file-service] [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2025-08-24T03:09:51.008+06:00  INFO 272423 --- [file-service] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2025-08-24T03:09:51.079+06:00  INFO 272423 --- [file-service] [           main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2025-08-24T03:09:51.164+06:00  INFO 272423 --- [file-service] [           main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2025-08-24T03:09:51.168+06:00  INFO 272423 --- [file-service] [           main] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2025-08-24T03:09:51.187+06:00  INFO 272423 --- [file-service] [           main] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2025-08-24T03:09:51.187+06:00  INFO 272423 --- [file-service] [           main] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2025-08-24T03:09:51.188+06:00  INFO 272423 --- [file-service] [           main] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2025-08-24T03:09:51.188+06:00  INFO 272423 --- [file-service] [           main] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2025-08-24T03:09:51.188+06:00  INFO 272423 --- [file-service] [           main] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2025-08-24T03:09:51.188+06:00  INFO 272423 --- [file-service] [           main] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2025-08-24T03:09:51.188+06:00  INFO 272423 --- [file-service] [           main] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2025-08-24T03:09:51.287+06:00 DEBUG 272423 --- [file-service] [           main] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/
+2025-08-24T03:09:51.374+06:00 DEBUG 272423 --- [file-service] [           main] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:09:51.410+06:00 DEBUG 272423 --- [file-service] [           main] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:09:51.412+06:00 DEBUG 272423 --- [file-service] [           main] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:09:51.442+06:00  INFO 272423 --- [file-service] [           main] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2025-08-24T03:09:51.444+06:00  INFO 272423 --- [file-service] [           main] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
+2025-08-24T03:09:51.446+06:00  INFO 272423 --- [file-service] [           main] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2025-08-24T03:09:51.450+06:00  INFO 272423 --- [file-service] [           main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1755983391449 with initial instances count: 4
+2025-08-24T03:09:51.455+06:00  INFO 272423 --- [file-service] [           main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application FILE-SERVICE with eureka with status UP
+2025-08-24T03:09:51.455+06:00  INFO 272423 --- [file-service] [           main] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1755983391455, current=UP, previous=STARTING]
+2025-08-24T03:09:51.457+06:00  INFO 272423 --- [file-service] [nfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_FILE-SERVICE/192.168.0.111:file-service:8083: registering service...
+2025-08-24T03:09:51.459+06:00 DEBUG 272423 --- [file-service] [nfoReplicator-0] o.s.web.client.RestTemplate              : HTTP POST http://localhost:8761/eureka/apps/FILE-SERVICE
+2025-08-24T03:09:51.461+06:00 DEBUG 272423 --- [file-service] [nfoReplicator-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:09:51.467+06:00  INFO 272423 --- [file-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8083 (http) with context path '/'
+2025-08-24T03:09:51.468+06:00  INFO 272423 --- [file-service] [           main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8083
+2025-08-24T03:09:51.472+06:00 DEBUG 272423 --- [file-service] [nfoReplicator-0] o.s.web.client.RestTemplate              : Writing [InstanceInfo [instanceId = 192.168.0.111:file-service:8083, appName = FILE-SERVICE, hostName = 192.168.0.111, status = UP, ipAddr = 192.168.0.111, port = 8083, securePort = 443, dataCenterInfo = com.netflix.appinfo.MyDataCenterInfo@7e544223] as "application/json"
+2025-08-24T03:09:51.486+06:00 DEBUG 272423 --- [file-service] [nfoReplicator-0] o.s.web.client.RestTemplate              : Response 204 NO_CONTENT
+2025-08-24T03:09:51.487+06:00  INFO 272423 --- [file-service] [nfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_FILE-SERVICE/192.168.0.111:file-service:8083 - registration status: 204
+2025-08-24T03:09:51.558+06:00  INFO 272423 --- [file-service] [           main] c.i.file_service.FileServiceApplication  : Started FileServiceApplication in 5.536 seconds (process running for 5.83)
+2025-08-24T03:09:58.823+06:00  INFO 272423 --- [file-service] [nio-8083-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-08-24T03:09:58.824+06:00  INFO 272423 --- [file-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-08-24T03:09:58.824+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+2025-08-24T03:09:58.824+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+2025-08-24T03:09:58.824+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+2025-08-24T03:09:58.825+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@6af10aa7
+2025-08-24T03:09:58.825+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@76629f82
+2025-08-24T03:09:58.826+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2025-08-24T03:09:58.826+06:00  INFO 272423 --- [file-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2025-08-24T03:09:58.835+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : POST "/api/v1/users/e76dbb07-7790-4862-95b0-e0aa96f7b2a3/cover-photo", parameters={multipart}
+2025-08-24T03:09:58.847+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.ijaa.file_service.exception.GlobalExceptionHandler#handleMultipartException(MultipartException)
+2025-08-24T03:09:58.847+06:00 ERROR 272423 --- [file-service] [nio-8083-exec-1] c.i.f.exception.GlobalExceptionHandler   : Multipart exception: Failed to parse multipart servlet request
+2025-08-24T03:09:58.853+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json] and supported [application/json, application/*+json, application/yaml]
+2025-08-24T03:09:58.855+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=false, message=File is required. Please provide a valid file to upload., data=nu (truncated)...]
+2025-08-24T03:09:58.858+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MultipartException: Failed to parse multipart servlet request]
+2025-08-24T03:09:58.859+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 400 BAD_REQUEST
+2025-08-24T03:10:03.206+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-2] o.s.web.servlet.DispatcherServlet        : POST "/api/v1/users/e76dbb07-7790-4862-95b0-e0aa96f7b2a3/cover-photo", parameters={multipart}
+2025-08-24T03:10:03.214+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.ijaa.file_service.controller.FileController#uploadCoverPhoto(String, MultipartFile)
+2025-08-24T03:10:03.227+06:00  INFO 272423 --- [file-service] [nio-8083-exec-2] c.i.f.controller.FileController          : Received cover photo upload request for user: e76dbb07-7790-4862-95b0-e0aa96f7b2a3
+2025-08-24T03:10:03.227+06:00  INFO 272423 --- [file-service] [nio-8083-exec-2] c.i.f.service.impl.FileServiceImpl       : Uploading cover photo for user: e76dbb07-7790-4862-95b0-e0aa96f7b2a3
+2025-08-24T03:10:03.228+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-2] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.ijaa.file_service.exception.GlobalExceptionHandler#handleInvalidFileTypeException(InvalidFileTypeException)
+2025-08-24T03:10:03.228+06:00 ERROR 272423 --- [file-service] [nio-8083-exec-2] c.i.f.exception.GlobalExceptionHandler   : Invalid file type exception: File type not allowed. Allowed types: jpg, jpeg, png, webp
+2025-08-24T03:10:03.228+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json] and supported [application/json, application/*+json, application/yaml]
+2025-08-24T03:10:03.228+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=false, message=File type not allowed. Allowed types: jpg, jpeg, png, webp, data= (truncated)...]
+2025-08-24T03:10:03.229+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-2] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.ijaa.file_service.exceptions.InvalidFileTypeException: File type not allowed. Allowed types: jpg, jpeg, png, webp]
+2025-08-24T03:10:03.229+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 400 BAD_REQUEST
+2025-08-24T03:10:07.647+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-3] o.s.web.servlet.DispatcherServlet        : POST "/api/v1/users/e76dbb07-7790-4862-95b0-e0aa96f7b2a3/cover-photo", parameters={multipart}
+2025-08-24T03:10:07.648+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.ijaa.file_service.controller.FileController#uploadCoverPhoto(String, MultipartFile)
+2025-08-24T03:10:07.649+06:00  INFO 272423 --- [file-service] [nio-8083-exec-3] c.i.f.controller.FileController          : Received cover photo upload request for user: e76dbb07-7790-4862-95b0-e0aa96f7b2a3
+2025-08-24T03:10:07.649+06:00  INFO 272423 --- [file-service] [nio-8083-exec-3] c.i.f.service.impl.FileServiceImpl       : Uploading cover photo for user: e76dbb07-7790-4862-95b0-e0aa96f7b2a3
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.active,
+        u1_0.cover_photo_path,
+        u1_0.created_at,
+        u1_0.password,
+        u1_0.profile_photo_path,
+        u1_0.updated_at,
+        u1_0.user_id,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+Hibernate: 
+    insert 
+    into
+        users
+        (active, cover_photo_path, created_at, password, profile_photo_path, updated_at, user_id, username) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?)
+2025-08-24T03:10:07.784+06:00 ERROR 272423 --- [file-service] [nio-8083-exec-3] c.i.f.service.impl.FileServiceImpl       : Error uploading cover photo for user: e76dbb07-7790-4862-95b0-e0aa96f7b2a3
+
+java.nio.file.AccessDeniedException: /uploads
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:90) ~[na:na]
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106) ~[na:na]
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111) ~[na:na]
+	at java.base/sun.nio.fs.UnixFileSystemProvider.createDirectory(UnixFileSystemProvider.java:438) ~[na:na]
+	at java.base/java.nio.file.Files.createDirectory(Files.java:699) ~[na:na]
+	at java.base/java.nio.file.Files.createAndCheckIsDirectory(Files.java:807) ~[na:na]
+	at java.base/java.nio.file.Files.createDirectories(Files.java:793) ~[na:na]
+	at com.ijaa.file_service.service.impl.FileServiceImpl.uploadCoverPhoto(FileServiceImpl.java:91) ~[classes/:na]
+	at com.ijaa.file_service.controller.FileController.uploadCoverPhoto(FileController.java:195) ~[classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:257) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:190) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:986) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:891) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1088) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:978) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590) ~[tomcat-embed-core-10.1.36.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.36.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:114) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1743) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+
+2025-08-24T03:10:07.787+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-3] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.ijaa.file_service.exception.GlobalExceptionHandler#handleFileStorageException(FileStorageException)
+2025-08-24T03:10:07.787+06:00 ERROR 272423 --- [file-service] [nio-8083-exec-3] c.i.f.exception.GlobalExceptionHandler   : File storage exception: Failed to upload cover photo
+
+com.ijaa.file_service.exceptions.FileStorageException: Failed to upload cover photo
+	at com.ijaa.file_service.service.impl.FileServiceImpl.uploadCoverPhoto(FileServiceImpl.java:124) ~[classes/:na]
+	at com.ijaa.file_service.controller.FileController.uploadCoverPhoto(FileController.java:195) ~[classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:257) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:190) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:986) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:891) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1088) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:978) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590) ~[tomcat-embed-core-10.1.36.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.3.jar:6.2.3]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.36.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:114) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.3.jar:6.2.3]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1743) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.36.jar:10.1.36]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+Caused by: java.nio.file.AccessDeniedException: /uploads
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:90) ~[na:na]
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106) ~[na:na]
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111) ~[na:na]
+	at java.base/sun.nio.fs.UnixFileSystemProvider.createDirectory(UnixFileSystemProvider.java:438) ~[na:na]
+	at java.base/java.nio.file.Files.createDirectory(Files.java:699) ~[na:na]
+	at java.base/java.nio.file.Files.createAndCheckIsDirectory(Files.java:807) ~[na:na]
+	at java.base/java.nio.file.Files.createDirectories(Files.java:793) ~[na:na]
+	at com.ijaa.file_service.service.impl.FileServiceImpl.uploadCoverPhoto(FileServiceImpl.java:91) ~[classes/:na]
+	... 53 common frames omitted
+
+2025-08-24T03:10:07.788+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json] and supported [application/json, application/*+json, application/yaml]
+2025-08-24T03:10:07.788+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=false, message=Failed to upload cover photo, data=null, timestamp=1755983407788)]
+2025-08-24T03:10:07.789+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-3] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.ijaa.file_service.exceptions.FileStorageException: Failed to upload cover photo]
+2025-08-24T03:10:07.789+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 500 INTERNAL_SERVER_ERROR
+2025-08-24T03:10:21.445+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2025-08-24T03:10:21.446+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:10:21.447+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/FILE-SERVICE/192.168.0.111:file-service:8083?status=UP&lastDirtyTimestamp=1755983391455
+2025-08-24T03:10:21.449+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:10:21.449+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:10:21.458+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:10:21.463+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:10:34.969+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-4] o.s.web.servlet.DispatcherServlet        : POST "/api/v1/users/e76dbb07-7790-4862-95b0-e0aa96f7b2a3/cover-photo", parameters={multipart}
+2025-08-24T03:10:34.970+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.ijaa.file_service.controller.FileController#uploadCoverPhoto(String, MultipartFile)
+2025-08-24T03:10:34.971+06:00  INFO 272423 --- [file-service] [nio-8083-exec-4] c.i.f.controller.FileController          : Received cover photo upload request for user: e76dbb07-7790-4862-95b0-e0aa96f7b2a3
+2025-08-24T03:10:34.971+06:00  INFO 272423 --- [file-service] [nio-8083-exec-4] c.i.f.service.impl.FileServiceImpl       : Uploading cover photo for user: e76dbb07-7790-4862-95b0-e0aa96f7b2a3
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.active,
+        u1_0.cover_photo_path,
+        u1_0.created_at,
+        u1_0.password,
+        u1_0.profile_photo_path,
+        u1_0.updated_at,
+        u1_0.user_id,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+Hibernate: 
+    update
+        users 
+    set
+        active=?,
+        cover_photo_path=?,
+        created_at=?,
+        password=?,
+        profile_photo_path=?,
+        updated_at=?,
+        user_id=?,
+        username=? 
+    where
+        id=?
+2025-08-24T03:10:34.993+06:00  INFO 272423 --- [file-service] [nio-8083-exec-4] c.i.f.service.impl.FileServiceImpl       : Cover photo uploaded successfully for user: e76dbb07-7790-4862-95b0-e0aa96f7b2a3, file: 31996c73-b8ad-44ef-86fe-71eda4693a90.jpg
+2025-08-24T03:10:34.994+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json] and supported [application/json, application/*+json, application/yaml]
+2025-08-24T03:10:34.994+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [ApiResponse(success=true, message=Cover photo uploaded successfully, data=FileUploadResponse(message (truncated)...]
+2025-08-24T03:10:34.996+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-08-24T03:10:39.345+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/swagger-ui/index.html", parameters={}
+2025-08-24T03:10:39.347+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-6] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/webjars/]]
+2025-08-24T03:10:39.354+06:00 DEBUG 272423 --- [file-service] [nio-8083-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-08-24T03:10:51.452+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2025-08-24T03:10:51.453+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:10:51.456+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:10:51.457+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:10:51.464+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/FILE-SERVICE/192.168.0.111:file-service:8083?status=UP&lastDirtyTimestamp=1755983391455
+2025-08-24T03:10:51.465+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:10:51.469+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:11:21.459+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2025-08-24T03:11:21.460+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:11:21.464+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:11:21.464+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:11:21.471+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/FILE-SERVICE/192.168.0.111:file-service:8083?status=UP&lastDirtyTimestamp=1755983391455
+2025-08-24T03:11:21.471+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:11:21.478+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 404 NOT_FOUND
+2025-08-24T03:11:21.479+06:00  INFO 272423 --- [file-service] [tbeatExecutor-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_FILE-SERVICE/192.168.0.111:file-service:8083 - Re-registering apps/FILE-SERVICE
+2025-08-24T03:11:21.479+06:00  INFO 272423 --- [file-service] [tbeatExecutor-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_FILE-SERVICE/192.168.0.111:file-service:8083: registering service...
+2025-08-24T03:11:21.480+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP POST http://localhost:8761/eureka/apps/FILE-SERVICE
+2025-08-24T03:11:21.480+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:11:21.480+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Writing [InstanceInfo [instanceId = 192.168.0.111:file-service:8083, appName = FILE-SERVICE, hostName = 192.168.0.111, status = UP, ipAddr = 192.168.0.111, port = 8083, securePort = 443, dataCenterInfo = com.netflix.appinfo.MyDataCenterInfo@7e544223] as "application/json"
+2025-08-24T03:11:21.484+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 204 NO_CONTENT
+2025-08-24T03:11:21.484+06:00  INFO 272423 --- [file-service] [tbeatExecutor-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_FILE-SERVICE/192.168.0.111:file-service:8083 - registration status: 204
+2025-08-24T03:11:51.467+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2025-08-24T03:11:51.467+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:11:51.471+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:11:51.471+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:11:51.485+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/FILE-SERVICE/192.168.0.111:file-service:8083?status=UP&lastDirtyTimestamp=1755983481479
+2025-08-24T03:11:51.486+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:11:51.489+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:12:21.473+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2025-08-24T03:12:21.473+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:12:21.476+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:12:21.476+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:12:21.490+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/FILE-SERVICE/192.168.0.111:file-service:8083?status=UP&lastDirtyTimestamp=1755983481479
+2025-08-24T03:12:21.490+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:12:21.493+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:12:51.478+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2025-08-24T03:12:51.479+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:12:51.482+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:12:51.483+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:12:51.494+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/FILE-SERVICE/192.168.0.111:file-service:8083?status=UP&lastDirtyTimestamp=1755983481479
+2025-08-24T03:12:51.494+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:12:51.497+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:13:21.484+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2025-08-24T03:13:21.484+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:13:21.487+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:13:21.488+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:13:21.498+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/FILE-SERVICE/192.168.0.111:file-service:8083?status=UP&lastDirtyTimestamp=1755983481479
+2025-08-24T03:13:21.499+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:13:21.501+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:13:51.489+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2025-08-24T03:13:51.490+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:13:51.492+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:13:51.493+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:13:51.502+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/FILE-SERVICE/192.168.0.111:file-service:8083?status=UP&lastDirtyTimestamp=1755983481479
+2025-08-24T03:13:51.503+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:13:51.506+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:14:21.494+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2025-08-24T03:14:21.495+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:14:21.498+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:14:21.498+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:14:21.507+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/FILE-SERVICE/192.168.0.111:file-service:8083?status=UP&lastDirtyTimestamp=1755983481479
+2025-08-24T03:14:21.508+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:14:21.511+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:14:51.189+06:00  INFO 272423 --- [file-service] [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2025-08-24T03:14:51.500+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2025-08-24T03:14:51.500+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:14:51.503+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:14:51.504+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:14:51.511+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/FILE-SERVICE/192.168.0.111:file-service:8083?status=UP&lastDirtyTimestamp=1755983481479
+2025-08-24T03:14:51.512+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:14:51.514+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:15:21.505+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2025-08-24T03:15:21.505+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:15:21.508+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:15:21.508+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:15:21.516+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/FILE-SERVICE/192.168.0.111:file-service:8083?status=UP&lastDirtyTimestamp=1755983481479
+2025-08-24T03:15:21.516+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:15:21.519+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:15:51.509+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2025-08-24T03:15:51.510+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:15:51.513+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:15:51.513+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:15:51.520+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/FILE-SERVICE/192.168.0.111:file-service:8083?status=UP&lastDirtyTimestamp=1755983481479
+2025-08-24T03:15:51.520+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:15:51.524+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:16:21.514+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2025-08-24T03:16:21.514+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:16:21.517+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:16:21.517+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:16:21.525+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/FILE-SERVICE/192.168.0.111:file-service:8083?status=UP&lastDirtyTimestamp=1755983481479
+2025-08-24T03:16:21.525+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:16:21.528+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:16:51.519+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2025-08-24T03:16:51.519+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:16:51.522+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:16:51.522+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:16:51.529+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/FILE-SERVICE/192.168.0.111:file-service:8083?status=UP&lastDirtyTimestamp=1755983481479
+2025-08-24T03:16:51.529+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:16:51.532+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:17:21.524+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2025-08-24T03:17:21.524+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:17:21.527+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:17:21.527+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:17:21.533+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/FILE-SERVICE/192.168.0.111:file-service:8083?status=UP&lastDirtyTimestamp=1755983481479
+2025-08-24T03:17:21.533+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:17:21.536+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:17:51.528+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2025-08-24T03:17:51.528+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:17:51.531+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:17:51.532+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:17:51.537+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/FILE-SERVICE/192.168.0.111:file-service:8083?status=UP&lastDirtyTimestamp=1755983481479
+2025-08-24T03:17:51.537+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:17:51.541+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 404 NOT_FOUND
+2025-08-24T03:17:51.541+06:00  INFO 272423 --- [file-service] [tbeatExecutor-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_FILE-SERVICE/192.168.0.111:file-service:8083 - Re-registering apps/FILE-SERVICE
+2025-08-24T03:17:51.541+06:00  INFO 272423 --- [file-service] [tbeatExecutor-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_FILE-SERVICE/192.168.0.111:file-service:8083: registering service...
+2025-08-24T03:17:51.542+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP POST http://localhost:8761/eureka/apps/FILE-SERVICE
+2025-08-24T03:17:51.542+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:17:51.542+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Writing [InstanceInfo [instanceId = 192.168.0.111:file-service:8083, appName = FILE-SERVICE, hostName = 192.168.0.111, status = UP, ipAddr = 192.168.0.111, port = 8083, securePort = 443, dataCenterInfo = com.netflix.appinfo.MyDataCenterInfo@7e544223] as "application/json"
+2025-08-24T03:17:51.544+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 204 NO_CONTENT
+2025-08-24T03:17:51.545+06:00  INFO 272423 --- [file-service] [tbeatExecutor-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_FILE-SERVICE/192.168.0.111:file-service:8083 - registration status: 204
+2025-08-24T03:18:21.534+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2025-08-24T03:18:21.534+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:18:21.538+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:18:21.539+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:18:21.545+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/FILE-SERVICE/192.168.0.111:file-service:8083?status=UP&lastDirtyTimestamp=1755983871541
+2025-08-24T03:18:21.546+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:18:21.549+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:18:51.541+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2025-08-24T03:18:51.541+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:18:51.544+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:18:51.544+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:18:51.549+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/FILE-SERVICE/192.168.0.111:file-service:8083?status=UP&lastDirtyTimestamp=1755983871541
+2025-08-24T03:18:51.550+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:18:51.552+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:19:21.546+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2025-08-24T03:19:21.546+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:19:21.549+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+2025-08-24T03:19:21.549+06:00 DEBUG 272423 --- [file-service] [freshExecutor-0] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2025-08-24T03:19:21.553+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/FILE-SERVICE/192.168.0.111:file-service:8083?status=UP&lastDirtyTimestamp=1755983871541
+2025-08-24T03:19:21.554+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2025-08-24T03:19:21.558+06:00 DEBUG 272423 --- [file-service] [tbeatExecutor-0] o.s.web.client.RestTemplate              : Response 200 OK
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  09:44 min
+[INFO] Finished at: 2025-08-24T03:19:24+06:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.4.3:run (default-cli) on project file-service: Process terminated with exit code: 137 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

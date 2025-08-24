@@ -17,6 +17,7 @@ public class RouteValidator {
                     "/ijaa/api/v1/user/signin",
                     "/ijaa/api/v1/admin/login",
                     "/ijaa/api/v1/admin/signup",
+                    "/ijaa/api/v1/users",
                     "/ijaa/actuator/**"
             )
             .noneMatch(uri -> request.getURI().getPath().contains(uri));

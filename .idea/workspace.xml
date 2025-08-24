@@ -4,25 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ce6d269-0e9e-4fa6-93e1-3e4fac090d6e" name="Changes" comment="profile working">
+    <list default="true" id="9ce6d269-0e9e-4fa6-93e1-3e4fac090d6e" name="Changes" comment="profile fixed">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/domain/dto/CurrentUserContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/domain/dto/CurrentUserContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/filter/AuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/filter/AuthenticationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/utils/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/utils/JwtUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/config/GatewayConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/config/GatewayConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/validator/RouteValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/validator/RouteValidator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project-context.md" beforeDir="false" afterPath="$PROJECT_DIR$/project-context.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/CurrentUserContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/CurrentUserContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/AuthService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/BaseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/BaseService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/JWTService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/JWTService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/ProfileServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/ProfileServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/AlumniSearchServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/AlumniSearchServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/AuthServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/AuthServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/ProfileServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/ProfileServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/Profile.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="module" />
+      <option value="repository" />
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -50,6 +51,8 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Maven.file-service [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.file-service [install].executor&quot;: &quot;Run&quot;,
     &quot;Maven.gateway-service [clean,install].executor&quot;: &quot;Run&quot;,
     &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
     &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
@@ -60,9 +63,11 @@
     &quot;Spring Boot.DiscoveryServerApplication.executor&quot;: &quot;Debug&quot;,
     &quot;Spring Boot.EdgeServerApplication.executor&quot;: &quot;Debug&quot;,
     &quot;Spring Boot.EventServiceApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.FileServiceApplication.executor&quot;: &quot;Debug&quot;,
     &quot;Spring Boot.UserServiceApplication.executor&quot;: &quot;Debug&quot;,
     &quot;git-widget-placeholder&quot;: &quot;feature/event&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/sahal/my/ijaa/file-service&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -92,6 +97,7 @@
               <entry key="DiscoveryServerApplication" value="STOPPED" />
               <entry key="EdgeServerApplication" value="STOPPED" />
               <entry key="EventServiceApplication" value="STOPPED" />
+              <entry key="FileServiceApplication" value="STOPPED" />
               <entry key="UserServiceApplication" value="STOPPED" />
             </map>
           </value>
@@ -99,7 +105,7 @@
       </map>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.UserServiceApplication">
+  <component name="RunManager" selected="Spring Boot.FileServiceApplication">
     <configuration name="ConfigserverApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="config-service" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.wallet.configserver.ConfigserverApplication" />
@@ -125,6 +131,13 @@
     <configuration name="EventServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="event-service" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.ijaa.event_service.EventServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FileServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="file-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ijaa.file_service.FileServiceApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -155,7 +168,9 @@
       <updated>1755715941660</updated>
       <workItem from="1755715946487" duration="6724000" />
       <workItem from="1755862071170" duration="13312000" />
-      <workItem from="1755926221240" duration="2465000" />
+      <workItem from="1755926221240" duration="2992000" />
+      <workItem from="1755967922561" duration="10058000" />
+      <workItem from="1756012158753" duration="1794000" />
     </task>
     <task id="LOCAL-00001" summary="sob elomelo">
       <option name="closed" value="true" />
@@ -173,7 +188,15 @@
       <option name="project" value="LOCAL" />
       <updated>1755868261453</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="profile fixed">
+      <option name="closed" value="true" />
+      <created>1755929073522</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1755929073522</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -182,6 +205,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="sob elomelo" />
     <MESSAGE value="profile working" />
-    <option name="LAST_COMMIT_MESSAGE" value="profile working" />
+    <MESSAGE value="profile fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="profile fixed" />
   </component>
 </project>
