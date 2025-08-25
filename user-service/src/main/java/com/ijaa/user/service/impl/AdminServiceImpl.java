@@ -91,8 +91,8 @@ public class AdminServiceImpl implements AdminService {
 
         Admin savedAdmin = adminRepository.save(admin);
 
-        // Generate JWT token with admin role
-        String token = jwtService.generateAdminToken(savedAdmin.getEmail(), savedAdmin.getRole().getRole());
+        // Generate JWT token with admin role and ID
+        String token = jwtService.generateAdminToken(savedAdmin.getEmail(), savedAdmin.getRole().getRole(), savedAdmin.getId());
 
         return createAuthResponse(savedAdmin, token);
     }
@@ -106,8 +106,8 @@ public class AdminServiceImpl implements AdminService {
             throw new AuthenticationFailedException("Invalid email or password");
         }
 
-        // Generate JWT token with admin role
-        String token = jwtService.generateAdminToken(admin.getEmail(), admin.getRole().getRole());
+        // Generate JWT token with admin role and ID
+        String token = jwtService.generateAdminToken(admin.getEmail(), admin.getRole().getRole(), admin.getId());
 
         return createAuthResponse(admin, token);
     }
@@ -151,6 +151,19 @@ public class AdminServiceImpl implements AdminService {
                 .orElseThrow(() -> new AdminNotFoundException("Admin not found with id: " + adminId));
 
         return createProfileResponse(admin);
+    }
+
+    /**
+     * Gets the current authenticated admin's profile
+     * @return The current admin's profile
+     */
+    public AdminProfileResponse getCurrentAdminProfile() {
+        Long currentAdminId = getCurrentAdminId();
+        if (currentAdminId == null) {
+            throw new AuthenticationFailedException("Authentication required to get admin profile");
+        }
+        
+        return getProfile(currentAdminId);
     }
 
     @Override

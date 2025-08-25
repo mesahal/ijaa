@@ -85,6 +85,7 @@ ijaa/
 - **Method-Level Security**: @PreAuthorize annotations on all protected endpoints
 - **User Context Management**: Secure user context handling with Base64 encoding
 - **Inter-Service Communication**: Secure service-to-service communication via Feign clients
+- **Admin ID Integration**: ✅ UPDATED - Admin profile API now properly extracts admin ID from JWT tokens instead of using hardcoded values
 - **Authorization Matrix**: 
   - **Public Endpoints**: Profile viewing, event browsing, comment reading (23 endpoints)
   - **USER Role**: Profile editing, event creation, comment posting (52+ endpoints)
@@ -117,7 +118,7 @@ ijaa/
 1. **Authentication & Authorization Tests**: 100% success
 2. **Profile Management Tests**: 100% success (including profile creation scenarios) ✅
 3. **Event Management Tests**: 100% success (Event Service)
-4. **Admin Management Tests**: 100% success
+4. **Admin Management Tests**: 100% success (including admin profile API with proper admin ID extraction) ✅
 5. **Feature Flag Tests**: 100% success
 6. **Repository Layer Tests**: Working perfectly
 7. **Performance Tests**: Response time validation
@@ -128,6 +129,7 @@ ijaa/
 12. **Delete API Tests**: Comprehensive testing for experience and interest deletion by ID ✅
 13. **Update API Tests**: Comprehensive testing for experience and interest updates by ID ✅
 14. **File Service Tests**: Comprehensive testing for file upload, download, validation, error scenarios, gateway integration, and Swagger UI file upload bug fixes ✅
+15. **Admin Profile API Tests**: Comprehensive testing for admin profile retrieval with proper admin ID extraction from JWT tokens ✅
 
 ### 🎯 Test Coverage Goals:
 - **Service Layer**: 95%+ coverage
@@ -572,6 +574,17 @@ The IJAA system now includes a comprehensive feature flag system that allows dyn
 - Added comprehensive tests specifically for Swagger UI file upload scenarios
 - All file upload endpoints now work correctly from both Swagger UI and direct API calls
 
+### 9. Admin Profile API Issues (FIXED):
+**Issue**: Admin profile API was using hardcoded admin ID (1L) instead of extracting the actual admin ID from JWT token
+**Status**: ✅ FIXED - Admin profile API now properly extracts admin ID from JWT tokens
+**Solution**: 
+- Updated JWT service to include admin ID in token claims
+- Modified AdminServiceImpl to use new JWT method with admin ID parameter
+- Added getCurrentAdminProfile method to extract admin ID from security context
+- Updated AdminAuthResource to use the new method instead of hardcoded ID
+- Added comprehensive tests for the new functionality
+- All admin profile operations now use proper admin ID extraction from JWT tokens
+
 ---
 
 ## 🎯 Next Steps & Roadmap
@@ -583,10 +596,11 @@ The IJAA system now includes a comprehensive feature flag system that allows dyn
 4. **✅ Update API Implementation**: COMPLETED - Added complete CRUD operations for experiences and interests
 5. **✅ User ID Integration**: COMPLETED - Gateway now sends user ID instead of username, all profile operations use user ID
 6. **✅ Swagger UI File Upload Bug Fix**: COMPLETED - Fixed file parameter binding issue in Swagger UI
-7. **Complete Feature Flag Integration**: Integrate feature flags across all services
-8. **Performance Testing**: Load testing for large datasets
-9. **Security Audit**: Comprehensive security review
-10. **Documentation**: Complete API documentation
+7. **✅ Admin Profile API Fix**: COMPLETED - Admin profile API now properly extracts admin ID from JWT tokens
+8. **Complete Feature Flag Integration**: Integrate feature flags across all services
+9. **Performance Testing**: Load testing for large datasets
+10. **Security Audit**: Comprehensive security review
+11. **Documentation**: Complete API documentation
 
 ### Future Enhancements:
 1. **Real-time Features**: WebSocket implementation for live updates
@@ -666,9 +680,9 @@ The IJAA backend system is a **robust, well-architected microservices platform**
 - ✅ **Performance Optimized**: High-performance caching and optimization
 - ✅ **Microservices Architecture**: Proper service separation with inter-service communication
 
-**Current Status**: Production-ready with comprehensive testing suite, feature flag system, microservices architecture, **enterprise-grade security**, **robust profile management**, **complete file management system with Swagger UI support**, and **user ID-based operations**.
+**Current Status**: Production-ready with comprehensive testing suite, feature flag system, microservices architecture, **enterprise-grade security**, **robust profile management**, **complete file management system with Swagger UI support**, **user ID integration**, and **proper admin ID extraction from JWT tokens**.
 
-**Recommendation**: The system is ready for production use with the current implementation. The microservices architecture provides excellent scalability, maintainability, the feature flag system provides flexibility for feature rollout and management, the comprehensive authorization ensures enterprise-grade security, the profile service provides complete CRUD operations for experiences and interests with independent creation, proper update/delete APIs, and comprehensive validation, the file service provides complete file management capabilities for profile and cover photos with validation, automatic cleanup, extensible storage architecture, and full Swagger UI support, and the user ID integration ensures proper user context management across all services.
+**Recommendation**: The system is ready for production use with the current implementation. The microservices architecture provides excellent scalability, maintainability, the feature flag system provides flexibility for feature rollout and management, the comprehensive authorization ensures enterprise-grade security, the profile service provides complete CRUD operations for experiences and interests with independent creation, proper update/delete APIs, and comprehensive validation, the file service provides complete file management capabilities for profile and cover photos with validation, automatic cleanup, extensible storage architecture, and full Swagger UI support, the user ID integration ensures proper user context management across all services, and the admin profile API now properly extracts admin ID from JWT tokens for secure admin operations.
 
 ---
 

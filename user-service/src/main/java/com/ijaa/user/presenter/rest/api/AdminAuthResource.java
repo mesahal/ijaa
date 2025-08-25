@@ -310,12 +310,8 @@ public class AdminAuthResource {
         )
     })
     public ResponseEntity<ApiResponse<AdminProfileResponse>> getProfile() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        
-        // For now, we'll need to get admin by email and then by ID
-        // This is a simplified approach - in production, you'd want to store admin ID in JWT claims
-        AdminProfileResponse response = adminService.getProfile(1L); // Placeholder - need to implement proper admin ID extraction
+        // Get current authenticated admin's profile
+        AdminProfileResponse response = adminService.getCurrentAdminProfile();
         
         return ResponseEntity.ok(new ApiResponse<>("Admin profile retrieved successfully", "200", response));
     }

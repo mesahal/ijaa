@@ -22,6 +22,8 @@ public interface AdminService {
     
     AdminProfileResponse getProfile(Long adminId);
     
+    AdminProfileResponse getCurrentAdminProfile();
+    
     List<AdminProfileResponse> getAllAdmins();
     
 

@@ -110,7 +110,7 @@ class AdminServiceTest {
         when(adminRepository.count()).thenReturn(0L); // First admin
         when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");
         when(adminRepository.save(any(Admin.class))).thenReturn(testAdmin);
-        when(jwtService.generateAdminToken("admin@test.com", "ADMIN")).thenReturn("test-jwt-token");
+        when(jwtService.generateAdminToken("admin@test.com", "ADMIN", 1L)).thenReturn("test-jwt-token");
 
         // When
         AdminAuthResponse result = adminService.signup(signupRequest);
@@ -121,7 +121,7 @@ class AdminServiceTest {
         verify(adminRepository).existsByEmail("admin@test.com");
         verify(passwordEncoder).encode("password123");
         verify(adminRepository).save(any(Admin.class));
-        verify(jwtService).generateAdminToken("admin@test.com", "ADMIN");
+        verify(jwtService).generateAdminToken("admin@test.com", "ADMIN", 1L);
     }
 
     @Test
@@ -140,7 +140,7 @@ class AdminServiceTest {
         // Given
         when(adminRepository.findByEmailAndActiveTrue("admin@test.com")).thenReturn(Optional.of(testAdmin));
         when(passwordEncoder.matches("password123", "encodedPassword")).thenReturn(true);
-        when(jwtService.generateAdminToken("admin@test.com", "ADMIN")).thenReturn("test-jwt-token");
+        when(jwtService.generateAdminToken("admin@test.com", "ADMIN", 1L)).thenReturn("test-jwt-token");
 
         // When
         AdminAuthResponse result = adminService.login(loginRequest);
@@ -150,7 +150,7 @@ class AdminServiceTest {
         assertEquals("test-jwt-token", result.getToken());
         verify(adminRepository).findByEmailAndActiveTrue("admin@test.com");
         verify(passwordEncoder).matches("password123", "encodedPassword");
-        verify(jwtService).generateAdminToken("admin@test.com", "ADMIN");
+        verify(jwtService).generateAdminToken("admin@test.com", "ADMIN", 1L);
     }
 
     @Test
@@ -737,7 +737,6 @@ class AdminServiceTest {
         when(adminRepository.findById(1L)).thenReturn(Optional.of(testAdmin));
         when(adminRepository.findByEmail("admin@test.com")).thenReturn(Optional.of(testAdmin));
         when(passwordEncoder.matches("oldPassword123", "encodedPassword")).thenReturn(true);
-        when(passwordEncoder.matches("oldPassword123", "encodedPassword")).thenReturn(true).thenReturn(true); // Same password
 
         // Mock SecurityContextHolder to return current admin
         try (MockedStatic<org.springframework.security.core.context.SecurityContextHolder> mockedSecurityContext = 
@@ -759,7 +758,7 @@ class AdminServiceTest {
             });
             
             verify(adminRepository).findById(1L);
-            verify(passwordEncoder).matches("oldPassword123", "encodedPassword");
+            verify(passwordEncoder, times(2)).matches("oldPassword123", "encodedPassword");
             verify(passwordEncoder, never()).encode(anyString());
             verify(adminRepository, never()).save(any(Admin.class));
         }
@@ -802,7 +801,6 @@ class AdminServiceTest {
         request.setNewPassword("newPassword123");
         request.setConfirmPassword("newPassword123");
 
-        when(adminRepository.findById(1L)).thenReturn(Optional.empty());
         when(adminRepository.findByEmail("admin@test.com")).thenReturn(Optional.empty());
 
         // Mock SecurityContextHolder to return current admin
@@ -820,13 +818,92 @@ class AdminServiceTest {
                     .thenReturn(mockContext);
 
             // When & Then
-            assertThrows(com.ijaa.user.common.exceptions.AdminNotFoundException.class, () -> {
+            assertThrows(com.ijaa.user.common.exceptions.AuthenticationFailedException.class, () -> {
                 adminService.changePassword(request);
             });
             
-            verify(adminRepository).findById(1L);
+            verify(adminRepository).findByEmail("admin@test.com");
             verify(passwordEncoder, never()).matches(anyString(), anyString());
             verify(adminRepository, never()).save(any(Admin.class));
+        }
+    }
+
+    @Test
+    void shouldGetCurrentAdminProfileWhenAuthenticated() {
+        // Given
+        when(adminRepository.findByEmail("admin@test.com")).thenReturn(Optional.of(testAdmin));
+        when(adminRepository.findById(1L)).thenReturn(Optional.of(testAdmin));
+
+        // Mock SecurityContextHolder to return current admin
+        try (MockedStatic<org.springframework.security.core.context.SecurityContextHolder> mockedSecurityContext = 
+                mockStatic(org.springframework.security.core.context.SecurityContextHolder.class)) {
+            
+            org.springframework.security.core.Authentication mockAuth = mock(org.springframework.security.core.Authentication.class);
+            when(mockAuth.isAuthenticated()).thenReturn(true);
+            when(mockAuth.getName()).thenReturn("admin@test.com");
+            
+            org.springframework.security.core.context.SecurityContext mockContext = mock(org.springframework.security.core.context.SecurityContext.class);
+            when(mockContext.getAuthentication()).thenReturn(mockAuth);
+            mockedSecurityContext.when(org.springframework.security.core.context.SecurityContextHolder::getContext)
+                    .thenReturn(mockContext);
+
+            // When
+            AdminProfileResponse result = adminService.getCurrentAdminProfile();
+
+            // Then
+            assertNotNull(result);
+            assertEquals("Admin User", result.getName());
+            assertEquals("admin@test.com", result.getEmail());
+            assertEquals(AdminRole.ADMIN, result.getRole());
+            verify(adminRepository).findByEmail("admin@test.com");
+            verify(adminRepository).findById(1L);
+        }
+    }
+
+    @Test
+    void shouldThrowAuthenticationFailedExceptionWhenGettingCurrentAdminProfileWithoutAuthentication() {
+        // Mock SecurityContextHolder to return null authentication
+        try (MockedStatic<org.springframework.security.core.context.SecurityContextHolder> mockedSecurityContext = 
+                mockStatic(org.springframework.security.core.context.SecurityContextHolder.class)) {
+            
+            org.springframework.security.core.context.SecurityContext mockContext = mock(org.springframework.security.core.context.SecurityContext.class);
+            when(mockContext.getAuthentication()).thenReturn(null);
+            mockedSecurityContext.when(org.springframework.security.core.context.SecurityContextHolder::getContext)
+                    .thenReturn(mockContext);
+
+            // When & Then
+            assertThrows(com.ijaa.user.common.exceptions.AuthenticationFailedException.class, () -> {
+                adminService.getCurrentAdminProfile();
+            });
+            
+            verify(adminRepository, never()).findByEmail(anyString());
+        }
+    }
+
+    @Test
+    void shouldThrowAuthenticationFailedExceptionWhenGettingCurrentAdminProfileWithNonExistentAdmin() {
+        // Given
+        when(adminRepository.findByEmail("nonexistent@test.com")).thenReturn(Optional.empty());
+
+        // Mock SecurityContextHolder to return current admin
+        try (MockedStatic<org.springframework.security.core.context.SecurityContextHolder> mockedSecurityContext = 
+                mockStatic(org.springframework.security.core.context.SecurityContextHolder.class)) {
+            
+            org.springframework.security.core.Authentication mockAuth = mock(org.springframework.security.core.Authentication.class);
+            when(mockAuth.isAuthenticated()).thenReturn(true);
+            when(mockAuth.getName()).thenReturn("nonexistent@test.com");
+            
+            org.springframework.security.core.context.SecurityContext mockContext = mock(org.springframework.security.core.context.SecurityContext.class);
+            when(mockContext.getAuthentication()).thenReturn(mockAuth);
+            mockedSecurityContext.when(org.springframework.security.core.context.SecurityContextHolder::getContext)
+                    .thenReturn(mockContext);
+
+            // When & Then
+            assertThrows(com.ijaa.user.common.exceptions.AuthenticationFailedException.class, () -> {
+                adminService.getCurrentAdminProfile();
+            });
+            
+            verify(adminRepository).findByEmail("nonexistent@test.com");
         }
     }
 }

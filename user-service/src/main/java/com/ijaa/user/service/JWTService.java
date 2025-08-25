@@ -38,12 +38,13 @@ public class JWTService {
                 .compact();
     }
 
-    public String generateAdminToken(String email, String role) {
+    public String generateAdminToken(String email, String role, Long adminId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", email);
         claims.put("role", role);
         claims.put("type", "ADMIN");
         claims.put("userType", "ADMIN");
+        claims.put("adminId", adminId);
 
         return Jwts.builder()
                 .claims()
@@ -57,10 +58,10 @@ public class JWTService {
     }
 
     // Legacy method for backward compatibility
-    public String generateToken(String username) {
-        // For backward compatibility, we'll need to get userId from User entity
-        // This method should be updated to include userId parameter
-        throw new UnsupportedOperationException("Please use generateUserToken(username, userId) instead");
+    public String generateAdminToken(String email, String role) {
+        // For backward compatibility, we'll need to get adminId from Admin entity
+        // This method should be updated to include adminId parameter
+        throw new UnsupportedOperationException("Please use generateAdminToken(email, role, adminId) instead");
     }
 
     public String extractUserId(String token) {
@@ -81,6 +82,10 @@ public class JWTService {
 
     public String extractEmail(String token) {
         return extractClaim(token, claims -> claims.get("email", String.class));
+    }
+
+    public Long extractAdminId(String token) {
+        return extractClaim(token, claims -> claims.get("adminId", Long.class));
     }
 
     public boolean validateToken(String token, String secret) {

@@ -3,6 +3,9 @@ spring:
     name: "users"
 #  config:
 #    import: "configserver:http://localhost:8071/"
+  cloud:
+    compatibility-verifier:
+      enabled: false
   datasource:
     url: jdbc:postgresql://localhost:5432/ijaa_users
     username: root
