@@ -120,8 +120,17 @@ public class GatewayConfig {
                 // File service routes - for user profile and cover photo management
                 .route(p-> p
                         .path("/ijaa/api/v1/users/**")
+                        .and()
+                        .not(route -> route.path("/ijaa/api/v1/users/*/profile-photo/file/**", "/ijaa/api/v1/users/*/cover-photo/file/**"))
                         .filters(f-> f
                                 .filter(filter.apply(new AuthenticationFilter.Config()))
+                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
+                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
+                        .uri("lb://FILE-SERVICE"))
+                // File serving routes - public endpoints for serving image files
+                .route(p-> p
+                        .path("/ijaa/api/v1/users/*/profile-photo/file/**", "/ijaa/api/v1/users/*/cover-photo/file/**")
+                        .filters(f-> f
                                 .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://FILE-SERVICE"))

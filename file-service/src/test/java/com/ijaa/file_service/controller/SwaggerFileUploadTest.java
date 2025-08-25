@@ -51,8 +51,7 @@ class SwaggerFileUploadTest {
 
         FileUploadResponse expectedResponse = new FileUploadResponse(
             "Profile photo uploaded successfully",
-            "/uploads/profile/swagger-uuid.jpg",
-            "/uploads/profile/swagger-uuid.jpg",
+            "/ijaa/api/v1/users/" + TEST_USER_ID + "/profile-photo/file/swagger-uuid.jpg",
             "swagger-uuid.jpg",
             1536L
         );
@@ -67,7 +66,7 @@ class SwaggerFileUploadTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Profile photo uploaded successfully"))
-                .andExpect(jsonPath("$.data.filePath").value("/uploads/profile/swagger-uuid.jpg"))
+                .andExpect(jsonPath("$.data.fileUrl").value("/ijaa/api/v1/users/" + TEST_USER_ID + "/profile-photo/file/swagger-uuid.jpg"))
                 .andExpect(jsonPath("$.data.fileName").value("swagger-uuid.jpg"));
     }
 
@@ -80,8 +79,7 @@ class SwaggerFileUploadTest {
 
         FileUploadResponse expectedResponse = new FileUploadResponse(
             "Cover photo uploaded successfully",
-            "/uploads/cover/swagger-cover-uuid.png",
-            "/uploads/cover/swagger-cover-uuid.png",
+            "/ijaa/api/v1/users/" + TEST_USER_ID + "/cover-photo/file/swagger-cover-uuid.png",
             "swagger-cover-uuid.png",
             2048L
         );
@@ -96,7 +94,7 @@ class SwaggerFileUploadTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Cover photo uploaded successfully"))
-                .andExpect(jsonPath("$.data.filePath").value("/uploads/cover/swagger-cover-uuid.png"))
+                .andExpect(jsonPath("$.data.fileUrl").value("/ijaa/api/v1/users/" + TEST_USER_ID + "/cover-photo/file/swagger-cover-uuid.png"))
                 .andExpect(jsonPath("$.data.fileName").value("swagger-cover-uuid.png"));
     }
 
@@ -163,8 +161,7 @@ class SwaggerFileUploadTest {
 
             FileUploadResponse expectedResponse = new FileUploadResponse(
                 "Profile photo uploaded successfully",
-                "/uploads/profile/test-uuid." + supportedTypes[i],
-                "/uploads/profile/test-uuid." + supportedTypes[i],
+                "/ijaa/api/v1/users/" + TEST_USER_ID + "/profile-photo/file/test-uuid." + supportedTypes[i],
                 "test-uuid." + supportedTypes[i],
                 1024L
             );
@@ -194,8 +191,7 @@ class SwaggerFileUploadTest {
 
             FileUploadResponse expectedResponse = new FileUploadResponse(
                 "Cover photo uploaded successfully",
-                "/uploads/cover/test-uuid." + supportedTypes[i],
-                "/uploads/cover/test-uuid." + supportedTypes[i],
+                "/ijaa/api/v1/users/" + TEST_USER_ID + "/cover-photo/file/test-uuid." + supportedTypes[i],
                 "test-uuid." + supportedTypes[i],
                 1024L
             );

@@ -10,12 +10,13 @@ import java.util.List;
 @Configuration
 @ConfigurationProperties(prefix = "file.storage")
 public class FileStorageConfig {
+
     private String basePath;
     private String profilePhotosPath;
     private String coverPhotosPath;
     private List<String> allowedImageTypes;
     private int maxFileSizeMb;
-    
+
     // Getters for backward compatibility
     public String getBasePath() { return basePath; }
     public String getProfilePhotosPath() { return profilePhotosPath; }
