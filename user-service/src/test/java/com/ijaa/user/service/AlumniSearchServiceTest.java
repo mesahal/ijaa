@@ -15,7 +15,6 @@ import com.ijaa.user.service.impl.AlumniSearchServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
@@ -49,13 +48,20 @@ class AlumniSearchServiceTest {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    @InjectMocks
     private AlumniSearchServiceImpl alumniSearchService;
 
     private MockHttpServletRequest request;
 
     @BeforeEach
     void setUp() {
+        // Create the service manually with proper constructor injection
+        alumniSearchService = new AlumniSearchServiceImpl(
+                connectionRepository,
+                profileRepository,
+                interestRepository,
+                objectMapper
+        );
+        
         request = new MockHttpServletRequest();
         // Create user context
         CurrentUserContext userContext = new CurrentUserContext();
@@ -276,8 +282,9 @@ class AlumniSearchServiceTest {
         Profile profile2 = createTestProfile("user2", "Jane Smith", "2019", "Data Scientist", "Mumbai");
         Profile profile3 = createTestProfile("user3", "Bob Wilson", "2021", "Product Manager", "Delhi");
         
-        List<Profile> profiles = Arrays.asList(profile1, profile2, profile3);
-        Page<Profile> profilePage = new PageImpl<>(profiles, PageRequest.of(1, 2), 3);
+        // For page 1 with size 2, we should have 2 items (index 2 and 3)
+        List<Profile> pageContent = Arrays.asList(profile3); // Only the third profile for page 1
+        Page<Profile> profilePage = new PageImpl<>(pageContent, PageRequest.of(1, 2), 3);
 
         when(connectionRepository.findConnectedUsernames("testuser"))
                 .thenReturn(Arrays.asList());
@@ -289,7 +296,7 @@ class AlumniSearchServiceTest {
                 eq("testuser"), 
                 any(Pageable.class)))
                 .thenReturn(profilePage);
-        when(interestRepository.findByUserIdIn(Arrays.asList("user1", "user2", "user3")))
+        when(interestRepository.findByUserIdIn(Arrays.asList("user3")))
                 .thenReturn(Arrays.asList());
 
         // Act
@@ -297,7 +304,7 @@ class AlumniSearchServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(3, result.getContent().size());
+        assertEquals(1, result.getContent().size());
         assertEquals(3, result.getTotalElements());
         assertEquals(1, result.getPage());
         assertEquals(2, result.getSize());

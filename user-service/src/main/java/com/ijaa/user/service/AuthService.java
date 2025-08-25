@@ -1,16 +1,21 @@
 package com.ijaa.user.service;
 
 import com.ijaa.user.common.exceptions.AuthenticationFailedException;
+import com.ijaa.user.common.exceptions.PasswordChangeException;
 import com.ijaa.user.common.exceptions.UserAlreadyExistsException;
+import com.ijaa.user.common.exceptions.UserNotFoundException;
 import com.ijaa.user.common.utils.UniqueIdGenerator;
 import com.ijaa.user.domain.entity.User;
 import com.ijaa.user.domain.request.SignInRequest;
 import com.ijaa.user.domain.request.SignUpRequest;
+import com.ijaa.user.domain.request.UserPasswordChangeRequest;
 import com.ijaa.user.domain.response.AuthResponse;
 import com.ijaa.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -88,5 +93,50 @@ public class AuthService {
         } while (userRepository.existsByUserId(userId));
 
         return userId;
+    }
+
+    /**
+     * Change user password
+     */
+    public void changePassword(UserPasswordChangeRequest request) {
+        // Get current authenticated user
+        String currentUsername = getCurrentUsername();
+        if (currentUsername == null) {
+            throw new AuthenticationFailedException("Authentication required to change password");
+        }
+
+        User user = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        // Verify current password
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new PasswordChangeException("Current password is incorrect");
+        }
+
+        // Validate new password confirmation
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new PasswordChangeException("New password and confirm password do not match");
+        }
+
+        // Check if new password is same as current password
+        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+            throw new PasswordChangeException("New password must be different from current password");
+        }
+
+        // Update password
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+    }
+
+    /**
+     * Gets the current authenticated username from security context
+     */
+    private String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && 
+            !"anonymousUser".equals(authentication.getName())) {
+            return authentication.getName();
+        }
+        return null;
     }
 }

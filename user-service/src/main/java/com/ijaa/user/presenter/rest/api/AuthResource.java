@@ -4,6 +4,7 @@ import com.ijaa.user.common.utils.AppUtils;
 import com.ijaa.user.domain.common.ApiResponse;
 import com.ijaa.user.domain.request.SignInRequest;
 import com.ijaa.user.domain.request.SignUpRequest;
+import com.ijaa.user.domain.request.UserPasswordChangeRequest;
 import com.ijaa.user.domain.response.AuthResponse;
 import com.ijaa.user.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,11 +13,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -220,5 +223,137 @@ public class AuthResource {
         return ResponseEntity.ok(
                 new ApiResponse<>("Registration successful", "201", authResponse)
         );
+    }
+
+    @PostMapping("/change-password")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(
+        summary = "Change User Password",
+        description = "Change the current user's password (USER only)",
+        security = @SecurityRequirement(name = "Bearer Authentication"),
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Password change details",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = UserPasswordChangeRequest.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Valid Password Change",
+                        summary = "Valid password change request",
+                        value = """
+                            {
+                                "currentPassword": "oldPassword123",
+                                "newPassword": "newSecurePassword123",
+                                "confirmPassword": "newSecurePassword123"
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Password changed successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.user.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Password changed successfully",
+                                "code": "200",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Invalid password change request",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Current Password Incorrect",
+                        value = """
+                            {
+                                "message": "Current password is incorrect",
+                                "code": "400",
+                                "data": null
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "Passwords Don't Match",
+                        value = """
+                            {
+                                "message": "New password and confirm password do not match",
+                                "code": "400",
+                                "data": null
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "Same Password",
+                        value = """
+                            {
+                                "message": "New password must be different from current password",
+                                "code": "400",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "401",
+            description = "Unauthorized - Missing or invalid token",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Unauthorized",
+                        value = """
+                            {
+                                "message": "Authentication required to change password",
+                                "code": "401",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "403",
+            description = "Forbidden - Insufficient privileges (USER required)",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Forbidden",
+                        value = """
+                            {
+                                "message": "Access denied",
+                                "code": "403",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
+    public ResponseEntity<ApiResponse<Void>> changePassword(@Valid @RequestBody UserPasswordChangeRequest request) {
+        authService.changePassword(request);
+        return ResponseEntity.ok(new ApiResponse<>("Password changed successfully", "200", null));
     }
 }

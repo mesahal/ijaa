@@ -1,7 +1,9 @@
 package com.ijaa.user.common.handler;
 
 import com.ijaa.user.common.exceptions.AuthenticationFailedException;
+import com.ijaa.user.common.exceptions.PasswordChangeException;
 import com.ijaa.user.common.exceptions.UserAlreadyExistsException;
+import com.ijaa.user.common.exceptions.UserNotFoundException;
 import com.ijaa.user.domain.common.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +61,20 @@ public class UserExceptionHandler {
     public ResponseEntity<ApiResponse<?>> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
         return ResponseEntity.badRequest().body(
                 new ApiResponse<>("Malformed JSON or empty request body", "400", null)
+        );
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ApiResponse<?>> handleUserNotFoundException(UserNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ApiResponse<>(ex.getMessage(), "404", null)
+        );
+    }
+
+    @ExceptionHandler(PasswordChangeException.class)
+    public ResponseEntity<ApiResponse<?>> handlePasswordChangeException(PasswordChangeException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new ApiResponse<>(ex.getMessage(), "400", null)
         );
     }
 }

@@ -3,6 +3,7 @@ package com.ijaa.user.presenter.rest.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ijaa.user.domain.request.SignInRequest;
 import com.ijaa.user.domain.request.SignUpRequest;
+import com.ijaa.user.domain.request.UserPasswordChangeRequest;
 import com.ijaa.user.service.AuthService;
 import com.ijaa.user.service.JWTService;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +37,7 @@ class AuthResourceIntegrationTest {
 
     private SignUpRequest signUpRequest;
     private SignInRequest signInRequest;
+    private UserPasswordChangeRequest passwordChangeRequest;
 
     @BeforeEach
     void setUp() {
@@ -46,6 +48,11 @@ class AuthResourceIntegrationTest {
         signInRequest = new SignInRequest();
         signInRequest.setUsername("testuser");
         signInRequest.setPassword("password123");
+
+        passwordChangeRequest = new UserPasswordChangeRequest();
+        passwordChangeRequest.setCurrentPassword("oldPassword123");
+        passwordChangeRequest.setNewPassword("newPassword123");
+        passwordChangeRequest.setConfirmPassword("newPassword123");
     }
 
     @Test
@@ -171,6 +178,119 @@ class AuthResourceIntegrationTest {
                 .andExpect(status().isBadRequest());
 
         mockMvc.perform(post("/api/v1/user/auth/signin")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{invalid json}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    // Password Change Integration Tests
+    @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
+    void shouldChangePasswordWhenValidRequestProvided() throws Exception {
+        // Given
+        // AuthService is mocked, so no need to mock the changePassword method
+
+        // When & Then
+        mockMvc.perform(post("/api/v1/user/auth/change-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(passwordChangeRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("Password changed successfully"))
+                .andExpect(jsonPath("$.code").value("200"));
+    }
+
+    @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
+    void shouldReturnBadRequestWhenPasswordChangeRequestIsInvalid() throws Exception {
+        // Given
+        UserPasswordChangeRequest invalidRequest = new UserPasswordChangeRequest();
+        invalidRequest.setCurrentPassword(""); // Invalid current password
+        invalidRequest.setNewPassword(""); // Invalid new password
+        invalidRequest.setConfirmPassword(""); // Invalid confirm password
+
+        // When & Then
+        mockMvc.perform(post("/api/v1/user/auth/change-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
+    void shouldReturnBadRequestWhenNewPasswordIsTooShort() throws Exception {
+        // Given
+        UserPasswordChangeRequest invalidRequest = new UserPasswordChangeRequest();
+        invalidRequest.setCurrentPassword("oldPassword123");
+        invalidRequest.setNewPassword("123"); // Too short
+        invalidRequest.setConfirmPassword("123");
+
+        // When & Then
+        mockMvc.perform(post("/api/v1/user/auth/change-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
+    void shouldReturnBadRequestWhenPasswordsDoNotMatch() throws Exception {
+        // Given
+        UserPasswordChangeRequest invalidRequest = new UserPasswordChangeRequest();
+        invalidRequest.setCurrentPassword("oldPassword123");
+        invalidRequest.setNewPassword("newPassword123");
+        invalidRequest.setConfirmPassword("differentPassword");
+
+        // When & Then
+        mockMvc.perform(post("/api/v1/user/auth/change-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturnForbiddenWhenUserNotAuthenticated() throws Exception {
+        // When & Then
+        mockMvc.perform(post("/api/v1/user/auth/change-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(passwordChangeRequest)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(username = "testuser", roles = {"ADMIN"})
+    void shouldReturnForbiddenWhenUserHasWrongRole() throws Exception {
+        // When & Then
+        mockMvc.perform(post("/api/v1/user/auth/change-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(passwordChangeRequest)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
+    void shouldReturnBadRequestWhenPasswordChangeRequestBodyIsEmpty() throws Exception {
+        // When & Then
+        mockMvc.perform(post("/api/v1/user/auth/change-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(""))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
+    void shouldReturnBadRequestWhenPasswordChangeContentTypeIsNotJson() throws Exception {
+        // When & Then
+        mockMvc.perform(post("/api/v1/user/auth/change-password")
+                        .contentType(MediaType.TEXT_PLAIN)
+                        .content("invalid content"))
+                .andExpect(status().isUnsupportedMediaType());
+    }
+
+    @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
+    void shouldReturnBadRequestWhenPasswordChangeJsonIsMalformed() throws Exception {
+        // When & Then
+        mockMvc.perform(post("/api/v1/user/auth/change-password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{invalid json}"))
                 .andExpect(status().isBadRequest());
