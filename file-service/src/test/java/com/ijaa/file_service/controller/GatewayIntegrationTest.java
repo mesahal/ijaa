@@ -94,8 +94,7 @@ class GatewayIntegrationTest {
 
         FileUploadResponse expectedResponse = new FileUploadResponse(
             "Profile photo uploaded successfully",
-            "/uploads/profile/test-profile.jpg",
-            "/uploads/profile/test-profile.jpg",
+            "/ijaa/api/v1/users/" + TEST_USER_ID + "/profile-photo/file/test-profile.jpg",
             "test-profile.jpg",
             1234L
         );
@@ -107,7 +106,7 @@ class GatewayIntegrationTest {
                 .file(file))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.fileUrl").value("/uploads/profile/test-profile.jpg"));
+                .andExpect(jsonPath("$.data.fileUrl").value("/ijaa/api/v1/users/" + TEST_USER_ID + "/profile-photo/file/test-profile.jpg"));
     }
 
     @Test
@@ -119,8 +118,7 @@ class GatewayIntegrationTest {
 
         FileUploadResponse expectedResponse = new FileUploadResponse(
             "Cover photo uploaded successfully",
-            "/uploads/cover/test-cover.jpg",
-            "/uploads/cover/test-cover.jpg",
+            "/ijaa/api/v1/users/" + TEST_USER_ID + "/cover-photo/file/test-cover.jpg",
             "test-cover.jpg",
             5678L
         );
@@ -132,7 +130,7 @@ class GatewayIntegrationTest {
                 .file(file))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.fileUrl").value("/uploads/cover/test-cover.jpg"));
+                .andExpect(jsonPath("$.data.fileUrl").value("/ijaa/api/v1/users/" + TEST_USER_ID + "/cover-photo/file/test-cover.jpg"));
     }
 
     @Test

@@ -23,6 +23,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.springframework.core.io.Resource;
+import com.ijaa.file_service.exceptions.FileStorageException;
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest
 @AutoConfigureWebMvc
@@ -55,8 +58,7 @@ class FileControllerIntegrationTest {
 
         FileUploadResponse expectedResponse = new FileUploadResponse(
             "Profile photo uploaded successfully",
-            "/uploads/profile/test-file.jpg",
-            "/uploads/profile/test-file.jpg",
+            "/ijaa/api/v1/users/" + TEST_USER_ID + "/profile-photo/file/test-file.jpg",
             "test-file.jpg",
             1234L
         );
@@ -70,7 +72,7 @@ class FileControllerIntegrationTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Profile photo uploaded successfully"))
                 .andExpect(jsonPath("$.data.message").value("Profile photo uploaded successfully"))
-                .andExpect(jsonPath("$.data.fileUrl").value("/uploads/profile/test-file.jpg"));
+                .andExpect(jsonPath("$.data.fileUrl").value("/ijaa/api/v1/users/" + TEST_USER_ID + "/profile-photo/file/test-file.jpg"));
     }
 
     @Test
@@ -82,8 +84,7 @@ class FileControllerIntegrationTest {
 
         FileUploadResponse expectedResponse = new FileUploadResponse(
             "Cover photo uploaded successfully",
-            "/uploads/cover/test-cover.jpg",
-            "/uploads/cover/test-cover.jpg",
+            "/ijaa/api/v1/users/" + TEST_USER_ID + "/cover-photo/file/test-cover.jpg",
             "test-cover.jpg",
             5678L
         );
@@ -97,14 +98,14 @@ class FileControllerIntegrationTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Cover photo uploaded successfully"))
                 .andExpect(jsonPath("$.data.message").value("Cover photo uploaded successfully"))
-                .andExpect(jsonPath("$.data.fileUrl").value("/uploads/cover/test-cover.jpg"));
+                .andExpect(jsonPath("$.data.fileUrl").value("/ijaa/api/v1/users/" + TEST_USER_ID + "/cover-photo/file/test-cover.jpg"));
     }
 
     @Test
     void getProfilePhotoUrl_Success() throws Exception {
         // Arrange
         PhotoUrlResponse expectedResponse = new PhotoUrlResponse(
-            "/uploads/profile/test-photo.jpg",
+            "/ijaa/api/v1/users/" + TEST_USER_ID + "/profile-photo/file/test-photo.jpg",
             "Profile photo found",
             true
         );
@@ -116,7 +117,7 @@ class FileControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Profile photo URL retrieved successfully"))
-                .andExpect(jsonPath("$.data.photoUrl").value("/uploads/profile/test-photo.jpg"))
+                .andExpect(jsonPath("$.data.photoUrl").value("/ijaa/api/v1/users/" + TEST_USER_ID + "/profile-photo/file/test-photo.jpg"))
                 .andExpect(jsonPath("$.data.exists").value(true));
     }
 
@@ -124,7 +125,7 @@ class FileControllerIntegrationTest {
     void getCoverPhotoUrl_Success() throws Exception {
         // Arrange
         PhotoUrlResponse expectedResponse = new PhotoUrlResponse(
-            "/uploads/cover/test-cover.jpg",
+            "/ijaa/api/v1/users/" + TEST_USER_ID + "/cover-photo/file/test-cover.jpg",
             "Cover photo found",
             true
         );
@@ -136,7 +137,7 @@ class FileControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Cover photo URL retrieved successfully"))
-                .andExpect(jsonPath("$.data.photoUrl").value("/uploads/cover/test-cover.jpg"))
+                .andExpect(jsonPath("$.data.photoUrl").value("/ijaa/api/v1/users/" + TEST_USER_ID + "/cover-photo/file/test-cover.jpg"))
                 .andExpect(jsonPath("$.data.exists").value(true));
     }
 
@@ -194,22 +195,6 @@ class FileControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Cover photo deleted successfully"));
-    }
-
-    @Test
-    void uploadProfilePhoto_EmptyFile_ReturnsBadRequest() throws Exception {
-        // Arrange
-        MockMultipartFile emptyFile = new MockMultipartFile(
-            "file", "test.jpg", "image/jpeg", new byte[0]
-        );
-
-        when(fileService.uploadProfilePhoto(eq(TEST_USER_ID), any()))
-            .thenThrow(new InvalidFileTypeException("File cannot be empty"));
-
-        // Act & Assert
-        mockMvc.perform(multipart("/api/v1/users/{userId}/profile-photo", TEST_USER_ID)
-                .file(emptyFile))
-                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -287,8 +272,7 @@ class FileControllerIntegrationTest {
 
         FileUploadResponse expectedResponse = new FileUploadResponse(
             "Profile photo uploaded successfully",
-            "/uploads/profile/test-uuid.jpg",
-            "/uploads/profile/test-uuid.jpg",
+            "/ijaa/api/v1/users/" + TEST_USER_ID + "/profile-photo/file/test-uuid.jpg",
             "test-uuid.jpg",
             1024L
         );
@@ -302,7 +286,6 @@ class FileControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Profile photo uploaded successfully"))
-                .andExpect(jsonPath("$.data.filePath").value("/uploads/profile/test-uuid.jpg"))
                 .andExpect(jsonPath("$.data.fileName").value("test-uuid.jpg"));
     }
 
@@ -315,8 +298,7 @@ class FileControllerIntegrationTest {
 
         FileUploadResponse expectedResponse = new FileUploadResponse(
             "Cover photo uploaded successfully",
-            "/uploads/cover/test-uuid.png",
-            "/uploads/cover/test-uuid.png",
+            "/ijaa/api/v1/users/" + TEST_USER_ID + "/cover-photo/file/test-uuid.png",
             "test-uuid.png",
             2048L
         );
@@ -330,7 +312,6 @@ class FileControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Cover photo uploaded successfully"))
-                .andExpect(jsonPath("$.data.filePath").value("/uploads/cover/test-uuid.png"))
                 .andExpect(jsonPath("$.data.fileName").value("test-uuid.png"));
     }
 
@@ -343,8 +324,7 @@ class FileControllerIntegrationTest {
 
         FileUploadResponse expectedResponse = new FileUploadResponse(
             "Profile photo uploaded successfully",
-            "/uploads/profile/swagger-uuid.jpg",
-            "/uploads/profile/swagger-uuid.jpg",
+            "/ijaa/api/v1/users/" + TEST_USER_ID + "/profile-photo/file/swagger-uuid.jpg",
             "swagger-uuid.jpg",
             1536L
         );
@@ -359,7 +339,7 @@ class FileControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Profile photo uploaded successfully"))
-                .andExpect(jsonPath("$.data.filePath").value("/uploads/profile/swagger-uuid.jpg"));
+                .andExpect(jsonPath("$.data.fileName").value("swagger-uuid.jpg"));
     }
 
     @Test
@@ -371,8 +351,7 @@ class FileControllerIntegrationTest {
 
         FileUploadResponse expectedResponse = new FileUploadResponse(
             "Cover photo uploaded successfully",
-            "/uploads/cover/swagger-cover-uuid.png",
-            "/uploads/cover/swagger-cover-uuid.png",
+            "/ijaa/api/v1/users/" + TEST_USER_ID + "/cover-photo/file/swagger-cover-uuid.png",
             "swagger-cover-uuid.png",
             2048L
         );
@@ -387,7 +366,7 @@ class FileControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Cover photo uploaded successfully"))
-                .andExpect(jsonPath("$.data.filePath").value("/uploads/cover/swagger-cover-uuid.png"));
+                .andExpect(jsonPath("$.data.fileName").value("swagger-cover-uuid.png"));
     }
 
     @Test
@@ -423,8 +402,7 @@ class FileControllerIntegrationTest {
 
             FileUploadResponse expectedResponse = new FileUploadResponse(
                 "Profile photo uploaded successfully",
-                "/uploads/profile/test-uuid." + supportedTypes[i],
-                "/uploads/profile/test-uuid." + supportedTypes[i],
+                "/ijaa/api/v1/users/" + TEST_USER_ID + "/profile-photo/file/test-uuid." + supportedTypes[i],
                 "test-uuid." + supportedTypes[i],
                 1024L
             );
@@ -453,8 +431,7 @@ class FileControllerIntegrationTest {
 
             FileUploadResponse expectedResponse = new FileUploadResponse(
                 "Cover photo uploaded successfully",
-                "/uploads/cover/test-uuid." + supportedTypes[i],
-                "/uploads/cover/test-uuid." + supportedTypes[i],
+                "/ijaa/api/v1/users/" + TEST_USER_ID + "/cover-photo/file/test-uuid." + supportedTypes[i],
                 "test-uuid." + supportedTypes[i],
                 1024L
             );
@@ -468,5 +445,73 @@ class FileControllerIntegrationTest {
                     .andExpect(jsonPath("$.success").value(true))
                     .andExpect(jsonPath("$.data.fileName").value("test-uuid." + supportedTypes[i]));
         }
+    }
+
+    @Test
+    void uploadProfilePhoto_EmptyFile_ReturnsBadRequest() throws Exception {
+        // Arrange
+        MockMultipartFile emptyFile = new MockMultipartFile(
+            "file", "test.jpg", "image/jpeg", new byte[0]
+        );
+
+        when(fileService.uploadProfilePhoto(eq(TEST_USER_ID), any()))
+            .thenThrow(new InvalidFileTypeException("File cannot be empty"));
+
+        // Act & Assert
+        mockMvc.perform(multipart("/api/v1/users/{userId}/profile-photo", TEST_USER_ID)
+                .file(emptyFile))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("File parameter is missing. Please provide a file."));
+    }
+
+    @Test
+    void getProfilePhotoFile_Success() throws Exception {
+        // Arrange
+        Resource mockResource = mock(Resource.class);
+        when(mockResource.exists()).thenReturn(true);
+        when(mockResource.isReadable()).thenReturn(true);
+        when(fileService.getProfilePhotoFile(TEST_USER_ID, "test-photo.jpg")).thenReturn(mockResource);
+
+        // Act & Assert
+        mockMvc.perform(get("/api/v1/users/{userId}/profile-photo/file/{fileName}", TEST_USER_ID, "test-photo.jpg"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "image/jpeg"));
+    }
+
+    @Test
+    void getProfilePhotoFile_NotFound() throws Exception {
+        // Arrange
+        when(fileService.getProfilePhotoFile(TEST_USER_ID, "nonexistent.jpg"))
+            .thenThrow(new FileStorageException("Profile photo file not found"));
+
+        // Act & Assert
+        mockMvc.perform(get("/api/v1/users/{userId}/profile-photo/file/{fileName}", TEST_USER_ID, "nonexistent.jpg"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getCoverPhotoFile_Success() throws Exception {
+        // Arrange
+        Resource mockResource = mock(Resource.class);
+        when(mockResource.exists()).thenReturn(true);
+        when(mockResource.isReadable()).thenReturn(true);
+        when(fileService.getCoverPhotoFile(TEST_USER_ID, "test-cover.jpg")).thenReturn(mockResource);
+
+        // Act & Assert
+        mockMvc.perform(get("/api/v1/users/{userId}/cover-photo/file/{fileName}", TEST_USER_ID, "test-cover.jpg"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "image/jpeg"));
+    }
+
+    @Test
+    void getCoverPhotoFile_NotFound() throws Exception {
+        // Arrange
+        when(fileService.getCoverPhotoFile(TEST_USER_ID, "nonexistent.jpg"))
+            .thenThrow(new FileStorageException("Cover photo file not found"));
+
+        // Act & Assert
+        mockMvc.perform(get("/api/v1/users/{userId}/cover-photo/file/{fileName}", TEST_USER_ID, "nonexistent.jpg"))
+                .andExpect(status().isNotFound());
     }
 }

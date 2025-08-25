@@ -4,15 +4,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ce6d269-0e9e-4fa6-93e1-3e4fac090d6e" name="Changes" comment="profile fixed">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="9ce6d269-0e9e-4fa6-93e1-3e4fac090d6e" name="Changes" comment="dp, cover image">
+      <change afterPath="$PROJECT_DIR$/file-service/API_DOCUMENTATION.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/file-service/FILE_URL_SOLUTION.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/file-service/src/main/java/com/ijaa/file_service/config/FileStorageInitializer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/file-service/test-uploads/cover/92ceeffc-e3c5-4736-872b-df73cb0894d5.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/file-service/test-uploads/cover/c53e3b0d-cf35-43f9-ac79-2f46332d6c8a.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/file-service/test-uploads/cover/facb7d69-2547-4966-99bb-de6e71f1008c.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/file-service/test-uploads/profile/25d7c06e-3096-49a2-a1a5-0722bf18cdcf.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/file-service/test-uploads/profile/b1ea848e-084a-478d-86e7-ef78916aebcd.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/file-service/test-uploads/profile/c1ff0fd9-5981-476f-a936-6aa1bc46291f.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/file-service/src/main/java/com/ijaa/file_service/config/FileStorageConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/file-service/src/main/java/com/ijaa/file_service/config/FileStorageConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/file-service/src/main/java/com/ijaa/file_service/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/file-service/src/main/java/com/ijaa/file_service/config/WebConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/file-service/src/main/java/com/ijaa/file_service/controller/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/file-service/src/main/java/com/ijaa/file_service/controller/FileController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/file-service/src/main/java/com/ijaa/file_service/domain/dto/FileUploadResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/file-service/src/main/java/com/ijaa/file_service/domain/dto/FileUploadResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/file-service/src/main/java/com/ijaa/file_service/service/FileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/file-service/src/main/java/com/ijaa/file_service/service/FileService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/file-service/src/main/java/com/ijaa/file_service/service/impl/FileServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/file-service/src/main/java/com/ijaa/file_service/service/impl/FileServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/file-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/file-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/file-service/src/test/java/com/ijaa/file_service/controller/FileControllerIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/file-service/src/test/java/com/ijaa/file_service/controller/FileControllerIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/file-service/src/test/java/com/ijaa/file_service/controller/GatewayIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/file-service/src/test/java/com/ijaa/file_service/controller/GatewayIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/file-service/src/test/java/com/ijaa/file_service/controller/SwaggerFileUploadTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/file-service/src/test/java/com/ijaa/file_service/controller/SwaggerFileUploadTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/file-service/src/test/java/com/ijaa/file_service/service/FileServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/file-service/src/test/java/com/ijaa/file_service/service/FileServiceTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/config/GatewayConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/config/GatewayConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/validator/RouteValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/validator/RouteValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project-context.md" beforeDir="false" afterPath="$PROJECT_DIR$/project-context.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/Profile.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +37,13 @@
     <option name="groupingKeys">
       <option value="module" />
       <option value="repository" />
+    </option>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
     </option>
   </component>
   <component name="Git.Settings">
@@ -45,6 +66,9 @@
   &quot;associatedIndex&quot;: 6
 }</component>
   <component name="ProjectId" id="31YzjpShvLxETgrwoyuLU4WPp7i" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -54,6 +78,8 @@
     &quot;Maven.file-service [clean].executor&quot;: &quot;Run&quot;,
     &quot;Maven.file-service [install].executor&quot;: &quot;Run&quot;,
     &quot;Maven.gateway-service [clean,install].executor&quot;: &quot;Run&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-DatabaseConfigFileWatcher.found&quot;: &quot;New/updated database configurations found&quot;,
+    &quot;Notification.DoNotAsk-DatabaseConfigFileWatcher.found&quot;: &quot;true&quot;,
     &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
     &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
     &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
@@ -170,7 +196,8 @@
       <workItem from="1755862071170" duration="13312000" />
       <workItem from="1755926221240" duration="2992000" />
       <workItem from="1755967922561" duration="10058000" />
-      <workItem from="1756012158753" duration="1794000" />
+      <workItem from="1756012158753" duration="17505000" />
+      <workItem from="1756103980606" duration="2401000" />
     </task>
     <task id="LOCAL-00001" summary="sob elomelo">
       <option name="closed" value="true" />
@@ -196,7 +223,15 @@
       <option name="project" value="LOCAL" />
       <updated>1755929073522</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="file service">
+      <option name="closed" value="true" />
+      <created>1756014111437</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1756014111437</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -206,6 +241,8 @@
     <MESSAGE value="sob elomelo" />
     <MESSAGE value="profile working" />
     <MESSAGE value="profile fixed" />
-    <option name="LAST_COMMIT_MESSAGE" value="profile fixed" />
+    <MESSAGE value="file service" />
+    <MESSAGE value="dp, cover image" />
+    <option name="LAST_COMMIT_MESSAGE" value="dp, cover image" />
   </component>
 </project>

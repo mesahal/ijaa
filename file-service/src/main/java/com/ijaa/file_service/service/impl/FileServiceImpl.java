@@ -20,6 +20,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 
 @Service
 @RequiredArgsConstructor
@@ -32,45 +34,44 @@ public class FileServiceImpl implements FileService {
     @Override
     public FileUploadResponse uploadProfilePhoto(String userId, MultipartFile file) {
         log.info("Uploading profile photo for user: {}", userId);
-        
+
         validateFile(file);
         User user = getUserOrCreate(userId);
-        
+
         try {
             // Create directory if it doesn't exist
             Path uploadDir = Paths.get(fileStorageConfig.getProfilePhotosPath());
             if (!Files.exists(uploadDir)) {
                 Files.createDirectories(uploadDir);
             }
-            
+
             // Delete old profile photo if exists
             if (user.getProfilePhotoPath() != null) {
-                deleteFile(Paths.get(user.getProfilePhotoPath()));
+                deleteFile(Paths.get(fileStorageConfig.getProfilePhotosPath()).resolve(user.getProfilePhotoPath()));
             }
-            
+
             // Generate unique filename
             String fileName = generateUniqueFileName(file.getOriginalFilename());
             Path filePath = uploadDir.resolve(fileName);
-            
+
             // Save the file
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-            
-            // Update user record
-            user.setProfilePhotoPath(filePath.toString());
+
+            // Store the filename (not the full path) in the database
+            user.setProfilePhotoPath(fileName);
             userRepository.save(user);
-            
-            String fileUrl = "/uploads/profile/" + fileName;
-            
+
+            String fileUrl = "/ijaa/api/v1/users/" + userId + "/profile-photo/file/" + fileName;
+
             log.info("Profile photo uploaded successfully for user: {}, file: {}", userId, fileName);
-            
+
             return new FileUploadResponse(
-                "Profile photo uploaded successfully",
-                filePath.toString(),
-                fileUrl,
-                fileName,
-                file.getSize()
+                    "Profile photo uploaded successfully",
+                    fileUrl,
+                    fileName,
+                    file.getSize()
             );
-            
+
         } catch (IOException e) {
             log.error("Error uploading profile photo for user: {}", userId, e);
             throw new FileStorageException("Failed to upload profile photo", e);
@@ -80,45 +81,44 @@ public class FileServiceImpl implements FileService {
     @Override
     public FileUploadResponse uploadCoverPhoto(String userId, MultipartFile file) {
         log.info("Uploading cover photo for user: {}", userId);
-        
+
         validateFile(file);
         User user = getUserOrCreate(userId);
-        
+
         try {
             // Create directory if it doesn't exist
             Path uploadDir = Paths.get(fileStorageConfig.getCoverPhotosPath());
             if (!Files.exists(uploadDir)) {
                 Files.createDirectories(uploadDir);
             }
-            
+
             // Delete old cover photo if exists
             if (user.getCoverPhotoPath() != null) {
-                deleteFile(Paths.get(user.getCoverPhotoPath()));
+                deleteFile(Paths.get(fileStorageConfig.getCoverPhotosPath()).resolve(user.getCoverPhotoPath()));
             }
-            
+
             // Generate unique filename
             String fileName = generateUniqueFileName(file.getOriginalFilename());
             Path filePath = uploadDir.resolve(fileName);
-            
+
             // Save the file
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-            
-            // Update user record
-            user.setCoverPhotoPath(filePath.toString());
+
+            // Store the filename (not the full path) in the database
+            user.setCoverPhotoPath(fileName);
             userRepository.save(user);
-            
-            String fileUrl = "/uploads/cover/" + fileName;
-            
+
+            String fileUrl = "/ijaa/api/v1/users/" + userId + "/cover-photo/file/" + fileName;
+
             log.info("Cover photo uploaded successfully for user: {}, file: {}", userId, fileName);
-            
+
             return new FileUploadResponse(
-                "Cover photo uploaded successfully",
-                filePath.toString(),
-                fileUrl,
-                fileName,
-                file.getSize()
+                    "Cover photo uploaded successfully",
+                    fileUrl,
+                    fileName,
+                    file.getSize()
             );
-            
+
         } catch (IOException e) {
             log.error("Error uploading cover photo for user: {}", userId, e);
             throw new FileStorageException("Failed to upload cover photo", e);
@@ -128,47 +128,54 @@ public class FileServiceImpl implements FileService {
     @Override
     public PhotoUrlResponse getProfilePhotoUrl(String userId) {
         log.info("Getting profile photo URL for user: {}", userId);
-        
+
         User user = userRepository.findByUserId(userId)
-            .orElseThrow(() -> new UserNotFoundException("User not found with userId: " + userId));
-        
+                .orElseThrow(() -> new UserNotFoundException("User not found with userId: " + userId));
+
         if (user.getProfilePhotoPath() == null) {
             return new PhotoUrlResponse(null, "No profile photo found", false);
         }
+
+        // Clean up the stored path to ensure it's just a filename
+        String fileName = extractFileName(user.getProfilePhotoPath());
         
-        String fileName = Paths.get(user.getProfilePhotoPath()).getFileName().toString();
-        String photoUrl = "/uploads/profile/" + fileName;
-        
+        // Generate the URL that points to the file endpoint
+        String photoUrl = "/ijaa/api/v1/users/" + userId + "/profile-photo/file/" + fileName;
+
         return new PhotoUrlResponse(photoUrl, "Profile photo found", true);
     }
 
     @Override
     public PhotoUrlResponse getCoverPhotoUrl(String userId) {
         log.info("Getting cover photo URL for user: {}", userId);
-        
+
         User user = userRepository.findByUserId(userId)
-            .orElseThrow(() -> new UserNotFoundException("User not found with userId: " + userId));
-        
+                .orElseThrow(() -> new UserNotFoundException("User not found with userId: " + userId));
+
         if (user.getCoverPhotoPath() == null) {
             return new PhotoUrlResponse(null, "No cover photo found", false);
         }
+
+        // Clean up the stored path to ensure it's just a filename
+        String fileName = extractFileName(user.getCoverPhotoPath());
         
-        String fileName = Paths.get(user.getCoverPhotoPath()).getFileName().toString();
-        String photoUrl = "/uploads/cover/" + fileName;
-        
+        // Generate the URL that points to the file endpoint
+        String photoUrl = "/ijaa/api/v1/users/" + userId + "/cover-photo/file/" + fileName;
+
         return new PhotoUrlResponse(photoUrl, "Cover photo found", true);
     }
 
     @Override
     public void deleteProfilePhoto(String userId) {
         log.info("Deleting profile photo for user: {}", userId);
-        
+
         User user = userRepository.findByUserId(userId)
-            .orElseThrow(() -> new UserNotFoundException("User not found with userId: " + userId));
-        
+                .orElseThrow(() -> new UserNotFoundException("User not found with userId: " + userId));
+
         if (user.getProfilePhotoPath() != null) {
             try {
-                deleteFile(Paths.get(user.getProfilePhotoPath()));
+                Path filePath = Paths.get(fileStorageConfig.getProfilePhotosPath()).resolve(user.getProfilePhotoPath());
+                deleteFile(filePath);
                 user.setProfilePhotoPath(null);
                 userRepository.save(user);
                 log.info("Profile photo deleted successfully for user: {}", userId);
@@ -182,13 +189,14 @@ public class FileServiceImpl implements FileService {
     @Override
     public void deleteCoverPhoto(String userId) {
         log.info("Deleting cover photo for user: {}", userId);
-        
+
         User user = userRepository.findByUserId(userId)
-            .orElseThrow(() -> new UserNotFoundException("User not found with userId: " + userId));
-        
+                .orElseThrow(() -> new UserNotFoundException("User not found with userId: " + userId));
+
         if (user.getCoverPhotoPath() != null) {
             try {
-                deleteFile(Paths.get(user.getCoverPhotoPath()));
+                Path filePath = Paths.get(fileStorageConfig.getCoverPhotosPath()).resolve(user.getCoverPhotoPath());
+                deleteFile(filePath);
                 user.setCoverPhotoPath(null);
                 userRepository.save(user);
                 log.info("Cover photo deleted successfully for user: {}", userId);
@@ -199,25 +207,93 @@ public class FileServiceImpl implements FileService {
         }
     }
 
+    @Override
+    public Resource getProfilePhotoFile(String userId, String fileName) {
+        log.info("Getting profile photo file for user: {}, file: {}", userId, fileName);
+
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with userId: " + userId));
+
+        if (user.getProfilePhotoPath() == null) {
+            throw new FileStorageException("No profile photo found for user: " + userId);
+        }
+
+        // Clean up the stored path to ensure it's just a filename
+        String storedFileName = extractFileName(user.getProfilePhotoPath());
+        
+        // Validate that the requested filename matches the user's stored filename
+        if (!fileName.equals(storedFileName)) {
+            throw new FileStorageException("File access denied: filename mismatch");
+        }
+
+        try {
+            Path filePath = Paths.get(fileStorageConfig.getProfilePhotosPath()).resolve(fileName);
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                return resource;
+            } else {
+                throw new FileStorageException("Profile photo file not found: " + fileName);
+            }
+        } catch (Exception e) {
+            log.error("Error getting profile photo file for user: {}, file: {}", userId, fileName, e);
+            throw new FileStorageException("Failed to get profile photo file", e);
+        }
+    }
+
+    @Override
+    public Resource getCoverPhotoFile(String userId, String fileName) {
+        log.info("Getting cover photo file for user: {}, file: {}", userId, fileName);
+
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with userId: " + userId));
+
+        if (user.getCoverPhotoPath() == null) {
+            throw new FileStorageException("No cover photo found for user: " + userId);
+        }
+
+        // Clean up the stored path to ensure it's just a filename
+        String storedFileName = extractFileName(user.getCoverPhotoPath());
+        
+        // Validate that the requested filename matches the user's stored filename
+        if (!fileName.equals(storedFileName)) {
+            throw new FileStorageException("File access denied: filename mismatch");
+        }
+
+        try {
+            Path filePath = Paths.get(fileStorageConfig.getCoverPhotosPath()).resolve(fileName);
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                return resource;
+            } else {
+                throw new FileStorageException("Cover photo file not found: " + fileName);
+            }
+        } catch (Exception e) {
+            log.error("Error getting cover photo file for user: {}, file: {}", userId, fileName, e);
+            throw new FileStorageException("Failed to get cover photo file", e);
+        }
+    }
+
     private void validateFile(MultipartFile file) {
         if (file.isEmpty()) {
             throw new InvalidFileTypeException("File is empty");
         }
-        
+
         if (file.getSize() > fileStorageConfig.getMaxFileSizeMb() * 1024 * 1024) {
-            throw new InvalidFileTypeException("File size exceeds maximum limit of " + 
-                fileStorageConfig.getMaxFileSizeMb() + "MB");
+            throw new InvalidFileTypeException("File size exceeds maximum limit of " +
+                    fileStorageConfig.getMaxFileSizeMb() + "MB");
         }
-        
+
         String originalFilename = file.getOriginalFilename();
         if (originalFilename == null) {
             throw new InvalidFileTypeException("File name is null");
         }
-        
+
         String fileExtension = getFileExtension(originalFilename).toLowerCase();
         if (!fileStorageConfig.getAllowedImageTypes().contains(fileExtension)) {
-            throw new InvalidFileTypeException("File type not allowed. Allowed types: " + 
-                String.join(", ", fileStorageConfig.getAllowedImageTypes()));
+            throw new InvalidFileTypeException("File type not allowed. Allowed types: " +
+                    String.join(", ", fileStorageConfig.getAllowedImageTypes()));
         }
     }
 
@@ -232,16 +308,31 @@ public class FileServiceImpl implements FileService {
         return uniqueId + "." + extension;
     }
 
+    /**
+     * Extracts just the filename from a path, handling both full paths and just filenames
+     */
+    private String extractFileName(String path) {
+        if (path == null) {
+            return null;
+        }
+        // If it's already just a filename (no path separators), return as is
+        if (!path.contains("/") && !path.contains("\\")) {
+            return path;
+        }
+        // Extract filename from path
+        return Paths.get(path).getFileName().toString();
+    }
+
     private User getUserOrCreate(String userId) {
         return userRepository.findByUserId(userId)
-            .orElseGet(() -> {
-                User newUser = new User();
-                newUser.setUserId(userId);
-                newUser.setUsername(userId); // Using userId as username for now
-                newUser.setPassword(""); // Empty password for file service users
-                newUser.setActive(true);
-                return userRepository.save(newUser);
-            });
+                .orElseGet(() -> {
+                    User newUser = new User();
+                    newUser.setUserId(userId);
+                    newUser.setUsername(userId); // Using userId as username for now
+                    newUser.setPassword(""); // Empty password for file service users
+                    newUser.setActive(true);
+                    return userRepository.save(newUser);
+                });
     }
 
     private void deleteFile(Path filePath) {

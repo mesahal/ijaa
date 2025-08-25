@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -74,9 +75,8 @@ class FileServiceTest {
         // Assert
         assertNotNull(response);
         assertEquals("Profile photo uploaded successfully", response.getMessage());
-        assertNotNull(response.getFilePath());
         assertNotNull(response.getFileUrl());
-        assertTrue(response.getFileUrl().contains("/uploads/profile/"));
+        assertTrue(response.getFileUrl().contains("/ijaa/api/v1/users/" + TEST_USER_ID + "/profile-photo/file/"));
         assertTrue(response.getFileName().endsWith(".jpg"));
         assertEquals(file.getSize(), response.getFileSize());
 
@@ -105,9 +105,8 @@ class FileServiceTest {
         // Assert
         assertNotNull(response);
         assertEquals("Cover photo uploaded successfully", response.getMessage());
-        assertNotNull(response.getFilePath());
         assertNotNull(response.getFileUrl());
-        assertTrue(response.getFileUrl().contains("/uploads/cover/"));
+        assertTrue(response.getFileUrl().contains("/ijaa/api/v1/users/" + TEST_USER_ID + "/cover-photo/file/"));
         assertTrue(response.getFileName().endsWith(".jpg"));
         assertEquals(file.getSize(), response.getFileSize());
 
@@ -171,7 +170,7 @@ class FileServiceTest {
         assertNotNull(response);
         assertTrue(response.isExists());
         assertEquals("Profile photo found", response.getMessage());
-        assertTrue(response.getPhotoUrl().contains("/uploads/profile/test-photo.jpg"));
+        assertTrue(response.getPhotoUrl().contains("/ijaa/api/v1/users/" + TEST_USER_ID + "/profile-photo/file/test-photo.jpg"));
 
         verify(userRepository).findByUserId(TEST_USER_ID);
     }
@@ -226,7 +225,7 @@ class FileServiceTest {
         assertNotNull(response);
         assertTrue(response.isExists());
         assertEquals("Cover photo found", response.getMessage());
-        assertTrue(response.getPhotoUrl().contains("/uploads/cover/test-cover.jpg"));
+        assertTrue(response.getPhotoUrl().contains("/ijaa/api/v1/users/" + TEST_USER_ID + "/cover-photo/file/test-cover.jpg"));
 
         verify(userRepository).findByUserId(TEST_USER_ID);
     }
@@ -278,14 +277,14 @@ class FileServiceTest {
         user.setCoverPhotoPath(TEST_COVER_PATH + "/test-cover.jpg");
 
         when(userRepository.findByUserId(TEST_USER_ID)).thenReturn(Optional.of(user));
-        when(userRepository.save(any(User.class))).thenReturn(user);
 
         // Act
-        assertDoesNotThrow(() -> fileService.deleteCoverPhoto(TEST_USER_ID));
+        fileService.deleteCoverPhoto(TEST_USER_ID);
 
         // Assert
         verify(userRepository).findByUserId(TEST_USER_ID);
-        verify(userRepository).save(any(User.class));
+        verify(userRepository).save(user);
+        assertNull(user.getCoverPhotoPath());
     }
 
     @Test
@@ -338,5 +337,99 @@ class FileServiceTest {
 
         verify(userRepository).findByUserId(TEST_USER_ID);
         verify(userRepository).save(any(User.class));
+    }
+
+    @Test
+    void getProfilePhotoFile_Success() throws Exception {
+        // Arrange
+        User user = new User();
+        user.setUserId(TEST_USER_ID);
+        user.setProfilePhotoPath(TEST_PROFILE_PATH + "/test-photo.jpg");
+
+        when(userRepository.findByUserId(TEST_USER_ID)).thenReturn(Optional.of(user));
+
+        // Act
+        Resource resource = fileService.getProfilePhotoFile(TEST_USER_ID, "test-photo.jpg");
+
+        // Assert
+        assertNotNull(resource);
+        verify(userRepository).findByUserId(TEST_USER_ID);
+    }
+
+    @Test
+    void getProfilePhotoFile_UserNotFound_ThrowsException() {
+        // Arrange
+        when(userRepository.findByUserId(TEST_USER_ID)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(UserNotFoundException.class, () -> {
+            fileService.getProfilePhotoFile(TEST_USER_ID, "test-photo.jpg");
+        });
+
+        verify(userRepository).findByUserId(TEST_USER_ID);
+    }
+
+    @Test
+    void getProfilePhotoFile_NoPhoto_ThrowsException() {
+        // Arrange
+        User user = new User();
+        user.setUserId(TEST_USER_ID);
+        user.setProfilePhotoPath(null);
+
+        when(userRepository.findByUserId(TEST_USER_ID)).thenReturn(Optional.of(user));
+
+        // Act & Assert
+        assertThrows(FileStorageException.class, () -> {
+            fileService.getProfilePhotoFile(TEST_USER_ID, "test-photo.jpg");
+        });
+
+        verify(userRepository).findByUserId(TEST_USER_ID);
+    }
+
+    @Test
+    void getCoverPhotoFile_Success() throws Exception {
+        // Arrange
+        User user = new User();
+        user.setUserId(TEST_USER_ID);
+        user.setCoverPhotoPath(TEST_COVER_PATH + "/test-cover.jpg");
+
+        when(userRepository.findByUserId(TEST_USER_ID)).thenReturn(Optional.of(user));
+
+        // Act
+        Resource resource = fileService.getCoverPhotoFile(TEST_USER_ID, "test-cover.jpg");
+
+        // Assert
+        assertNotNull(resource);
+        verify(userRepository).findByUserId(TEST_USER_ID);
+    }
+
+    @Test
+    void getCoverPhotoFile_UserNotFound_ThrowsException() {
+        // Arrange
+        when(userRepository.findByUserId(TEST_USER_ID)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(UserNotFoundException.class, () -> {
+            fileService.getCoverPhotoFile(TEST_USER_ID, "test-cover.jpg");
+        });
+
+        verify(userRepository).findByUserId(TEST_USER_ID);
+    }
+
+    @Test
+    void getCoverPhotoFile_NoPhoto_ThrowsException() {
+        // Arrange
+        User user = new User();
+        user.setUserId(TEST_USER_ID);
+        user.setCoverPhotoPath(null);
+
+        when(userRepository.findByUserId(TEST_USER_ID)).thenReturn(Optional.of(user));
+
+        // Act & Assert
+        assertThrows(FileStorageException.class, () -> {
+            fileService.getCoverPhotoFile(TEST_USER_ID, "test-cover.jpg");
+        });
+
+        verify(userRepository).findByUserId(TEST_USER_ID);
     }
 }
