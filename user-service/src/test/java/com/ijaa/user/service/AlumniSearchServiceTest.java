@@ -3,6 +3,7 @@ package com.ijaa.user.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ijaa.user.domain.common.PagedResponse;
 import com.ijaa.user.domain.dto.AlumniSearchDto;
+import com.ijaa.user.domain.dto.AlumniSearchMetadata;
 import com.ijaa.user.domain.dto.InterestDto;
 import com.ijaa.user.domain.entity.CurrentUserContext;
 import com.ijaa.user.domain.entity.Interest;
@@ -344,6 +345,36 @@ class AlumniSearchServiceTest {
         assertEquals(0, result.getTotalElements());
         assertTrue(result.isFirst());
         assertTrue(result.isLast());
+    }
+
+    @Test
+    void testGetSearchMetadata() {
+        // Arrange
+        when(profileRepository.countByUsernameNot("testuser")).thenReturn(1250L);
+        when(profileRepository.findDistinctBatchesByUsernameNot("testuser"))
+                .thenReturn(Arrays.asList("2023", "2022", "2021", "2020", "2019", "2018"));
+        when(profileRepository.findDistinctProfessionsByUsernameNot("testuser"))
+                .thenReturn(Arrays.asList("Technology", "Finance", "Healthcare", "Education"));
+        when(profileRepository.findDistinctLocationsByUsernameNot("testuser"))
+                .thenReturn(Arrays.asList("Bangalore", "Mumbai", "Delhi", "Chennai", "Hyderabad"));
+
+        // Act
+        AlumniSearchMetadata metadata = alumniSearchService.getSearchMetadata();
+
+        // Assert
+        assertNotNull(metadata);
+        assertEquals(1250L, metadata.getTotalAlumni());
+        assertEquals(6, metadata.getAvailableBatches().size());
+        assertEquals(4, metadata.getAvailableProfessions().size());
+        assertEquals(5, metadata.getAvailableLocations().size());
+        assertEquals(12, metadata.getDefaultPageSize());
+        assertEquals(100, metadata.getMaxPageSize());
+        assertEquals(1000, metadata.getMaxPageNumber());
+        assertEquals(4, metadata.getAvailableSortOptions().size());
+        assertTrue(metadata.getAvailableSortOptions().contains("relevance"));
+        assertTrue(metadata.getAvailableSortOptions().contains("name"));
+        assertTrue(metadata.getAvailableSortOptions().contains("batch"));
+        assertTrue(metadata.getAvailableSortOptions().contains("connections"));
     }
 
     private Profile createTestProfile(String userId, String name, String batch, String profession, String location) {

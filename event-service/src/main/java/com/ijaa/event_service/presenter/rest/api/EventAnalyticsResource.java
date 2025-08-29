@@ -1,5 +1,6 @@
 package com.ijaa.event_service.presenter.rest.api;
 
+import com.ijaa.event_service.common.annotation.RequiresFeature;
 import com.ijaa.event_service.domain.common.ApiResponse;
 import com.ijaa.event_service.domain.request.EventAnalyticsRequest;
 import com.ijaa.event_service.domain.response.EventAnalyticsResponse;
@@ -19,16 +20,23 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
-@RequestMapping("/api/v1/event-analytics")
-@Tag(name = "Event Analytics", description = "Event analytics and attendance tracking APIs")
+@RequestMapping("/api/v1/user/events/analytics")
+@Slf4j
+@Tag(name = "Event Analytics", description = "APIs for event analytics and reporting")
 public class EventAnalyticsResource {
 
-    @Autowired
-    private EventAnalyticsService eventAnalyticsService;
+    private final EventAnalyticsService eventAnalyticsService;
+
+    public EventAnalyticsResource(EventAnalyticsService eventAnalyticsService) {
+        this.eventAnalyticsService = eventAnalyticsService;
+    }
 
     @GetMapping("/{eventId}")
+    @RequiresFeature("events.analytics")
     @Operation(
         summary = "Get Event Analytics",
         description = "Retrieve comprehensive analytics for a specific event including attendance, response rates, and engagement metrics",
@@ -119,6 +127,7 @@ public class EventAnalyticsResource {
     }
 
     @PostMapping
+    @RequiresFeature("events.analytics")
     @Operation(
         summary = "Update Event Analytics",
         description = "Create or update analytics for an event with detailed metrics and tracking data",

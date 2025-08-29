@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -34,4 +35,17 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
             @Param("currentUsername") String currentUsername,
             Pageable pageable
     );
+
+    // Metadata queries for search filters
+    @Query("SELECT COUNT(p) FROM Profile p WHERE p.username != :username")
+    long countByUsernameNot(@Param("username") String username);
+
+    @Query("SELECT DISTINCT p.batch FROM Profile p WHERE p.username != :username AND p.batch IS NOT NULL ORDER BY p.batch DESC")
+    List<String> findDistinctBatchesByUsernameNot(@Param("username") String username);
+
+    @Query("SELECT DISTINCT p.profession FROM Profile p WHERE p.username != :username AND p.profession IS NOT NULL ORDER BY p.profession ASC")
+    List<String> findDistinctProfessionsByUsernameNot(@Param("username") String username);
+
+    @Query("SELECT DISTINCT p.location FROM Profile p WHERE p.username != :username AND p.location IS NOT NULL ORDER BY p.location ASC")
+    List<String> findDistinctLocationsByUsernameNot(@Param("username") String username);
 }

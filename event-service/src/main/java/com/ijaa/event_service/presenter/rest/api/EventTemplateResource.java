@@ -1,5 +1,6 @@
 package com.ijaa.event_service.presenter.rest.api;
 
+import com.ijaa.event_service.common.annotation.RequiresFeature;
 import com.ijaa.event_service.domain.common.ApiResponse;
 import com.ijaa.event_service.domain.request.EventTemplateRequest;
 import com.ijaa.event_service.domain.response.EventTemplateResponse;
@@ -11,9 +12,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,17 +25,23 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/event-templates")
-@Tag(name = "Event Templates", description = "Event template management APIs")
+@RequestMapping("/api/v1/user/events/templates")
+@Slf4j
+@Tag(name = "Event Templates", description = "APIs for managing reusable event templates")
 public class EventTemplateResource {
 
-    @Autowired
-    private EventTemplateService eventTemplateService;
+    private final EventTemplateService eventTemplateService;
+
+    public EventTemplateResource(EventTemplateService eventTemplateService) {
+        this.eventTemplateService = eventTemplateService;
+    }
 
     @GetMapping
+    @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("events.templates")
     @Operation(
-        summary = "Get All Templates",
-        description = "Retrieve all event templates available in the system",
+        summary = "Get Event Templates",
+        description = "Retrieve all available event templates (USER role required)",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {

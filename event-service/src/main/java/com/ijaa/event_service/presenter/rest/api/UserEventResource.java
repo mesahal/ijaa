@@ -1,11 +1,14 @@
 package com.ijaa.event_service.presenter.rest.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ijaa.event_service.common.annotation.RequiresFeature;
+import com.ijaa.event_service.common.utils.FeatureFlagUtils;
 import com.ijaa.event_service.domain.common.ApiResponse;
 import com.ijaa.event_service.domain.request.EventRequest;
 import com.ijaa.event_service.domain.response.EventResponse;
 import com.ijaa.event_service.common.service.BaseService;
 import com.ijaa.event_service.service.EventService;
+import lombok.RequiredArgsConstructor;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -30,14 +33,17 @@ import java.util.List;
 public class UserEventResource extends BaseService {
 
     private final EventService eventService;
+    private final FeatureFlagUtils featureFlagUtils;
 
-    public UserEventResource(EventService eventService, ObjectMapper objectMapper) {
+    public UserEventResource(EventService eventService, ObjectMapper objectMapper, FeatureFlagUtils featureFlagUtils) {
         super(objectMapper);
         this.eventService = eventService;
+        this.featureFlagUtils = featureFlagUtils;
     }
 
     @GetMapping("/my-events")
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("events")
     @Operation(
         summary = "Get User's Events",
         description = "Retrieve all events created by the authenticated user (USER role required)",
@@ -113,6 +119,7 @@ public class UserEventResource extends BaseService {
 
     @GetMapping("/my-events/active")
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("events")
     @Operation(
         summary = "Get User's Active Events",
         description = "Retrieve all active events created by the authenticated user (USER role required)",
@@ -168,9 +175,11 @@ public class UserEventResource extends BaseService {
     }
 
     @GetMapping("/all-events")
+    @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("events")
     @Operation(
-        summary = "Get All Active Events",
-        description = "Retrieve all active events created by all users (public events)",
+        summary = "Get All Events",
+        description = "Retrieve all events (USER role required)",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {
@@ -219,9 +228,11 @@ public class UserEventResource extends BaseService {
     }
 
     @GetMapping("/all-events/{eventId}")
+    @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("events")
     @Operation(
         summary = "Get Event by ID",
-        description = "Retrieve a specific event by ID (public access)",
+        description = "Retrieve a specific event by ID (USER role required)",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {
@@ -288,8 +299,9 @@ public class UserEventResource extends BaseService {
 
     @GetMapping("/my-events/{eventId}")
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("events")
     @Operation(
-        summary = "Get User's Event by ID",
+        summary = "Get My Event by ID",
         description = "Retrieve a specific event created by the authenticated user (USER role required)",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
@@ -361,6 +373,7 @@ public class UserEventResource extends BaseService {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("events.creation")
     @Operation(
         summary = "Create Event",
         description = "Create a new event for the authenticated user (USER role required)",
@@ -501,6 +514,7 @@ public class UserEventResource extends BaseService {
 
     @PutMapping("/my-events/{eventId}")
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("events.update")
     @Operation(
         summary = "Update User's Event",
         description = "Update an event created by the authenticated user (USER role required)",
@@ -628,6 +642,7 @@ public class UserEventResource extends BaseService {
 
     @DeleteMapping("/my-events/{eventId}")
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("events.delete")
     @Operation(
         summary = "Delete User's Event",
         description = "Delete an event created by the authenticated user (USER role required)",
@@ -685,9 +700,10 @@ public class UserEventResource extends BaseService {
 
     @PostMapping("/search")
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("search")
     @Operation(
-        summary = "Search Events (POST)",
-        description = "Search events by various criteria using POST method with query parameters (USER role required)",
+        summary = "Search Events",
+        description = "Search events with various criteria (USER role required)",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {
@@ -767,115 +783,6 @@ public class UserEventResource extends BaseService {
         )
     })
     public ResponseEntity<ApiResponse<List<EventResponse>>> searchEvents(
-            @RequestParam(required = false) String location,
-            @RequestParam(required = false) String eventType,
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate,
-            @RequestParam(required = false) Boolean isOnline,
-            @RequestParam(required = false) String organizerName,
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String description) {
-        
-        // Parse dates if provided
-        LocalDateTime startDateTime = null;
-        LocalDateTime endDateTime = null;
-        
-        if (startDate != null && !startDate.isEmpty()) {
-            startDateTime = LocalDateTime.parse(startDate);
-        }
-        if (endDate != null && !endDate.isEmpty()) {
-            endDateTime = LocalDateTime.parse(endDate);
-        }
-        
-        List<EventResponse> events = eventService.searchEvents(location, eventType, startDateTime, 
-                                                              endDateTime, isOnline, organizerName, title, description);
-        return ResponseEntity.ok(new ApiResponse<>("Events found successfully", "200", events));
-    }
-
-    @GetMapping("/search")
-    @PreAuthorize("hasRole('USER')")
-    @Operation(
-        summary = "Search Events (GET)",
-        description = "Search events by various criteria using GET method with query parameters (USER role required)",
-        security = @SecurityRequirement(name = "Bearer Authentication")
-    )
-    @ApiResponses(value = {
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "200",
-            description = "Events found successfully",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = com.ijaa.event_service.domain.common.ApiResponse.class),
-                examples = {
-                    @ExampleObject(
-                        name = "Success Response",
-                        value = """
-                            {
-                                "message": "Events found successfully",
-                                "code": "200",
-                                "data": [
-                                    {
-                                        "id": 1,
-                                        "title": "Alumni Meet 2024",
-                                        "description": "Annual alumni gathering",
-                                        "startDate": "2024-12-25T18:00:00",
-                                        "endDate": "2024-12-25T22:00:00",
-                                        "location": "IIT Campus",
-                                        "eventType": "MEETING",
-                                        "active": true,
-                                        "isOnline": false,
-                                        "maxParticipants": 100,
-                                        "currentParticipants": 0,
-                                        "organizerName": "John Doe",
-                                        "organizerEmail": "john@example.com"
-                                    }
-                                ]
-                            }
-                            """
-                    )
-                }
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "400",
-            description = "Invalid search parameters",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Invalid Request",
-                        value = """
-                            {
-                                "message": "Invalid search parameters provided",
-                                "code": "400",
-                                "data": null
-                            }
-                            """
-                    )
-                }
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "401",
-            description = "Unauthorized - Missing or invalid token",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Unauthorized",
-                        value = """
-                            {
-                                "message": "Missing Authorization Header",
-                                "code": "401",
-                                "data": null
-                            }
-                            """
-                    )
-                }
-            )
-        )
-    })
-    public ResponseEntity<ApiResponse<List<EventResponse>>> searchEventsGet(
             @RequestParam(required = false) String location,
             @RequestParam(required = false) String eventType,
             @RequestParam(required = false) String startDate,

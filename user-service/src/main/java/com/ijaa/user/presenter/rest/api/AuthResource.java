@@ -1,6 +1,8 @@
 package com.ijaa.user.presenter.rest.api;
 
+import com.ijaa.user.common.annotation.RequiresFeature;
 import com.ijaa.user.common.utils.AppUtils;
+import com.ijaa.user.common.utils.FeatureFlagUtils;
 import com.ijaa.user.domain.common.ApiResponse;
 import com.ijaa.user.domain.request.SignInRequest;
 import com.ijaa.user.domain.request.SignUpRequest;
@@ -32,8 +34,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthResource {
 
     private final AuthService authService;
+    private final FeatureFlagUtils featureFlagUtils;
 
     @PostMapping("/signin")
+    @RequiresFeature("user.login")
     @Operation(
         summary = "User Login",
         description = "Authenticate a user with username and password",
@@ -130,6 +134,7 @@ public class AuthResource {
     }
 
     @PostMapping("/signup")
+    @RequiresFeature("user.registration")
     @Operation(
         summary = "User Registration",
         description = "Register a new user with username and password",
@@ -220,6 +225,7 @@ public class AuthResource {
     public ResponseEntity<ApiResponse<AuthResponse>> signUp(
             @Valid @RequestBody SignUpRequest request) {
         AuthResponse authResponse = authService.registerUser(request);
+        featureFlagUtils.logFeatureUsage(FeatureFlagUtils.USER_REGISTRATION, authResponse.getUserId());
         return ResponseEntity.ok(
                 new ApiResponse<>("Registration successful", "201", authResponse)
         );
@@ -227,6 +233,7 @@ public class AuthResource {
 
     @PostMapping("/change-password")
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("user.password-change")
     @Operation(
         summary = "Change User Password",
         description = "Change the current user's password (USER only)",

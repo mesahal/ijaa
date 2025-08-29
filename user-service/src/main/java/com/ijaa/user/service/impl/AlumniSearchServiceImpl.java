@@ -3,6 +3,7 @@ package com.ijaa.user.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ijaa.user.domain.common.PagedResponse;
 import com.ijaa.user.domain.dto.AlumniSearchDto;
+import com.ijaa.user.domain.dto.AlumniSearchMetadata;
 import com.ijaa.user.domain.dto.InterestDto;
 import com.ijaa.user.domain.request.AlumniSearchRequest;
 import com.ijaa.user.domain.entity.Profile;
@@ -43,6 +44,9 @@ public class AlumniSearchServiceImpl extends BaseService implements AlumniSearch
     @Override
     public PagedResponse<AlumniSearchDto> searchAlumni(AlumniSearchRequest request) {
         String currentUsername = getCurrentUsername();
+
+        // Validate and sanitize request parameters
+        validateAndSanitizeRequest(request);
 
         // Get connected usernames for current user
         List<String> connectedUsernames = connectionRepository.findConnectedUsernames(currentUsername);
@@ -92,6 +96,66 @@ public class AlumniSearchServiceImpl extends BaseService implements AlumniSearch
                 profilePage.isFirst(),
                 profilePage.isLast()
         );
+    }
+
+    @Override
+    public AlumniSearchMetadata getSearchMetadata() {
+        String currentUsername = getCurrentUsername();
+        
+        // Get total count of alumni (excluding current user)
+        long totalAlumni = profileRepository.countByUsernameNot(currentUsername);
+        
+        // Get available batches
+        List<String> availableBatches = profileRepository.findDistinctBatchesByUsernameNot(currentUsername);
+        
+        // Get available professions
+        List<String> availableProfessions = profileRepository.findDistinctProfessionsByUsernameNot(currentUsername);
+        
+        // Get available locations
+        List<String> availableLocations = profileRepository.findDistinctLocationsByUsernameNot(currentUsername);
+        
+        return new AlumniSearchMetadata(
+                totalAlumni,
+                availableBatches,
+                availableProfessions,
+                availableLocations,
+                12, // defaultPageSize
+                100, // maxPageSize
+                1000, // maxPageNumber
+                List.of("relevance", "name", "batch", "connections") // availableSortOptions
+        );
+    }
+
+    private void validateAndSanitizeRequest(AlumniSearchRequest request) {
+        // Sanitize search query to prevent SQL injection
+        if (request.getSearchQuery() != null) {
+            request.setSearchQuery(request.getSearchQuery().trim());
+            if (request.getSearchQuery().length() > 100) {
+                request.setSearchQuery(request.getSearchQuery().substring(0, 100));
+            }
+        }
+
+        // Sanitize other string fields
+        if (request.getBatch() != null) {
+            request.setBatch(request.getBatch().trim());
+        }
+        if (request.getProfession() != null) {
+            request.setProfession(request.getProfession().trim());
+            if (request.getProfession().length() > 50) {
+                request.setProfession(request.getProfession().substring(0, 50));
+            }
+        }
+        if (request.getLocation() != null) {
+            request.setLocation(request.getLocation().trim());
+            if (request.getLocation().length() > 100) {
+                request.setLocation(request.getLocation().substring(0, 100));
+            }
+        }
+
+        // Ensure sortBy is valid
+        if (request.getSortBy() == null || request.getSortBy().trim().isEmpty()) {
+            request.setSortBy("relevance");
+        }
     }
 
     private Pageable createPageable(AlumniSearchRequest request) {

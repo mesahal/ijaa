@@ -1,6 +1,7 @@
 package com.ijaa.user.presenter.rest.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ijaa.user.config.TestConfig;
 import com.ijaa.user.domain.request.SignInRequest;
 import com.ijaa.user.domain.request.SignUpRequest;
 import com.ijaa.user.domain.request.UserPasswordChangeRequest;
@@ -9,10 +10,13 @@ import com.ijaa.user.service.JWTService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -20,7 +24,10 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(AuthResource.class)
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+@Import(TestConfig.class)
 class AuthResourceIntegrationTest {
 
     @Autowired
@@ -62,11 +69,12 @@ class AuthResourceIntegrationTest {
                 .thenReturn(new com.ijaa.user.domain.response.AuthResponse("test-jwt-token", "USER_123456"));
 
         // When & Then
-        mockMvc.perform(post("/api/v1/user/auth/signup")
+        mockMvc.perform(post("/api/v1/user/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(signUpRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.message").value("Registration successful"))
+                .andExpect(jsonPath("$.code").value("201"))
                 .andExpect(jsonPath("$.data.token").value("test-jwt-token"))
                 .andExpect(jsonPath("$.data.userId").value("USER_123456"));
     }
@@ -79,7 +87,7 @@ class AuthResourceIntegrationTest {
         invalidRequest.setPassword(""); // Invalid password
 
         // When & Then
-        mockMvc.perform(post("/api/v1/user/auth/signup")
+        mockMvc.perform(post("/api/v1/user/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isBadRequest());
@@ -92,11 +100,10 @@ class AuthResourceIntegrationTest {
                 .thenReturn(new com.ijaa.user.domain.response.AuthResponse("test-jwt-token", "USER_123456"));
 
         // When & Then
-        mockMvc.perform(post("/api/v1/user/auth/signin")
+        mockMvc.perform(post("/api/v1/user/signin")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(signInRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.token").value("test-jwt-token"))
                 .andExpect(jsonPath("$.data.userId").value("USER_123456"));
     }
@@ -109,7 +116,7 @@ class AuthResourceIntegrationTest {
         invalidRequest.setPassword(""); // Invalid password
 
         // When & Then
-        mockMvc.perform(post("/api/v1/user/auth/signin")
+        mockMvc.perform(post("/api/v1/user/signin")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isBadRequest());
@@ -122,7 +129,7 @@ class AuthResourceIntegrationTest {
                 .thenThrow(new RuntimeException("Invalid credentials"));
 
         // When & Then
-        mockMvc.perform(post("/api/v1/user/auth/signin")
+        mockMvc.perform(post("/api/v1/user/signin")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(signInRequest)))
                 .andExpect(status().isUnauthorized());
@@ -135,7 +142,7 @@ class AuthResourceIntegrationTest {
                 .thenThrow(new RuntimeException("Username already exists"));
 
         // When & Then
-        mockMvc.perform(post("/api/v1/user/auth/signup")
+        mockMvc.perform(post("/api/v1/user/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(signUpRequest)))
                 .andExpect(status().isConflict());
@@ -144,12 +151,12 @@ class AuthResourceIntegrationTest {
     @Test
     void shouldReturnBadRequestWhenRequestBodyIsEmpty() throws Exception {
         // When & Then
-        mockMvc.perform(post("/api/v1/user/auth/signup")
+        mockMvc.perform(post("/api/v1/user/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(""))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(post("/api/v1/user/auth/signin")
+        mockMvc.perform(post("/api/v1/user/signin")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(""))
                 .andExpect(status().isBadRequest());
@@ -158,12 +165,12 @@ class AuthResourceIntegrationTest {
     @Test
     void shouldReturnBadRequestWhenContentTypeIsNotJson() throws Exception {
         // When & Then
-        mockMvc.perform(post("/api/v1/user/auth/signup")
+        mockMvc.perform(post("/api/v1/user/signup")
                         .contentType(MediaType.TEXT_PLAIN)
                         .content("invalid content"))
                 .andExpect(status().isUnsupportedMediaType());
 
-        mockMvc.perform(post("/api/v1/user/auth/signin")
+        mockMvc.perform(post("/api/v1/user/signin")
                         .contentType(MediaType.TEXT_PLAIN)
                         .content("invalid content"))
                 .andExpect(status().isUnsupportedMediaType());
@@ -172,12 +179,12 @@ class AuthResourceIntegrationTest {
     @Test
     void shouldReturnBadRequestWhenJsonIsMalformed() throws Exception {
         // When & Then
-        mockMvc.perform(post("/api/v1/user/auth/signup")
+        mockMvc.perform(post("/api/v1/user/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{invalid json}"))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(post("/api/v1/user/auth/signin")
+        mockMvc.perform(post("/api/v1/user/signin")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{invalid json}"))
                 .andExpect(status().isBadRequest());
@@ -191,7 +198,7 @@ class AuthResourceIntegrationTest {
         // AuthService is mocked, so no need to mock the changePassword method
 
         // When & Then
-        mockMvc.perform(post("/api/v1/user/auth/change-password")
+        mockMvc.perform(post("/api/v1/user/change-password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(passwordChangeRequest)))
                 .andExpect(status().isOk())
@@ -209,7 +216,7 @@ class AuthResourceIntegrationTest {
         invalidRequest.setConfirmPassword(""); // Invalid confirm password
 
         // When & Then
-        mockMvc.perform(post("/api/v1/user/auth/change-password")
+        mockMvc.perform(post("/api/v1/user/change-password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isBadRequest());
@@ -225,7 +232,7 @@ class AuthResourceIntegrationTest {
         invalidRequest.setConfirmPassword("123");
 
         // When & Then
-        mockMvc.perform(post("/api/v1/user/auth/change-password")
+        mockMvc.perform(post("/api/v1/user/change-password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isBadRequest());
@@ -241,7 +248,7 @@ class AuthResourceIntegrationTest {
         invalidRequest.setConfirmPassword("differentPassword");
 
         // When & Then
-        mockMvc.perform(post("/api/v1/user/auth/change-password")
+        mockMvc.perform(post("/api/v1/user/change-password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isBadRequest());
@@ -250,7 +257,7 @@ class AuthResourceIntegrationTest {
     @Test
     void shouldReturnForbiddenWhenUserNotAuthenticated() throws Exception {
         // When & Then
-        mockMvc.perform(post("/api/v1/user/auth/change-password")
+        mockMvc.perform(post("/api/v1/user/change-password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(passwordChangeRequest)))
                 .andExpect(status().isForbidden());
@@ -260,7 +267,7 @@ class AuthResourceIntegrationTest {
     @WithMockUser(username = "testuser", roles = {"ADMIN"})
     void shouldReturnForbiddenWhenUserHasWrongRole() throws Exception {
         // When & Then
-        mockMvc.perform(post("/api/v1/user/auth/change-password")
+        mockMvc.perform(post("/api/v1/user/change-password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(passwordChangeRequest)))
                 .andExpect(status().isForbidden());
@@ -270,7 +277,7 @@ class AuthResourceIntegrationTest {
     @WithMockUser(username = "testuser", roles = {"USER"})
     void shouldReturnBadRequestWhenPasswordChangeRequestBodyIsEmpty() throws Exception {
         // When & Then
-        mockMvc.perform(post("/api/v1/user/auth/change-password")
+        mockMvc.perform(post("/api/v1/user/change-password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(""))
                 .andExpect(status().isBadRequest());
@@ -280,7 +287,7 @@ class AuthResourceIntegrationTest {
     @WithMockUser(username = "testuser", roles = {"USER"})
     void shouldReturnBadRequestWhenPasswordChangeContentTypeIsNotJson() throws Exception {
         // When & Then
-        mockMvc.perform(post("/api/v1/user/auth/change-password")
+        mockMvc.perform(post("/api/v1/user/change-password")
                         .contentType(MediaType.TEXT_PLAIN)
                         .content("invalid content"))
                 .andExpect(status().isUnsupportedMediaType());
@@ -290,7 +297,7 @@ class AuthResourceIntegrationTest {
     @WithMockUser(username = "testuser", roles = {"USER"})
     void shouldReturnBadRequestWhenPasswordChangeJsonIsMalformed() throws Exception {
         // When & Then
-        mockMvc.perform(post("/api/v1/user/auth/change-password")
+        mockMvc.perform(post("/api/v1/user/change-password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{invalid json}"))
                 .andExpect(status().isBadRequest());

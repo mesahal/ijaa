@@ -1,5 +1,7 @@
 package com.ijaa.file_service.controller;
 
+import com.ijaa.file_service.common.annotation.RequiresFeature;
+import com.ijaa.file_service.config.FeatureFlagUtils;
 import com.ijaa.file_service.domain.common.ApiResponse;
 import com.ijaa.file_service.domain.dto.FileUploadResponse;
 import com.ijaa.file_service.domain.dto.PhotoUrlResponse;
@@ -28,8 +30,10 @@ import org.springframework.core.io.Resource;
 public class FileController {
 
     private final FileService fileService;
+    private final FeatureFlagUtils featureFlagUtils;
 
     @PostMapping(value = "/{userId}/profile-photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequiresFeature("file-upload.profile-photo")
     @Operation(
             summary = "Upload Profile Photo",
             description = "Upload or update a user's profile photo. Supports JPG, JPEG, PNG, WEBP formats up to 5MB. Old photo will be automatically replaced.\n\n" +
@@ -103,6 +107,7 @@ public class FileController {
 
         try {
             FileUploadResponse response = fileService.uploadProfilePhoto(userId, file);
+            featureFlagUtils.logFeatureUsage(FeatureFlagUtils.FILE_UPLOAD_PROFILE_PHOTO, userId);
             return ResponseEntity.ok(ApiResponse.success("Profile photo uploaded successfully", response));
         } catch (Exception e) {
             log.error("Error uploading profile photo for user: {}", userId, e);
@@ -112,6 +117,7 @@ public class FileController {
     }
 
     @PostMapping(value = "/{userId}/cover-photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequiresFeature("file-upload.cover-photo")
     @Operation(
             summary = "Upload Cover Photo",
             description = "Upload or update a user's cover photo. Supports JPG, JPEG, PNG, WEBP formats up to 5MB. Old photo will be automatically replaced.\n\n" +
@@ -200,6 +206,7 @@ public class FileController {
 
         try {
             FileUploadResponse response = fileService.uploadCoverPhoto(userId, file);
+            featureFlagUtils.logFeatureUsage(FeatureFlagUtils.FILE_UPLOAD_COVER_PHOTO, userId);
             return ResponseEntity.ok(ApiResponse.success("Cover photo uploaded successfully", response));
         } catch (Exception e) {
             log.error("Error uploading cover photo for user: {}", userId, e);
@@ -209,6 +216,7 @@ public class FileController {
     }
 
     @GetMapping("/{userId}/profile-photo")
+    @RequiresFeature("file-download")
     @Operation(
             summary = "Get Profile Photo URL",
             description = "Retrieve the URL of a user's profile photo. Returns null if no photo exists."
@@ -261,11 +269,13 @@ public class FileController {
         log.info("Received profile photo URL request for user: {}", userId);
 
         PhotoUrlResponse response = fileService.getProfilePhotoUrl(userId);
+        featureFlagUtils.logFeatureUsage(FeatureFlagUtils.FILE_DOWNLOAD, userId);
 
         return ResponseEntity.ok(ApiResponse.success("Profile photo URL retrieved successfully", response));
     }
 
     @GetMapping("/{userId}/cover-photo")
+    @RequiresFeature("file-download")
     @Operation(
             summary = "Get Cover Photo URL",
             description = "Retrieve the URL of a user's cover photo. Returns null if no photo exists."
@@ -318,11 +328,13 @@ public class FileController {
         log.info("Received cover photo URL request for user: {}", userId);
 
         PhotoUrlResponse response = fileService.getCoverPhotoUrl(userId);
+        featureFlagUtils.logFeatureUsage(FeatureFlagUtils.FILE_DOWNLOAD, userId);
 
         return ResponseEntity.ok(ApiResponse.success("Cover photo URL retrieved successfully", response));
     }
 
     @DeleteMapping("/{userId}/profile-photo")
+    @RequiresFeature("file-delete")
     @Operation(
             summary = "Delete Profile Photo",
             description = "Delete a user's profile photo. Removes the file from storage and clears the database reference."
@@ -356,11 +368,13 @@ public class FileController {
         log.info("Received profile photo deletion request for user: {}", userId);
 
         fileService.deleteProfilePhoto(userId);
+        featureFlagUtils.logFeatureUsage(FeatureFlagUtils.FILE_DELETE, userId);
 
         return ResponseEntity.ok(ApiResponse.success("Profile photo deleted successfully"));
     }
 
     @DeleteMapping("/{userId}/cover-photo")
+    @RequiresFeature("file-delete")
     @Operation(
             summary = "Delete Cover Photo",
             description = "Delete a user's cover photo. Removes the file from storage and clears the database reference."
@@ -394,6 +408,7 @@ public class FileController {
         log.info("Received cover photo deletion request for user: {}", userId);
 
         fileService.deleteCoverPhoto(userId);
+        featureFlagUtils.logFeatureUsage(FeatureFlagUtils.FILE_DELETE, userId);
 
         return ResponseEntity.ok(ApiResponse.success("Cover photo deleted successfully", null));
     }

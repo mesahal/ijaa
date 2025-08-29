@@ -5,28 +5,32 @@ import org.springframework.stereotype.Component;
 
 /**
  * Utility class for feature flag integration in the event service.
- * Simplified version that defaults to enabled for all features.
+ * This is a simplified version that defaults to disabled for safety.
+ * In a production implementation, this would connect to the user service via Feign client.
  */
 @Component
 @Slf4j
 public class FeatureFlagUtils {
 
-    // Feature flag constants
-    public static final String NEW_UI = "NEW_UI";
-    public static final String CHAT_FEATURE = "CHAT_FEATURE";
+    // Event Features
     public static final String EVENT_REGISTRATION = "EVENT_REGISTRATION";
-    public static final String PAYMENT_INTEGRATION = "PAYMENT_INTEGRATION";
-    public static final String SOCIAL_LOGIN = "SOCIAL_LOGIN";
-    public static final String DARK_MODE = "DARK_MODE";
-    public static final String NOTIFICATIONS = "NOTIFICATIONS";
-    public static final String ADVANCED_SEARCH = "ADVANCED_SEARCH";
-    public static final String ALUMNI_DIRECTORY = "ALUMNI_DIRECTORY";
-    public static final String MENTORSHIP_PROGRAM = "MENTORSHIP_PROGRAM";
-    public static final String EVENT_ANALYTICS = "EVENT_ANALYTICS";
-    public static final String EVENT_TEMPLATES = "EVENT_TEMPLATES";
-    public static final String RECURRING_EVENTS = "RECURRING_EVENTS";
-    public static final String EVENT_MEDIA = "EVENT_MEDIA";
-    public static final String EVENT_COMMENTS = "EVENT_COMMENTS";
+    public static final String EVENT_MANAGEMENT = "events";
+    public static final String EVENT_CREATION = "events.creation";
+    public static final String EVENT_UPDATE = "events.update";
+    public static final String EVENT_DELETE = "events.delete";
+    public static final String EVENT_PARTICIPATION = "events.participation";
+    public static final String EVENT_INVITATIONS = "events.invitations";
+    public static final String EVENT_COMMENTS = "events.comments";
+    public static final String EVENT_MEDIA = "events.media";
+    public static final String EVENT_TEMPLATES = "events.templates";
+    public static final String RECURRING_EVENTS = "events.recurring";
+    public static final String EVENT_ANALYTICS = "events.analytics";
+    public static final String EVENT_REMINDERS = "events.reminders";
+    public static final String CALENDAR_INTEGRATION = "calendar.integration";
+
+    // Search Features
+    public static final String ADVANCED_SEARCH = "search";
+    public static final String SEARCH_ADVANCED_FILTERS = "search.advanced-filters";
 
     /**
      * Check if a feature flag is enabled
@@ -34,24 +38,76 @@ public class FeatureFlagUtils {
      * @return true if the feature is enabled, false otherwise
      */
     public boolean isFeatureEnabled(String featureName) {
-        // Default to enabled for all features in event service
-        return true;
+        // Default to disabled for safety in event service
+        // In a production implementation, this would call the user service via Feign client
+        log.debug("Checking feature flag: {} - defaulting to disabled for safety", featureName);
+        return false;
     }
 
-    /**
-     * Check if event registration is enabled
-     * @return true if event registration is enabled
-     */
+    // Event Features
     public boolean isEventRegistrationEnabled() {
         return isFeatureEnabled(EVENT_REGISTRATION);
     }
 
-    /**
-     * Check if advanced search is enabled
-     * @return true if advanced search is enabled
-     */
+    public boolean isEventManagementEnabled() {
+        return isFeatureEnabled(EVENT_MANAGEMENT);
+    }
+
+    public boolean isEventCreationEnabled() {
+        return isFeatureEnabled(EVENT_CREATION);
+    }
+
+    public boolean isEventUpdateEnabled() {
+        return isFeatureEnabled(EVENT_UPDATE);
+    }
+
+    public boolean isEventDeleteEnabled() {
+        return isFeatureEnabled(EVENT_DELETE);
+    }
+
+    public boolean isEventParticipationEnabled() {
+        return isFeatureEnabled(EVENT_PARTICIPATION);
+    }
+
+    public boolean isEventInvitationsEnabled() {
+        return isFeatureEnabled(EVENT_INVITATIONS);
+    }
+
+    public boolean isEventCommentsEnabled() {
+        return isFeatureEnabled(EVENT_COMMENTS);
+    }
+
+    public boolean isEventMediaEnabled() {
+        return isFeatureEnabled(EVENT_MEDIA);
+    }
+
+    public boolean isEventTemplatesEnabled() {
+        return isFeatureEnabled(EVENT_TEMPLATES);
+    }
+
+    public boolean isRecurringEventsEnabled() {
+        return isFeatureEnabled(RECURRING_EVENTS);
+    }
+
+    public boolean isEventAnalyticsEnabled() {
+        return isFeatureEnabled(EVENT_ANALYTICS);
+    }
+
+    public boolean isEventRemindersEnabled() {
+        return isFeatureEnabled(EVENT_REMINDERS);
+    }
+
+    public boolean isCalendarIntegrationEnabled() {
+        return isFeatureEnabled(CALENDAR_INTEGRATION);
+    }
+
+    // Search Features
     public boolean isAdvancedSearchEnabled() {
         return isFeatureEnabled(ADVANCED_SEARCH);
+    }
+
+    public boolean isSearchAdvancedFiltersEnabled() {
+        return isFeatureEnabled(SEARCH_ADVANCED_FILTERS);
     }
 
     /**
@@ -60,6 +116,8 @@ public class FeatureFlagUtils {
      * @param userId the user ID (optional)
      */
     public void logFeatureUsage(String featureName, String userId) {
-        log.info("Feature flag {} used by user {}", featureName, userId != null ? userId : "anonymous");
+        if (isFeatureEnabled(featureName)) {
+            log.info("Feature flag {} used by user {}", featureName, userId != null ? userId : "anonymous");
+        }
     }
 }

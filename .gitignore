@@ -1,0 +1,91 @@
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+.springBeans
+.sts4-cache
+
+# Logs
+*.log
+logs/
+*.log.*
+**/user-service.log
+**/event-service.log
+**/file-service.log
+**/gateway-service.log
+**/config-service.log
+**/discovery-service.log
+
+# Application specific
+uploads/
+test-uploads/
+temp/
+tmp/
+**/uploads/
+**/test-uploads/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Build artifacts
+build/
+dist/
+out/
+
+# Test reports
+**/surefire-reports/
+**/test-results/
+**/coverage/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Docker
+.dockerignore
+
+# Kubernetes
+*.kubeconfig
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+*.backup
+*.old

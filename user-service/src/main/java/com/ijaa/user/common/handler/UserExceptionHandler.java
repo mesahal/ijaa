@@ -4,6 +4,7 @@ import com.ijaa.user.common.exceptions.AuthenticationFailedException;
 import com.ijaa.user.common.exceptions.PasswordChangeException;
 import com.ijaa.user.common.exceptions.UserAlreadyExistsException;
 import com.ijaa.user.common.exceptions.UserNotFoundException;
+import com.ijaa.user.common.exceptions.FeatureDisabledException;
 import com.ijaa.user.domain.common.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,14 @@ public class UserExceptionHandler {
             AuthenticationFailedException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                 new ApiResponse<>(ex.getMessage(), "401", null)
+        );
+    }
+
+    @ExceptionHandler(FeatureDisabledException.class)
+    public ResponseEntity<ApiResponse<?>> handleFeatureDisabled(
+            FeatureDisabledException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                new ApiResponse<>(ex.getMessage(), "403", null)
         );
     }
 

@@ -1,6 +1,7 @@
 package com.ijaa.event_service.presenter.rest.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ijaa.event_service.common.annotation.RequiresFeature;
 import com.ijaa.event_service.domain.common.ApiResponse;
 import com.ijaa.event_service.domain.request.EventReminderRequest;
 import com.ijaa.event_service.domain.response.EventReminderResponse;
@@ -34,6 +35,7 @@ public class EventReminderResource {
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("events.reminders")
     @Operation(
         summary = "Set Event Reminder",
         description = "Set a reminder for an event with customizable timing and notification preferences (USER role required)",

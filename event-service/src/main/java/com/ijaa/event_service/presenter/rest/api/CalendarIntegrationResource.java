@@ -1,5 +1,6 @@
 package com.ijaa.event_service.presenter.rest.api;
 
+import com.ijaa.event_service.common.annotation.RequiresFeature;
 import com.ijaa.event_service.domain.common.ApiResponse;
 import com.ijaa.event_service.domain.request.CalendarIntegrationRequest;
 import com.ijaa.event_service.domain.response.CalendarIntegrationResponse;
@@ -11,9 +12,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +25,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/calendar-integrations")
+@Slf4j
 @Tag(name = "Calendar Integration", description = "Calendar integration and external calendar sync APIs")
 public class CalendarIntegrationResource {
 
-    @Autowired
-    private CalendarIntegrationService calendarIntegrationService;
+    private final CalendarIntegrationService calendarIntegrationService;
+
+    public CalendarIntegrationResource(CalendarIntegrationService calendarIntegrationService) {
+        this.calendarIntegrationService = calendarIntegrationService;
+    }
 
     @GetMapping("/user")
+    @RequiresFeature("calendar.integration")
     @Operation(summary = "Get user's calendar integrations", description = "Retrieve all calendar integrations for the current user")
     public ResponseEntity<ApiResponse<List<CalendarIntegrationResponse>>> getUserCalendarIntegrations(Authentication authentication) {
         String username = authentication.getName();
@@ -41,6 +49,7 @@ public class CalendarIntegrationResource {
     }
 
     @GetMapping("/user/active")
+    @RequiresFeature("calendar.integration")
     @Operation(summary = "Get user's active calendar integrations", description = "Retrieve active calendar integrations for the current user")
     public ResponseEntity<ApiResponse<List<CalendarIntegrationResponse>>> getActiveCalendarIntegrations(Authentication authentication) {
         String username = authentication.getName();
@@ -53,6 +62,7 @@ public class CalendarIntegrationResource {
     }
 
     @GetMapping("/{integrationId}")
+    @RequiresFeature("calendar.integration")
     @Operation(summary = "Get calendar integration by ID", description = "Retrieve a specific calendar integration by ID")
     public ResponseEntity<ApiResponse<CalendarIntegrationResponse>> getCalendarIntegrationById(@PathVariable Long integrationId) {
         CalendarIntegrationResponse integration = calendarIntegrationService.getCalendarIntegrationById(integrationId);
@@ -64,6 +74,7 @@ public class CalendarIntegrationResource {
     }
 
     @PostMapping
+    @RequiresFeature("calendar.integration")
     @Operation(
         summary = "Create Calendar Integration",
         description = "Create a new calendar integration with external calendar services (Google Calendar, Outlook, etc.)",

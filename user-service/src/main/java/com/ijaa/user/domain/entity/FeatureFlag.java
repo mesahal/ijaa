@@ -1,5 +1,7 @@
 package com.ijaa.user.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -22,21 +25,33 @@ public class FeatureFlag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false, length = 100)
-    private String featureName;
+    @Column(name = "feature_name", unique = true, nullable = false, length = 100)
+    private String name;
 
-    @Column(nullable = false)
+    @Column(name = "display_name", length = 255)
+    private String displayName;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    @JsonBackReference
+    private FeatureFlag parent;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<FeatureFlag> children;
+
+    @Column(name = "enabled", nullable = false)
     private Boolean enabled = false;
 
-    @Column(length = 500)
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @CreatedDate
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(nullable = false)
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     @PrePersist

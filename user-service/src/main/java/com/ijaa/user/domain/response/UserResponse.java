@@ -16,6 +16,15 @@ public class UserResponse {
     private String username;
     private String name;
     private String email;
+    private String profession;
+    private String location;
+    private String batch;
+    private String phone;
+    private String linkedIn;
+    private String website;
+    private String facebook;
+    private String bio;
+    private Integer connections;
     private Boolean active;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

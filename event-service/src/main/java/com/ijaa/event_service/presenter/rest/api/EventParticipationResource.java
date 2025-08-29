@@ -1,6 +1,8 @@
 package com.ijaa.event_service.presenter.rest.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ijaa.event_service.common.annotation.RequiresFeature;
+import com.ijaa.event_service.common.utils.FeatureFlagUtils;
 import com.ijaa.event_service.domain.common.ApiResponse;
 import com.ijaa.event_service.domain.request.EventParticipationRequest;
 import com.ijaa.event_service.domain.response.EventParticipationResponse;
@@ -29,14 +31,19 @@ import java.util.List;
 public class EventParticipationResource extends BaseService {
 
     private final EventParticipationService eventParticipationService;
+    private final FeatureFlagUtils featureFlagUtils;
 
-    public EventParticipationResource(EventParticipationService eventParticipationService, ObjectMapper objectMapper) {
+    public EventParticipationResource(EventParticipationService eventParticipationService, ObjectMapper objectMapper, FeatureFlagUtils featureFlagUtils) {
         super(objectMapper);
         this.eventParticipationService = eventParticipationService;
+        this.featureFlagUtils = featureFlagUtils;
     }
+
+
 
     @PostMapping("/rsvp")
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("events.participation")
     @Operation(
         summary = "RSVP to Event",
         description = "RSVP to an event with GOING, MAYBE, or NOT_GOING status",

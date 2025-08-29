@@ -1,6 +1,7 @@
 package com.ijaa.event_service.presenter.rest.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ijaa.event_service.common.annotation.RequiresFeature;
 import com.ijaa.event_service.domain.common.ApiResponse;
 import com.ijaa.event_service.domain.request.RecurringEventRequest;
 import com.ijaa.event_service.domain.response.RecurringEventResponse;
@@ -24,9 +25,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/user/recurring-events")
+@RequestMapping("/api/v1/user/events/recurring")
 @Slf4j
-@Tag(name = "Recurring Event Management", description = "APIs for managing recurring events and series")
+@Tag(name = "Recurring Events", description = "APIs for managing recurring events")
 public class RecurringEventResource extends BaseService {
 
     private final RecurringEventService recurringEventService;
@@ -86,9 +87,10 @@ public class RecurringEventResource extends BaseService {
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("events.recurring")
     @Operation(
         summary = "Create Recurring Event",
-        description = "Create a new recurring event with customizable recurrence patterns",
+        description = "Create a recurring event with pattern (USER role required)",
         security = @SecurityRequirement(name = "Bearer Authentication"),
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Recurring event creation details",

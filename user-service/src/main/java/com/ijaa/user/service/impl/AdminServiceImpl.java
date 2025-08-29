@@ -12,6 +12,7 @@ import com.ijaa.user.common.exceptions.UserAlreadyBlockedException;
 import com.ijaa.user.common.exceptions.UserAlreadyUnblockedException;
 import com.ijaa.user.domain.entity.Admin;
 import com.ijaa.user.domain.entity.User;
+import com.ijaa.user.domain.entity.Profile;
 import com.ijaa.user.domain.enums.AdminRole;
 import com.ijaa.user.domain.request.AdminLoginRequest;
 import com.ijaa.user.domain.request.AdminPasswordChangeRequest;
@@ -22,6 +23,7 @@ import com.ijaa.user.domain.response.DashboardStatsResponse;
 import com.ijaa.user.domain.response.UserResponse;
 import com.ijaa.user.repository.AdminRepository;
 import com.ijaa.user.repository.UserRepository;
+import com.ijaa.user.repository.ProfileRepository;
 import com.ijaa.user.service.AdminService;
 import com.ijaa.user.service.AnnouncementService;
 
@@ -42,6 +44,7 @@ public class AdminServiceImpl implements AdminService {
 
     private final AdminRepository adminRepository;
     private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
 
     private final AnnouncementService announcementService;
     private final ReportService reportService;
@@ -379,11 +382,43 @@ public class AdminServiceImpl implements AdminService {
         UserResponse response = new UserResponse();
         response.setUserId(user.getUserId());
         response.setUsername(user.getUsername());
-        response.setName(user.getUsername()); // Using username as name for now
-        response.setEmail(null); // User entity doesn't have email field yet
         response.setActive(user.getActive());
-        response.setCreatedAt(null); // User entity doesn't have timestamps yet
-        response.setUpdatedAt(null);
+        
+        // Try to get profile data for richer information
+        Profile profile = profileRepository.findByUserId(user.getUserId()).orElse(null);
+        
+        if (profile != null) {
+            // Use profile data for richer information
+            response.setName(profile.getName() != null ? profile.getName() : user.getUsername());
+            response.setEmail(profile.getEmail());
+            response.setProfession(profile.getProfession());
+            response.setLocation(profile.getLocation());
+            response.setBatch(profile.getBatch());
+            response.setPhone(profile.getPhone());
+            response.setLinkedIn(profile.getLinkedIn());
+            response.setWebsite(profile.getWebsite());
+            response.setFacebook(profile.getFacebook());
+            response.setBio(profile.getBio());
+            response.setConnections(profile.getConnections());
+            response.setCreatedAt(profile.getCreatedAt());
+            response.setUpdatedAt(profile.getUpdatedAt());
+        } else {
+            // Fallback to user data if profile doesn't exist
+            response.setName(user.getUsername());
+            response.setEmail(null);
+            response.setProfession(null);
+            response.setLocation(null);
+            response.setBatch(null);
+            response.setPhone(null);
+            response.setLinkedIn(null);
+            response.setWebsite(null);
+            response.setFacebook(null);
+            response.setBio(null);
+            response.setConnections(null);
+            response.setCreatedAt(null);
+            response.setUpdatedAt(null);
+        }
+        
         return response;
     }
 } 
