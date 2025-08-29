@@ -4,115 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ce6d269-0e9e-4fa6-93e1-3e4fac090d6e" name="Changes" comment="password change">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+    <list default="true" id="9ce6d269-0e9e-4fa6-93e1-3e4fac090d6e" name="Changes" comment="feature flag">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PROFILE_APIS.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/EventServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/EventServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/common/handler/BaseExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/common/handler/BaseExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/common/utils/FeatureFlagUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/common/utils/FeatureFlagUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/AdvancedEventSearchResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/AdvancedEventSearchResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/CalendarIntegrationResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/CalendarIntegrationResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventAnalyticsResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventAnalyticsResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventCommentResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventCommentResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventInvitationResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventInvitationResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventMediaResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventMediaResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventParticipationResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventParticipationResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventReminderResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventReminderResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventTemplateResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventTemplateResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/RecurringEventResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/RecurringEventResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/UserEventResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/UserEventResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/API_DOCUMENTATION.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/FILE_URL_SOLUTION.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/IMPLEMENTATION_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/demo.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/service.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/src/main/java/com/ijaa/file_service/FileServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/file-service/src/main/java/com/ijaa/file_service/FileServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/src/main/java/com/ijaa/file_service/controller/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/file-service/src/main/java/com/ijaa/file_service/controller/FileController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/src/main/java/com/ijaa/file_service/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/file-service/src/main/java/com/ijaa/file_service/exception/GlobalExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-api.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-file-upload.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/0eb938a7-1ead-4409-8510-491aaef100cb.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/1c328e34-7a31-4654-af01-dd539f193cbd.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/1d00f5da-3468-4609-90c3-d4dd343b8b0f.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/2bc63a1f-c764-471c-8c9a-e191b4f21153.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/32601d39-394e-46c4-8750-1f9aad40d97b.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/43f7b5e9-b4bc-4de4-b41c-0c81ac0812c9.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/5eccfab6-5103-49e2-bba5-a2f07afb199d.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/602c9697-97b5-4962-ab94-6b3165b0d6ad.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/63f08c38-c457-4156-89ab-43dd1c1c5a7d.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/66354fca-8add-48ba-bec2-77482a35642f.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/75f07cf5-a378-4e14-a23a-c1600509c6de.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/7ab90abe-5888-49a4-b09e-6f0e22665f4f.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/7e9d26ef-7c26-4721-a657-4c7c47260cb3.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/8e34c7a8-a2ab-4c0b-b567-545a43ed5d02.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/925aef7e-8930-4f13-9528-186c675f948c.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/92ceeffc-e3c5-4736-872b-df73cb0894d5.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/95f0ab24-758b-4c07-a47e-12d57ffdf9d4.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/998482a2-9739-49e7-ab89-3d7967eb8e19.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/a5eef133-75d2-49dd-8e26-fa353109e258.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/adc7740e-b188-4f26-ad2c-765023e1c211.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/b6c5860f-3758-471f-ab7e-72c0e96c7e00.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/bb17cd43-3c65-4382-a9ce-35599f72a50b.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/c53e3b0d-cf35-43f9-ac79-2f46332d6c8a.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/d61b796c-4fb0-40f9-bd52-e667ee0da464.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/e2ba9261-a1ba-4296-9ed7-86ab27a8a0e9.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/e49914b0-1506-4eb0-90b1-48c83fc27c71.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/efac91f9-e72d-451c-96e0-7e66f4042e9f.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/f2eff845-0ce8-4ddb-bb52-25ae57130556.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/facb7d69-2547-4966-99bb-de6e71f1008c.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/027188ad-e3b6-4663-9036-2f14cd777fcf.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/084d74f4-6d2e-4a19-9394-af06a2824bec.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/0e1392b7-6cc9-47fb-8923-d7af4de5f6f7.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/10b71254-afa8-467e-aaf2-43843e43971a.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/112a64d7-4aef-4ed7-a0fa-0b5d422e4b48.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/18599afe-3d38-4930-8774-40ee10accf4f.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/1fcb4b1f-f638-4edf-97c7-4e6211dbf162.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/25d7c06e-3096-49a2-a1a5-0722bf18cdcf.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/25ee51b2-537d-42ad-a9bc-895287e02156.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/4ded89f4-4dd9-4161-a49c-fd2a99b123fe.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/4e752b96-1417-46f4-9040-ab704065e2a8.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/5a53b22e-ed28-4fd3-b507-26613ce878ce.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/6b95efa2-c10f-4bfe-834c-f072c73f29e4.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/74119df0-2b5d-4494-9246-719722388229.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/7495f447-e657-4801-b753-c3971f3df8d2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/804d1f15-2447-4b2d-8a4a-f2fdaf3afca5.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/899d8e7d-d050-4494-adea-42c68f25738d.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/9a7e9f28-0d71-4bf5-96e6-164cf2c0362a.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/9e1464a9-1ae4-4121-822d-71a15a0808ae.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/b1ea848e-084a-478d-86e7-ef78916aebcd.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/bac4f5de-4e24-48f5-b558-6fb895f780b3.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/c1bb934b-d68a-4d2f-b9ec-83964208dd6d.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/c1ff0fd9-5981-476f-a936-6aa1bc46291f.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/c22cba1a-8a3f-4295-9f8a-ed17da6e2c15.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/d0525a01-52bf-4909-a09b-015b7ed19451.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/db9e0b79-5e72-4e52-aff7-996db660f989.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/f1516478-de22-4577-b075-e73e66373fae.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/f3c20ac3-fba8-4e65-bd4f-27ebd663f813.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/feb186d4-7968-4a61-bdc3-66ba98a0a5ec.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/config/GatewayConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/config/GatewayConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project-context.md" beforeDir="false" afterPath="$PROJECT_DIR$/project-context.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/UserServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/UserServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/common/handler/UserExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/common/handler/UserExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/common/utils/FeatureFlagUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/common/utils/FeatureFlagUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/FeatureFlag.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/entity/FeatureFlag.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/response/UserResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/response/UserResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/AdminAuthResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/AdminAuthResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/AdminManagementResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/AdminManagementResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/AlumniSearchResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/AlumniSearchResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/AuthResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/AuthResource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/FeatureFlagResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/FeatureFlagResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/ProfileResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/ProfileResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/repository/FeatureFlagRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/repository/FeatureFlagRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/FeatureFlagService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/FeatureFlagService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/AdminServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/AdminServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/FeatureFlagServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/FeatureFlagServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/presenter/rest/api/AuthResourceIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/presenter/rest/api/AuthResourceIntegrationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/AdminServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/AdminServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/AuthorizationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/AuthorizationTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -296,8 +193,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.23892.409" />
-        <option value="bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-IU-252.23892.409" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.25557.131" />
+        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-IU-252.25557.131" />
       </set>
     </attachedChunks>
   </component>
@@ -322,6 +219,7 @@
       <workItem from="1756316230293" duration="8881000" />
       <workItem from="1756362049953" duration="12576000" />
       <workItem from="1756403546554" duration="4290000" />
+      <workItem from="1756445717157" duration="5185000" />
     </task>
     <task id="LOCAL-00001" summary="sob elomelo">
       <option name="closed" value="true" />
@@ -371,7 +269,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756156468276</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="feature flag">
+      <option name="closed" value="true" />
+      <created>1756445743032</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1756445743032</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -385,6 +291,7 @@
     <MESSAGE value="dp, cover image" />
     <MESSAGE value="admin profile api" />
     <MESSAGE value="password change" />
-    <option name="LAST_COMMIT_MESSAGE" value="password change" />
+    <MESSAGE value="feature flag" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature flag" />
   </component>
 </project>

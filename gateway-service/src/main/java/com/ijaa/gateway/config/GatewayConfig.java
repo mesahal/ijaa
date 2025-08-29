@@ -22,9 +22,18 @@ public class GatewayConfig {
                                 .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://user-service"))
-                // Admin routes - apply authentication filter for protected endpoints
+                // Feature flag status check - public endpoint (no authentication required)
+                .route(p-> p
+                        .path("/ijaa/api/v1/admin/feature-flags/*/enabled")
+                        .filters(f-> f
+                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
+                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
+                        .uri("lb://user-service"))
+                // Admin routes - apply authentication filter for protected endpoints (excluding feature flag status)
                 .route(p-> p
                         .path("/ijaa/api/v1/admin/**")
+                        .and()
+                        .not(route -> route.path("/ijaa/api/v1/admin/feature-flags/*/enabled"))
                         .filters(f-> f
                                 .filter(filter.apply(new AuthenticationFilter.Config()))
                                 .rewritePath("/ijaa/(?<segment>.*)","/${segment}")

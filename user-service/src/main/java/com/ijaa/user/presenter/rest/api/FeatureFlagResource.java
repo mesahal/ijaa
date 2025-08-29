@@ -331,8 +331,7 @@ public class FeatureFlagResource {
     @GetMapping("/{name}/enabled")
     @Operation(
         summary = "Check Feature Flag Status",
-        description = "Check if a specific feature flag is enabled (Public endpoint)",
-        security = @SecurityRequirement(name = "Bearer Authentication")
+        description = "Check if a specific feature flag is enabled (Public endpoint - No authentication required)"
     )
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(

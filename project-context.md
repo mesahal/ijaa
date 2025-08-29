@@ -45,6 +45,7 @@ Gateway Service (8080) → User Service (8081), Event Service (8082), File Servi
   - CORS configuration
   - JWT token validation
   - User context propagation via headers
+  - **Public access for feature flag status checks** (no authentication required)
 
 #### 4. User Service (Port: 8081)
 - **Technology**: Spring Boot + PostgreSQL + JPA
@@ -196,13 +197,13 @@ All services provide comprehensive REST APIs ready for frontend integration:
 - ✅ `POST /alumni/search` - Alumni search functionality
 
 #### Feature Flag Management APIs (`/api/v1/admin/feature-flags/`)
-- ✅ `GET /` - Get all feature flags
-- ✅ `GET /{name}` - Get specific feature flag
-- ✅ `POST /` - Create new feature flag
-- ✅ `PUT /{name}` - Update feature flag
-- ✅ `DELETE /{name}` - Delete feature flag
-- ✅ `GET /{name}/enabled` - Check feature flag status
-- ✅ `POST /refresh-cache` - Refresh feature flag cache
+- ✅ `GET /` - Get all feature flags (ADMIN only)
+- ✅ `GET /{name}` - Get specific feature flag (ADMIN only)
+- ✅ `POST /` - Create new feature flag (ADMIN only)
+- ✅ `PUT /{name}` - Update feature flag (ADMIN only)
+- ✅ `DELETE /{name}` - Delete feature flag (ADMIN only)
+- ✅ `GET /{name}/enabled` - Check feature flag status (Public - No authentication required)
+- ✅ `POST /refresh-cache` - Refresh feature flag cache (ADMIN only)
 - ✅ **Standardized error responses** with consistent ApiResponse format
 
 #### Event Service APIs (`/api/v1/events/`)
@@ -228,6 +229,21 @@ All services provide comprehensive REST APIs ready for frontend integration:
 2. **Login**: Frontend → Gateway → User Service (returns JWT)
 3. **Authenticated Requests**: Frontend (with JWT) → Gateway → Services
 4. **User Context**: Gateway extracts user info from JWT and forwards to services
+5. **Feature Flag Checks**: Frontend → Gateway (public) → User Service (public)
+
+### Gateway Routing Configuration
+The gateway service provides intelligent routing with the following patterns:
+
+#### **Public Endpoints (No Authentication Required):**
+- `GET /ijaa/api/v1/admin/feature-flags/{name}/enabled` - Feature flag status check
+- `GET /ijaa/api/v1/users/*/profile-photo/file/**` - Profile photo serving
+- `GET /ijaa/api/v1/users/*/cover-photo/file/**` - Cover photo serving
+
+#### **Protected Endpoints (Authentication Required):**
+- All other admin endpoints (`/ijaa/api/v1/admin/**`)
+- All user endpoints (`/ijaa/api/v1/user/**`)
+- All event endpoints (`/ijaa/api/v1/events/**`, `/ijaa/api/v1/user/events/**`)
+- All file management endpoints (`/ijaa/api/v1/users/**`)
 
 ## Development Guidelines
 
