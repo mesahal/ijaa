@@ -36,6 +36,7 @@ public class CalendarIntegrationResource {
     }
 
     @GetMapping("/user")
+    @RequiresFeature("calendar.integration")
     @Operation(summary = "Get user's calendar integrations", description = "Retrieve all calendar integrations for the current user")
     public ResponseEntity<ApiResponse<List<CalendarIntegrationResponse>>> getUserCalendarIntegrations(Authentication authentication) {
         String username = authentication.getName();
@@ -48,6 +49,7 @@ public class CalendarIntegrationResource {
     }
 
     @GetMapping("/user/active")
+    @RequiresFeature("calendar.integration")
     @Operation(summary = "Get user's active calendar integrations", description = "Retrieve active calendar integrations for the current user")
     public ResponseEntity<ApiResponse<List<CalendarIntegrationResponse>>> getActiveCalendarIntegrations(Authentication authentication) {
         String username = authentication.getName();
@@ -60,6 +62,7 @@ public class CalendarIntegrationResource {
     }
 
     @GetMapping("/{integrationId}")
+    @RequiresFeature("calendar.integration")
     @Operation(summary = "Get calendar integration by ID", description = "Retrieve a specific calendar integration by ID")
     public ResponseEntity<ApiResponse<CalendarIntegrationResponse>> getCalendarIntegrationById(@PathVariable Long integrationId) {
         CalendarIntegrationResponse integration = calendarIntegrationService.getCalendarIntegrationById(integrationId);
@@ -71,6 +74,7 @@ public class CalendarIntegrationResource {
     }
 
     @PostMapping
+    @RequiresFeature("calendar.integration")
     @Operation(
         summary = "Create Calendar Integration",
         description = "Create a new calendar integration with external calendar services (Google Calendar, Outlook, etc.)",

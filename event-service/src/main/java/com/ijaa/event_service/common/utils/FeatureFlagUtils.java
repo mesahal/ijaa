@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * Utility class for feature flag integration in the event service.
- * This is a simplified version that defaults to enabled for all features.
- * In a real implementation, this would connect to the user service via Feign client.
+ * This is a simplified version that defaults to disabled for safety.
+ * In a production implementation, this would connect to the user service via Feign client.
  */
 @Component
 @Slf4j
@@ -38,10 +38,10 @@ public class FeatureFlagUtils {
      * @return true if the feature is enabled, false otherwise
      */
     public boolean isFeatureEnabled(String featureName) {
-        // Default to enabled for all features in event service
-        // In a real implementation, this would call the user service via Feign client
-        log.debug("Checking feature flag: {} - defaulting to enabled", featureName);
-        return true;
+        // Default to disabled for safety in event service
+        // In a production implementation, this would call the user service via Feign client
+        log.debug("Checking feature flag: {} - defaulting to disabled for safety", featureName);
+        return false;
     }
 
     // Event Features

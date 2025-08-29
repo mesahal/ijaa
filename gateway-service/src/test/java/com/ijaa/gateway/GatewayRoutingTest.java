@@ -33,3 +33,4 @@ class GatewayRoutingTest {
         assertTrue(true, "Gateway configuration should include public feature flag route");
     }
 }
+

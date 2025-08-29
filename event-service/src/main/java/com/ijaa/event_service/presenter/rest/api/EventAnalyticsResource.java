@@ -36,6 +36,7 @@ public class EventAnalyticsResource {
     }
 
     @GetMapping("/{eventId}")
+    @RequiresFeature("events.analytics")
     @Operation(
         summary = "Get Event Analytics",
         description = "Retrieve comprehensive analytics for a specific event including attendance, response rates, and engagement metrics",
@@ -126,6 +127,7 @@ public class EventAnalyticsResource {
     }
 
     @PostMapping
+    @RequiresFeature("events.analytics")
     @Operation(
         summary = "Update Event Analytics",
         description = "Create or update analytics for an event with detailed metrics and tracking data",

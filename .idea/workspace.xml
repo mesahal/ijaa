@@ -4,12 +4,69 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ce6d269-0e9e-4fa6-93e1-3e4fac090d6e" name="Changes" comment="feature flag">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+    <list default="true" id="9ce6d269-0e9e-4fa6-93e1-3e4fac090d6e" name="Changes" comment="feature flag fix">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/5b4f968b-5d3e-405b-9a57-f5f68ed5e7f5.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/5b4f968b-5d3e-405b-9a57-f5f68ed5e7f5/storage_v2/_src_/database/ijaa_events.FxbuFg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/5b4f968b-5d3e-405b-9a57-f5f68ed5e7f5/storage_v2/_src_/database/ijaa_events.FxbuFg/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/5b4f968b-5d3e-405b-9a57-f5f68ed5e7f5/storage_v2/_src_/database/ijaa_events.FxbuFg/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/5b4f968b-5d3e-405b-9a57-f5f68ed5e7f5/storage_v2/_src_/database/ijaa_events.FxbuFg/schema/public.abK9xQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97.corrupted.20250825-041218.reason.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/60e88a9d-fd2b-40c2-b9ea-cb4da30ffe97.corrupted.20250825-041218.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/7ca6e6ad-2e8a-41f4-a8d0-1e75d761077a.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/7ca6e6ad-2e8a-41f4-a8d0-1e75d761077a/storage_v2/_src_/database/ijaa_files.ue3upQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/7ca6e6ad-2e8a-41f4-a8d0-1e75d761077a/storage_v2/_src_/database/ijaa_files.ue3upQ/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/7ca6e6ad-2e8a-41f4-a8d0-1e75d761077a/storage_v2/_src_/database/ijaa_files.ue3upQ/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/7ca6e6ad-2e8a-41f4-a8d0-1e75d761077a/storage_v2/_src_/database/ijaa_files.ue3upQ/schema/public.abK9xQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/98eed407-15ff-4205-97ee-02a9ec27afce.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/98eed407-15ff-4205-97ee-02a9ec27afce/storage_v2/_src_/database/ijaa_users.SsHGpg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/98eed407-15ff-4205-97ee-02a9ec27afce/storage_v2/_src_/database/ijaa_users.SsHGpg/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/98eed407-15ff-4205-97ee-02a9ec27afce/storage_v2/_src_/database/ijaa_users.SsHGpg/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/98eed407-15ff-4205-97ee-02a9ec27afce/storage_v2/_src_/database/ijaa_users.SsHGpg/schema/public.abK9xQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/98eed407-15ff-4205-97ee-02a9ec27afce/storage_v2/_src_/database/postgres.edMnLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/98eed407-15ff-4205-97ee-02a9ec27afce/storage_v2/_src_/database/postgres.edMnLQ/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/98eed407-15ff-4205-97ee-02a9ec27afce/storage_v2/_src_/database/postgres.edMnLQ/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/98eed407-15ff-4205-97ee-02a9ec27afce/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/ijaa.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_8_25_25,_4_12 PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_8_25_25__4_12PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config-service/src/main/java/com/wallet/configserver/ConfigserverApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config-service/src/test/java/com/wallet/configserver/ConfigserverApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/discovery-service/src/main/java/com/wallet/discoveryserver/DiscoveryServerApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/discovery-service/src/test/java/com/wallet/discoveryserver/DiscoveryserverApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/common/utils/FeatureFlagUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/common/utils/FeatureFlagUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/AdvancedEventSearchResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/AdvancedEventSearchResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/CalendarIntegrationResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/CalendarIntegrationResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventAnalyticsResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/main/java/com/ijaa/event_service/presenter/rest/api/EventAnalyticsResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/event-service/src/test/resources/application-test.yml" beforeDir="false" afterPath="$PROJECT_DIR$/event-service/src/test/resources/application-test.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/feature-flag-backend-implementation-plan.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/feature-flag-frontend-implementation.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/0c1da288-be9f-41ef-8122-6b4794c3323b.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/cover/142de35b-c26b-4a1c-9a9a-23be328dc1a5.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/a3114809-e462-4df0-9201-6f56b3ac3eda.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/file-service/test-uploads/profile/bc315a63-8a6b-4de2-b09a-051ecc2e0439.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/config/GatewayConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/java/com/ijaa/gateway/config/GatewayConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway-service/src/test/java/com/ijaa/gateway/GatewayRoutingTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/test/java/com/ijaa/gateway/GatewayRoutingTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project-context.md" beforeDir="false" afterPath="$PROJECT_DIR$/project-context.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/FeatureFlagResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/FeatureFlagResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/request/AlumniSearchRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/domain/request/AlumniSearchRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/AlumniSearchResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/presenter/rest/api/AlumniSearchResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/repository/ProfileRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/repository/ProfileRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/AlumniSearchService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/AlumniSearchService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/AlumniSearchServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/ijaa/user/service/impl/AlumniSearchServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/AlumniSearchServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/com/ijaa/user/service/AlumniSearchServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/test/resources/application-test.yml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/resources/application-test.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/user-service.log" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,50 +128,53 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Maven.file-service [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.file-service [install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.gateway-service [clean,install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.gateway-service [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.gateway-service [install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.user-service [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.user-service [install].executor&quot;: &quot;Run&quot;,
-    &quot;Notification.DisplayName-DoNotAsk-DatabaseConfigFileWatcher.found&quot;: &quot;New/updated database configurations found&quot;,
-    &quot;Notification.DoNotAsk-DatabaseConfigFileWatcher.found&quot;: &quot;true&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Spring Boot.ConfigserverApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;Spring Boot.DiscoveryServerApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;Spring Boot.EdgeServerApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;Spring Boot.EventServiceApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;Spring Boot.FileServiceApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;Spring Boot.GatewayServiceApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;Spring Boot.UserServiceApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/feature-flag&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/sahal/my/ijaa/file-service&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.file-service [clean].executor": "Run",
+    "Maven.file-service [install].executor": "Run",
+    "Maven.gateway-service [clean,install].executor": "Run",
+    "Maven.gateway-service [clean].executor": "Run",
+    "Maven.gateway-service [install].executor": "Run",
+    "Maven.user-service [clean].executor": "Run",
+    "Maven.user-service [install].executor": "Run",
+    "Notification.DisplayName-DoNotAsk-DatabaseConfigFileWatcher.found": "New/updated database configurations found",
+    "Notification.DoNotAsk-DatabaseConfigFileWatcher.found": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.ConfigserverApplication.executor": "Debug",
+    "Spring Boot.DiscoveryServerApplication.executor": "Debug",
+    "Spring Boot.EdgeServerApplication.executor": "Debug",
+    "Spring Boot.EventServiceApplication.executor": "Debug",
+    "Spring Boot.FileServiceApplication.executor": "Debug",
+    "Spring Boot.GatewayServiceApplication.executor": "Debug",
+    "Spring Boot.UserServiceApplication.executor": "Debug",
+    "git-widget-placeholder": "feature/feature-flag",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/sahal/my/ijaa/file-service",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "run.configurations.included.in.services": "true",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;,
-      &quot;mysql_aurora&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql",
+      "mysql_aurora"
     ]
   }
-}</component>
+}]]></component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
@@ -219,7 +279,8 @@
       <workItem from="1756316230293" duration="8881000" />
       <workItem from="1756362049953" duration="12576000" />
       <workItem from="1756403546554" duration="4290000" />
-      <workItem from="1756445717157" duration="5185000" />
+      <workItem from="1756445717157" duration="6528000" />
+      <workItem from="1756482061784" duration="3956000" />
     </task>
     <task id="LOCAL-00001" summary="sob elomelo">
       <option name="closed" value="true" />
@@ -277,7 +338,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756445743032</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="feature flag fix">
+      <option name="closed" value="true" />
+      <created>1756463462029</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1756463462029</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -292,6 +361,7 @@
     <MESSAGE value="admin profile api" />
     <MESSAGE value="password change" />
     <MESSAGE value="feature flag" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature flag" />
+    <MESSAGE value="feature flag fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature flag fix" />
   </component>
 </project>

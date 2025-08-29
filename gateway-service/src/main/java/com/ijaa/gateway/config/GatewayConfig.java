@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class GatewayConfig {
 
     @Bean
-    public RouteLocator walletRouteConfig(RouteLocatorBuilder builder, AuthenticationFilter filter) {
+    public RouteLocator ijaaRouteConfig(RouteLocatorBuilder builder, AuthenticationFilter filter) {
         return builder.routes()
                 // User service routes (excluding events which are handled by event service)
                 .route(p-> p

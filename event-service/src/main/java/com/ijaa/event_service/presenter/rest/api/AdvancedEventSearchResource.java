@@ -34,6 +34,7 @@ public class AdvancedEventSearchResource {
     private final FeatureFlagUtils featureFlagUtils;
 
     @PostMapping("/advanced")
+    @RequiresFeature("search.advanced-filters")
     @Operation(
         summary = "Advanced Event Search",
         description = "Search events with multiple filters and criteria including location, date range, event type, and more",
@@ -189,9 +190,10 @@ public class AdvancedEventSearchResource {
     }
 
     @GetMapping("/recommendations")
+    @RequiresFeature("search.advanced-filters")
     @Operation(
         summary = "Get Event Recommendations",
-        description = "Get personalized event recommendations for the user based on their interests and past participation",
+        description = "Get personalized event recommendations based on user preferences and past behavior",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {

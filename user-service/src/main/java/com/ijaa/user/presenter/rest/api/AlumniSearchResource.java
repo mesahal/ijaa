@@ -6,6 +6,7 @@ import com.ijaa.user.common.utils.FeatureFlagUtils;
 import com.ijaa.user.domain.common.ApiResponse;
 import com.ijaa.user.domain.common.PagedResponse;
 import com.ijaa.user.domain.dto.AlumniSearchDto;
+import com.ijaa.user.domain.dto.AlumniSearchMetadata;
 import com.ijaa.user.domain.request.AlumniSearchRequest;
 import com.ijaa.user.service.AlumniSearchService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(AppUtils.BASE_URL + "/alumni")
@@ -186,11 +188,64 @@ public class AlumniSearchResource {
         )
     })
     public ResponseEntity<ApiResponse<PagedResponse<AlumniSearchDto>>> searchAlumni(
-            @RequestBody AlumniSearchRequest request) {
+            @Valid @RequestBody AlumniSearchRequest request) {
 
         PagedResponse<AlumniSearchDto> result = alumniSearchService.searchAlumni(request);
         return ResponseEntity.ok(
                 new ApiResponse<>("Alumni search completed successfully", "200", result)
+        );
+    }
+
+    @GetMapping("/search/metadata")
+    @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("alumni.search")
+    @Operation(
+        summary = "Get Alumni Search Metadata",
+        description = "Get metadata about alumni search including total counts and available filters. (USER role required)",
+        security = @SecurityRequirement(name = "Bearer Authentication")
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Search metadata retrieved successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.user.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Search metadata retrieved successfully",
+                                "code": "200",
+                                "data": {
+                                    "totalAlumni": 1250,
+                                    "availableBatches": ["2018", "2019", "2020", "2021", "2022", "2023"],
+                                    "availableProfessions": ["Technology", "Finance", "Healthcare", "Education"],
+                                    "availableLocations": ["Bangalore", "Mumbai", "Delhi", "Chennai", "Hyderabad"],
+                                    "defaultPageSize": 12,
+                                    "maxPageSize": 100,
+                                    "maxPageNumber": 1000
+                                }
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "401",
+            description = "Unauthorized - Missing or invalid authentication token"
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "500",
+            description = "Internal server error"
+        )
+    })
+    public ResponseEntity<ApiResponse<AlumniSearchMetadata>> getSearchMetadata() {
+        AlumniSearchMetadata metadata = alumniSearchService.getSearchMetadata();
+        return ResponseEntity.ok(
+                new ApiResponse<>("Search metadata retrieved successfully", "200", metadata)
         );
     }
 }
