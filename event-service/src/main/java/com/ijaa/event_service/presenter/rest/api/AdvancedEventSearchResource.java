@@ -1,5 +1,7 @@
 package com.ijaa.event_service.presenter.rest.api;
 
+import com.ijaa.event_service.common.annotation.RequiresFeature;
+import com.ijaa.event_service.common.utils.FeatureFlagUtils;
 import com.ijaa.event_service.domain.common.ApiResponse;
 import com.ijaa.event_service.domain.common.PagedResponse;
 import com.ijaa.event_service.domain.request.AdvancedEventSearchRequest;
@@ -15,6 +17,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,12 +25,13 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/user/events/search")
+@RequestMapping("/api/v1/user/events/advanced-search")
 @RequiredArgsConstructor
-@Tag(name = "Advanced Event Search", description = "Advanced event search and recommendation APIs")
+@Tag(name = "Advanced Event Search", description = "APIs for advanced event search with multiple filters")
 public class AdvancedEventSearchResource {
 
     private final AdvancedEventSearchService advancedEventSearchService;
+    private final FeatureFlagUtils featureFlagUtils;
 
     @PostMapping("/advanced")
     @Operation(
@@ -159,7 +163,27 @@ public class AdvancedEventSearchResource {
     public ResponseEntity<ApiResponse<PagedResponse<EventResponse>>> searchEvents(
             @RequestBody AdvancedEventSearchRequest request) {
         
+        // Check if advanced search feature is enabled
+        if (!featureFlagUtils.isAdvancedSearchEnabled()) {
+            log.warn("Advanced search feature is disabled. Blocking search request");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new ApiResponse<>("Feature 'search' is disabled", "403", null));
+        }
+
+        // Check if advanced filters are enabled for complex searches
+        if (request.getLocation() != null || request.getEventType() != null || 
+            request.getStartDate() != null || request.getEndDate() != null) {
+            if (!featureFlagUtils.isSearchAdvancedFiltersEnabled()) {
+                log.warn("Advanced search filters feature is disabled. Blocking search request with filters");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new ApiResponse<>("Feature 'search.advanced-filters' is disabled", "403", null));
+            }
+        }
+        
         PagedResponse<EventResponse> response = advancedEventSearchService.searchEvents(request);
+        
+        // Log feature usage
+        featureFlagUtils.logFeatureUsage(FeatureFlagUtils.ADVANCED_SEARCH, "user");
         
         return ResponseEntity.ok(new ApiResponse<>("Events found successfully", "200", response));
     }

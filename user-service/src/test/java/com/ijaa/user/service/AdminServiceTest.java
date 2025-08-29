@@ -18,6 +18,7 @@ import com.ijaa.user.domain.response.AdminProfileResponse;
 import com.ijaa.user.domain.response.UserResponse;
 import com.ijaa.user.repository.AdminRepository;
 import com.ijaa.user.repository.UserRepository;
+import com.ijaa.user.repository.ProfileRepository;
 import com.ijaa.user.common.utils.UniqueIdGenerator;
 import com.ijaa.user.service.impl.AdminServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,6 +53,9 @@ class AdminServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private ProfileRepository profileRepository;
 
     @Mock
     private BCryptPasswordEncoder passwordEncoder;
@@ -182,6 +186,7 @@ class AdminServiceTest {
         // Given
         List<User> users = Arrays.asList(testUser);
         when(userRepository.findAll()).thenReturn(users);
+        when(profileRepository.findByUserId(anyString())).thenReturn(Optional.empty());
 
         // When
         List<UserResponse> result = adminService.getAllUsers();
@@ -190,6 +195,63 @@ class AdminServiceTest {
         assertNotNull(result);
         assertEquals(1, result.size());
         verify(userRepository).findAll();
+        verify(profileRepository).findByUserId(testUser.getUserId());
+    }
+
+    @Test
+    void shouldGetAllUsersWithProfileDataWhenProfileExists() {
+        // Given
+        User userWithProfile = new User();
+        userWithProfile.setId(1L);
+        userWithProfile.setUserId("USER_123456");
+        userWithProfile.setUsername("testuser");
+        userWithProfile.setActive(true);
+
+        com.ijaa.user.domain.entity.Profile profile = new com.ijaa.user.domain.entity.Profile();
+        profile.setId(1L);
+        profile.setUserId("USER_123456");
+        profile.setUsername("testuser");
+        profile.setName("John Doe");
+        profile.setEmail("john.doe@example.com");
+        profile.setProfession("Software Engineer");
+        profile.setLocation("Dhaka, Bangladesh");
+        profile.setBatch("2018");
+        profile.setPhone("+8801234567890");
+        profile.setLinkedIn("https://linkedin.com/in/johndoe");
+        profile.setWebsite("https://johndoe.com");
+        profile.setFacebook("https://facebook.com/johndoe");
+        profile.setBio("Passionate software engineer");
+        profile.setConnections(25);
+
+        List<User> users = Arrays.asList(userWithProfile);
+        when(userRepository.findAll()).thenReturn(users);
+        when(profileRepository.findByUserId("USER_123456")).thenReturn(Optional.of(profile));
+
+        // When
+        List<UserResponse> result = adminService.getAllUsers();
+
+        // Then
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        
+        UserResponse userResponse = result.get(0);
+        assertEquals("USER_123456", userResponse.getUserId());
+        assertEquals("testuser", userResponse.getUsername());
+        assertEquals("John Doe", userResponse.getName());
+        assertEquals("john.doe@example.com", userResponse.getEmail());
+        assertEquals("Software Engineer", userResponse.getProfession());
+        assertEquals("Dhaka, Bangladesh", userResponse.getLocation());
+        assertEquals("2018", userResponse.getBatch());
+        assertEquals("+8801234567890", userResponse.getPhone());
+        assertEquals("https://linkedin.com/in/johndoe", userResponse.getLinkedIn());
+        assertEquals("https://johndoe.com", userResponse.getWebsite());
+        assertEquals("https://facebook.com/johndoe", userResponse.getFacebook());
+        assertEquals("Passionate software engineer", userResponse.getBio());
+        assertEquals(25, userResponse.getConnections());
+        assertTrue(userResponse.getActive());
+        
+        verify(userRepository).findAll();
+        verify(profileRepository).findByUserId("USER_123456");
     }
 
     @Test
@@ -546,6 +608,7 @@ class AdminServiceTest {
         
         when(userRepository.findByUserId("USER_345678")).thenReturn(Optional.of(activeUser));
         when(userRepository.save(any(User.class))).thenReturn(activeUser);
+        when(profileRepository.findByUserId("USER_345678")).thenReturn(Optional.empty());
 
         // When
         UserResponse result = adminService.blockUser("USER_345678");
@@ -555,6 +618,7 @@ class AdminServiceTest {
         assertEquals("USER_345678", result.getUserId());
         verify(userRepository).findByUserId("USER_345678");
         verify(userRepository).save(any(User.class));
+        verify(profileRepository).findByUserId("USER_345678");
     }
 
     @Test
@@ -568,6 +632,7 @@ class AdminServiceTest {
         
         when(userRepository.findByUserId("USER_901234")).thenReturn(Optional.of(blockedUser));
         when(userRepository.save(any(User.class))).thenReturn(blockedUser);
+        when(profileRepository.findByUserId("USER_901234")).thenReturn(Optional.empty());
 
         // When
         UserResponse result = adminService.unblockUser("USER_901234");
@@ -577,6 +642,7 @@ class AdminServiceTest {
         assertEquals("USER_901234", result.getUserId());
         verify(userRepository).findByUserId("USER_901234");
         verify(userRepository).save(any(User.class));
+        verify(profileRepository).findByUserId("USER_901234");
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.ijaa.event_service.presenter.rest.api;
 
+import com.ijaa.event_service.common.annotation.RequiresFeature;
 import com.ijaa.event_service.domain.common.ApiResponse;
 import com.ijaa.event_service.domain.common.PagedResponse;
 import com.ijaa.event_service.domain.request.EventMediaRequest;
@@ -21,20 +22,23 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/user/events/media")
 @RequiredArgsConstructor
-@Tag(name = "Event Media", description = "Event media management APIs")
+@Tag(name = "Event Media", description = "APIs for managing event media attachments")
 public class EventMediaResource {
 
     private final EventMediaService eventMediaService;
 
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("events.media")
     @Operation(
         summary = "Upload Event Media",
-        description = "Upload media files (images, videos, documents) for an event",
+        description = "Upload media files for an event (USER role required)",
         security = @SecurityRequirement(name = "Bearer Authentication"),
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Event media upload details",

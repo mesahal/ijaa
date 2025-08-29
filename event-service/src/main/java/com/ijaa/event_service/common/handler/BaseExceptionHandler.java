@@ -1,4 +1,4 @@
-package com.ijaa.user.common.handler;
+package com.ijaa.event_service.common.handler;
 
 import com.ijaa.event_service.domain.common.ApiResponse;
 import org.slf4j.Logger;

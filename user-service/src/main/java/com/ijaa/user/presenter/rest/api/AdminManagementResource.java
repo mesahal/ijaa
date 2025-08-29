@@ -1,6 +1,8 @@
 package com.ijaa.user.presenter.rest.api;
 
+import com.ijaa.user.common.annotation.RequiresFeature;
 import com.ijaa.user.common.utils.AppUtils;
+import com.ijaa.user.common.utils.FeatureFlagUtils;
 import com.ijaa.user.domain.common.ApiResponse;
 import com.ijaa.user.domain.entity.FeatureFlag;
 import com.ijaa.user.domain.enums.AdminRole;
@@ -36,16 +38,18 @@ import java.util.List;
 @RestController
 @RequestMapping(AppUtils.ADMIN_BASE_URL)
 @RequiredArgsConstructor
-@Tag(name = "Admin Management", description = "APIs for admin management, user management, announcements, reports, and feature flags")
+@Tag(name = "Admin Management", description = "APIs for admin management operations")
 public class AdminManagementResource {
 
     private final AdminService adminService;
 
     private final AnnouncementService announcementService;
     private final ReportService reportService;
+    private final FeatureFlagUtils featureFlagUtils;
     // Admin Management (ADMIN only)
     @GetMapping("/admins")
     @PreAuthorize("hasRole('ADMIN')")
+    @RequiresFeature("admin.features")
     @Operation(
         summary = "Get All Admins",
         description = "Retrieve all admin users (ADMIN only)",
@@ -130,6 +134,80 @@ public class AdminManagementResource {
 
     @PostMapping("/admins/{adminId}/deactivate")
     @PreAuthorize("hasRole('ADMIN')")
+    @RequiresFeature("admin.features")
+    @Operation(
+        summary = "Deactivate Admin",
+        description = "Deactivate an admin account (ADMIN only)",
+        security = @SecurityRequirement(name = "Bearer Authentication")
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Admin deactivated successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.user.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Admin deactivated successfully",
+                                "code": "200",
+                                "data": {
+                                    "id": 1,
+                                    "name": "Administrator",
+                                    "email": "admin@ijaa.com",
+                                    "role": "ADMIN",
+                                    "active": false,
+                                    "createdAt": "2025-07-31T01:51:12.870989",
+                                    "updatedAt": "2025-07-31T01:51:12.871015"
+                                }
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Admin not found",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Admin Not Found",
+                        value = """
+                            {
+                                "message": "Admin not found with id: 1",
+                                "code": "404",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "403",
+            description = "Forbidden - Insufficient privileges (ADMIN required)",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Forbidden",
+                        value = """
+                            {
+                                "message": "Access denied",
+                                "code": "403",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
     public ResponseEntity<ApiResponse<AdminProfileResponse>> deactivateAdmin(@PathVariable Long adminId) {
         AdminProfileResponse admin = adminService.deactivateAdmin(adminId);
         return ResponseEntity.ok(new ApiResponse<>("Admin deactivated successfully", "200", admin));
@@ -137,6 +215,80 @@ public class AdminManagementResource {
 
     @PostMapping("/admins/{adminId}/activate")
     @PreAuthorize("hasRole('ADMIN')")
+    @RequiresFeature("admin.features")
+    @Operation(
+        summary = "Activate Admin",
+        description = "Activate a deactivated admin account (ADMIN only)",
+        security = @SecurityRequirement(name = "Bearer Authentication")
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Admin activated successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = com.ijaa.user.domain.common.ApiResponse.class),
+                examples = {
+                    @ExampleObject(
+                        name = "Success Response",
+                        value = """
+                            {
+                                "message": "Admin activated successfully",
+                                "code": "200",
+                                "data": {
+                                    "id": 1,
+                                    "name": "Administrator",
+                                    "email": "admin@ijaa.com",
+                                    "role": "ADMIN",
+                                    "active": true,
+                                    "createdAt": "2025-07-31T01:51:12.870989",
+                                    "updatedAt": "2025-07-31T01:51:12.871015"
+                                }
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Admin not found",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Admin Not Found",
+                        value = """
+                            {
+                                "message": "Admin not found with id: 1",
+                                "code": "404",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "403",
+            description = "Forbidden - Insufficient privileges (ADMIN required)",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Forbidden",
+                        value = """
+                            {
+                                "message": "Access denied",
+                                "code": "403",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
     public ResponseEntity<ApiResponse<AdminProfileResponse>> activateAdmin(@PathVariable Long adminId) {
         AdminProfileResponse admin = adminService.activateAdmin(adminId);
         return ResponseEntity.ok(new ApiResponse<>("Admin activated successfully", "200", admin));
@@ -145,9 +297,10 @@ public class AdminManagementResource {
     // User Management (ADMIN only)
     @GetMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
+    @RequiresFeature("admin.user-management")
     @Operation(
         summary = "Get All Users",
-        description = "Retrieve all users (ADMIN only)",
+        description = "Retrieve all users with enhanced profile information including profession, location, batch, social links, and connections (ADMIN only)",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {
@@ -168,11 +321,20 @@ public class AdminManagementResource {
                                     {
                                         "userId": "USER_ABC123XYZ",
                                         "username": "john.doe",
-                                        "name": "john.doe",
-                                        "email": null,
+                                        "name": "John Doe",
+                                        "email": "john.doe@example.com",
+                                        "profession": "Software Engineer",
+                                        "location": "Dhaka, Bangladesh",
+                                        "batch": "2018",
+                                        "phone": "+8801234567890",
+                                        "linkedIn": "https://linkedin.com/in/johndoe",
+                                        "website": "https://johndoe.com",
+                                        "facebook": "https://facebook.com/johndoe",
+                                        "bio": "Passionate software engineer with 5+ years of experience",
+                                        "connections": 25,
                                         "active": true,
-                                        "createdAt": null,
-                                        "updatedAt": null
+                                        "createdAt": "2024-01-15T10:30:00",
+                                        "updatedAt": "2024-01-20T14:45:00"
                                     }
                                 ]
                             }
@@ -227,6 +389,7 @@ public class AdminManagementResource {
 
     @PostMapping("/users/{userId}/block")
     @PreAuthorize("hasRole('ADMIN')")
+    @RequiresFeature("admin.user-management")
     @Operation(
         summary = "Block User",
         description = "Block a user account (ADMIN only)",
@@ -249,11 +412,20 @@ public class AdminManagementResource {
                                 "data": {
                                     "userId": "USER_ABC123XYZ",
                                     "username": "john.doe",
-                                    "name": "john.doe",
-                                    "email": null,
+                                    "name": "John Doe",
+                                    "email": "john.doe@example.com",
+                                    "profession": "Software Engineer",
+                                    "location": "Dhaka, Bangladesh",
+                                    "batch": "2018",
+                                    "phone": "+8801234567890",
+                                    "linkedIn": "https://linkedin.com/in/johndoe",
+                                    "website": "https://johndoe.com",
+                                    "facebook": "https://facebook.com/johndoe",
+                                    "bio": "Passionate software engineer with 5+ years of experience",
+                                    "connections": 25,
                                     "active": false,
-                                    "createdAt": null,
-                                    "updatedAt": null
+                                    "createdAt": "2024-01-15T10:30:00",
+                                    "updatedAt": "2024-01-20T14:45:00"
                                 }
                             }
                             """
@@ -308,9 +480,10 @@ public class AdminManagementResource {
 
     @PostMapping("/users/{userId}/unblock")
     @PreAuthorize("hasRole('ADMIN')")
+    @RequiresFeature("admin.user-management")
     @Operation(
         summary = "Unblock User",
-        description = "Unblock a user account (ADMIN only)",
+        description = "Unblock a blocked user account (ADMIN only)",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {
@@ -330,11 +503,20 @@ public class AdminManagementResource {
                                 "data": {
                                     "userId": "USER_ABC123XYZ",
                                     "username": "john.doe",
-                                    "name": "john.doe",
-                                    "email": null,
+                                    "name": "John Doe",
+                                    "email": "john.doe@example.com",
+                                    "profession": "Software Engineer",
+                                    "location": "Dhaka, Bangladesh",
+                                    "batch": "2018",
+                                    "phone": "+8801234567890",
+                                    "linkedIn": "https://linkedin.com/in/johndoe",
+                                    "website": "https://johndoe.com",
+                                    "facebook": "https://facebook.com/johndoe",
+                                    "bio": "Passionate software engineer with 5+ years of experience",
+                                    "connections": 25,
                                     "active": true,
-                                    "createdAt": null,
-                                    "updatedAt": null
+                                    "createdAt": "2024-01-15T10:30:00",
+                                    "updatedAt": "2024-01-20T14:45:00"
                                 }
                             }
                             """
@@ -389,9 +571,10 @@ public class AdminManagementResource {
 
     @DeleteMapping("/users/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
+    @RequiresFeature("admin.user-management")
     @Operation(
         summary = "Delete User",
-        description = "Delete a user account (ADMIN only)",
+        description = "Permanently delete a user account (ADMIN only)",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {
@@ -465,9 +648,10 @@ public class AdminManagementResource {
     // Announcement Management (ADMIN only)
     @GetMapping("/announcements")
     @PreAuthorize("hasRole('ADMIN')")
+    @RequiresFeature("admin.announcements")
     @Operation(
         summary = "Get All Announcements",
-        description = "Retrieve all announcements (ADMIN only)",
+        description = "Retrieve all system announcements (ADMIN only)",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {
@@ -545,9 +729,10 @@ public class AdminManagementResource {
 
     @PostMapping("/announcements")
     @PreAuthorize("hasRole('ADMIN')")
+    @RequiresFeature("admin.announcements")
     @Operation(
         summary = "Create Announcement",
-        description = "Create a new announcement (ADMIN only)",
+        description = "Create a new system announcement (ADMIN only)",
         security = @SecurityRequirement(name = "Bearer Authentication"),
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Announcement details",
@@ -674,9 +859,10 @@ public class AdminManagementResource {
 
     @DeleteMapping("/announcements/{announcementId}")
     @PreAuthorize("hasRole('ADMIN')")
+    @RequiresFeature("admin.announcements")
     @Operation(
         summary = "Delete Announcement",
-        description = "Delete an announcement (ADMIN only)",
+        description = "Delete a system announcement (ADMIN only)",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {
@@ -747,9 +933,10 @@ public class AdminManagementResource {
     // Report Management (ADMIN only)
     @GetMapping("/reports")
     @PreAuthorize("hasRole('ADMIN')")
+    @RequiresFeature("admin.reports")
     @Operation(
         summary = "Get All Reports",
-        description = "Retrieve all reports (ADMIN only)",
+        description = "Retrieve all user reports (ADMIN only)",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {
@@ -829,9 +1016,10 @@ public class AdminManagementResource {
 
     @PostMapping("/reports")
     @PreAuthorize("hasRole('ADMIN')")
+    @RequiresFeature("admin.reports")
     @Operation(
         summary = "Create Report",
-        description = "Create a new report (ADMIN only)",
+        description = "Create a new user report (ADMIN only)",
         security = @SecurityRequirement(name = "Bearer Authentication"),
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Report details",
@@ -960,9 +1148,10 @@ public class AdminManagementResource {
 
     @PutMapping("/reports/{reportId}/resolve")
     @PreAuthorize("hasRole('ADMIN')")
+    @RequiresFeature("admin.reports")
     @Operation(
         summary = "Resolve Report",
-        description = "Resolve a report (ADMIN only)",
+        description = "Mark a user report as resolved (ADMIN only)",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {

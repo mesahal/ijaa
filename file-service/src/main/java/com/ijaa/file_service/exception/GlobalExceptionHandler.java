@@ -4,6 +4,7 @@ import com.ijaa.file_service.domain.common.ApiResponse;
 import com.ijaa.file_service.exceptions.FileStorageException;
 import com.ijaa.file_service.exceptions.InvalidFileTypeException;
 import com.ijaa.file_service.exceptions.UserNotFoundException;
+import com.ijaa.file_service.common.exceptions.FeatureDisabledException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleUserNotFoundException(UserNotFoundException e) {
         log.error("User not found exception: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(ApiResponse.error(e.getMessage()));
+    }
+
+    @ExceptionHandler(FeatureDisabledException.class)
+    public ResponseEntity<ApiResponse<Void>> handleFeatureDisabledException(FeatureDisabledException e) {
+        log.warn("Feature disabled exception: {} - Feature: {}", e.getMessage(), e.getFeatureName());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
             .body(ApiResponse.error(e.getMessage()));
     }
 

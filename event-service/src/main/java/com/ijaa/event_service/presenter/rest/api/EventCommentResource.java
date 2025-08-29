@@ -1,6 +1,7 @@
 package com.ijaa.event_service.presenter.rest.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ijaa.event_service.common.annotation.RequiresFeature;
 import com.ijaa.event_service.domain.common.ApiResponse;
 import com.ijaa.event_service.domain.common.PagedResponse;
 import com.ijaa.event_service.domain.request.EventCommentRequest;
@@ -35,52 +36,11 @@ public class EventCommentResource {
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("events.comments")
     @Operation(
-        summary = "Create Event Comment", 
-        description = "Create a new comment for an event with support for replies and threaded discussions (USER role required)",
-        security = @SecurityRequirement(name = "Bearer Authentication"),
-        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Comment creation details",
-            required = true,
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = EventCommentRequest.class),
-                examples = {
-                    @ExampleObject(
-                        name = "Top-level Comment",
-                        summary = "Create a new top-level comment",
-                        value = """
-                            {
-                                "eventId": 1,
-                                "content": "This event looks amazing! Looking forward to attending.",
-                                "parentCommentId": null
-                            }
-                            """
-                    ),
-                    @ExampleObject(
-                        name = "Reply to Comment",
-                        summary = "Create a reply to an existing comment",
-                        value = """
-                            {
-                                "eventId": 1,
-                                "content": "I agree! The venue is perfect for this gathering.",
-                                "parentCommentId": 5
-                            }
-                            """
-                    ),
-                    @ExampleObject(
-                        name = "Short Comment",
-                        summary = "Create a simple comment",
-                        value = """
-                            {
-                                "eventId": 1,
-                                "content": "Count me in!"
-                            }
-                            """
-                    )
-                }
-            )
-        )
+        summary = "Add Event Comment",
+        description = "Add a comment to an event (USER role required)",
+        security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(

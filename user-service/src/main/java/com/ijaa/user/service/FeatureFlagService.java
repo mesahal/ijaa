@@ -1,20 +1,21 @@
 package com.ijaa.user.service;
 
 import com.ijaa.user.domain.entity.FeatureFlag;
+import com.ijaa.user.domain.dto.FeatureFlagDto;
 
 import java.util.List;
 
 public interface FeatureFlagService {
 
-    List<FeatureFlag> getAllFeatureFlags();
+    List<FeatureFlagDto> getAllFlags();
     
-    FeatureFlag getFeatureFlag(String featureName);
+    FeatureFlag getFeatureFlag(String flagName);
     
-    FeatureFlag createFeatureFlag(String featureName, String description);
+    FeatureFlag createFlag(FeatureFlagDto dto);
     
-    FeatureFlag updateFeatureFlag(String featureName, boolean enabled);
+    FeatureFlag updateFlag(String flagName, boolean enabled);
     
-    void deleteFeatureFlag(String featureName);
+    void deleteFeatureFlag(String flagName);
     
-    boolean isFeatureEnabled(String featureName);
+    boolean isEnabled(String flagName);
 } 

@@ -1,5 +1,6 @@
 package com.ijaa.user.presenter.rest.api;
 
+import com.ijaa.user.common.annotation.RequiresFeature;
 import com.ijaa.user.common.utils.AppUtils;
 import com.ijaa.user.domain.common.ApiResponse;
 import com.ijaa.user.domain.request.AdminLoginRequest;
@@ -37,6 +38,7 @@ public class AdminAuthResource {
 
     @PostMapping("/signup")
     @PreAuthorize("hasRole('ADMIN') or @securityUtils.isFirstAdmin()")
+    @RequiresFeature("admin.auth")
     @Operation(
         summary = "Admin Registration",
         description = "Register a new admin (first admin: no auth required, subsequent admins: ADMIN role required)",
@@ -140,7 +142,7 @@ public class AdminAuthResource {
     @PostMapping("/login")
     @Operation(
         summary = "Admin Login",
-        description = "Authenticate an admin with email and password",
+        description = "Authenticate admin and return JWT token",
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Admin login credentials",
             required = true,
@@ -150,95 +152,105 @@ public class AdminAuthResource {
                 examples = {
                     @ExampleObject(
                         name = "Valid Admin Login",
-                        summary = "Valid admin login credentials",
+                        summary = "Valid admin login data",
                         value = """
                             {
-                                "email": "admin@ijaa.com",
-                                "password": "admin123"
+                                "email": "afrinjahaneva@gmail.com",
+                                "password": "Admin@123"
                             }
                             """
                     )
                 }
             )
-        )
-    )
-    @ApiResponses(value = {
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "200",
-            description = "Login successful",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = com.ijaa.user.domain.common.ApiResponse.class),
-                examples = {
-                    @ExampleObject(
-                        name = "Success Response",
-                        value = """
-                            {
-                                "message": "Admin login successful",
-                                "code": "200",
-                                "data": {
-                                    "token": "eyJhbGciOiJIUzUxMiJ9...",
-                                    "adminId": 1,
-                                    "name": "Super Administrator",
-                                    "email": "admin@ijaa.com",
-                                    "role": "SUPER_ADMIN",
-                                    "active": true
+        ),
+        responses = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                responseCode = "200",
+                description = "Admin login successful",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = AdminAuthResponse.class),
+                    examples = {
+                        @ExampleObject(
+                            name = "Successful Login",
+                            summary = "Admin login successful response",
+                            value = """
+                                {
+                                    "message": "Admin login successful",
+                                    "code": "200",
+                                    "data": {
+                                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                                        "adminId": 1,
+                                        "name": "Admin User",
+                                        "email": "admin@ijaa.com",
+                                        "role": "ADMIN",
+                                        "active": true
+                                    }
                                 }
-                            }
-                            """
-                    )
-                }
+                                """
+                        )
+                    }
+                )
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                responseCode = "401",
+                description = "Invalid credentials",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ApiResponse.class),
+                    examples = {
+                        @ExampleObject(
+                            name = "Invalid Credentials",
+                            summary = "Invalid admin credentials",
+                            value = """
+                                {
+                                    "message": "Invalid email or password",
+                                    "code": "401",
+                                    "data": null
+                                }
+                                """
+                        )
+                    }
+                )
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                responseCode = "403",
+                description = "Feature disabled",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ApiResponse.class),
+                    examples = {
+                        @ExampleObject(
+                            name = "Feature Disabled",
+                            summary = "Admin auth feature is disabled",
+                            value = """
+                                {
+                                    "message": "Feature 'admin.auth' is disabled",
+                                    "code": "403",
+                                    "data": null
+                                }
+                                """
+                        )
+                    }
+                )
             )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "400",
-            description = "Invalid credentials",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Invalid Credentials",
-                        value = """
-                            {
-                                "message": "Invalid credentials",
-                                "code": "400",
-                                "data": null
-                            }
-                            """
-                    )
-                }
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "404",
-            description = "Admin not found",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Admin Not Found",
-                        value = """
-                            {
-                                "message": "Admin not found",
-                                "code": "404",
-                                "data": null
-                            }
-                            """
-                    )
-                }
-            )
-        )
-    })
+        }
+    )
     public ResponseEntity<ApiResponse<AdminAuthResponse>> login(@Valid @RequestBody AdminLoginRequest request) {
+        // log.info("Admin login attempt for email: {}", request.getEmail()); // Original code had this line commented out
+        
         AdminAuthResponse response = adminService.login(request);
+        
+        // log.info("Admin login successful for email: {}", request.getEmail()); // Original code had this line commented out
         return ResponseEntity.ok(new ApiResponse<>("Admin login successful", "200", response));
     }
 
     @GetMapping("/profile")
     @PreAuthorize("hasRole('ADMIN')")
+    @RequiresFeature("admin.auth")
     @Operation(
         summary = "Get Admin Profile",
-        description = "Retrieve the current admin's profile information (ADMIN only)",
+        description = "Retrieve the profile of the currently authenticated admin",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {
@@ -318,9 +330,10 @@ public class AdminAuthResource {
 
     @GetMapping("/dashboard")
     @PreAuthorize("hasRole('ADMIN')")
+    @RequiresFeature("admin.features")
     @Operation(
-        summary = "Get Dashboard Statistics",
-        description = "Retrieve dashboard statistics for admin panel (ADMIN only)",
+        summary = "Get Admin Dashboard",
+        description = "Retrieve dashboard statistics and overview for admin",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {
@@ -401,9 +414,10 @@ public class AdminAuthResource {
 
     @PutMapping("/change-password")
     @PreAuthorize("hasRole('ADMIN')")
+    @RequiresFeature("admin.auth")
     @Operation(
         summary = "Change Admin Password",
-        description = "Change the current admin's password (ADMIN only)",
+        description = "Change the password of the currently authenticated admin",
         security = @SecurityRequirement(name = "Bearer Authentication"),
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Password change details",
@@ -414,7 +428,7 @@ public class AdminAuthResource {
                 examples = {
                     @ExampleObject(
                         name = "Valid Password Change",
-                        summary = "Valid password change request",
+                        summary = "Valid password change data",
                         value = """
                             {
                                 "currentPassword": "oldPassword123",

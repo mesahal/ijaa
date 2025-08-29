@@ -1,6 +1,7 @@
 package com.ijaa.event_service.presenter.rest.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ijaa.event_service.common.annotation.RequiresFeature;
 import com.ijaa.event_service.domain.common.ApiResponse;
 import com.ijaa.event_service.domain.request.EventInvitationRequest;
 import com.ijaa.event_service.domain.response.EventInvitationResponse;
@@ -24,7 +25,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 @RestController
 @RequestMapping("/api/v1/user/events/invitations")
 @Slf4j
-@Tag(name = "Event Invitations", description = "APIs for event invitation management")
+@Tag(name = "Event Invitations", description = "APIs for managing event invitations")
 public class EventInvitationResource extends BaseService {
 
     private final EventInvitationService eventInvitationService;
@@ -36,9 +37,10 @@ public class EventInvitationResource extends BaseService {
 
     @PostMapping("/send")
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("events.invitations")
     @Operation(
-        summary = "Send Event Invitations",
-        description = "Send invitations to users for an event (only event creator can send invitations)",
+        summary = "Send Event Invitation",
+        description = "Send invitation to users for an event (USER role required)",
         security = @SecurityRequirement(name = "Bearer Authentication"),
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Invitation details",

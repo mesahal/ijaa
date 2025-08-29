@@ -1,5 +1,6 @@
 package com.ijaa.event_service.presenter.rest.api;
 
+import com.ijaa.event_service.common.annotation.RequiresFeature;
 import com.ijaa.event_service.domain.common.ApiResponse;
 import com.ijaa.event_service.domain.request.CalendarIntegrationRequest;
 import com.ijaa.event_service.domain.response.CalendarIntegrationResponse;
@@ -11,9 +12,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,11 +25,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/calendar-integrations")
+@Slf4j
 @Tag(name = "Calendar Integration", description = "Calendar integration and external calendar sync APIs")
 public class CalendarIntegrationResource {
 
-    @Autowired
-    private CalendarIntegrationService calendarIntegrationService;
+    private final CalendarIntegrationService calendarIntegrationService;
+
+    public CalendarIntegrationResource(CalendarIntegrationService calendarIntegrationService) {
+        this.calendarIntegrationService = calendarIntegrationService;
+    }
 
     @GetMapping("/user")
     @Operation(summary = "Get user's calendar integrations", description = "Retrieve all calendar integrations for the current user")

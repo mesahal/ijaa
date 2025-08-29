@@ -1,7 +1,9 @@
 // ProfileResource.java
 package com.ijaa.user.presenter.rest.api;
 
+import com.ijaa.user.common.annotation.RequiresFeature;
 import com.ijaa.user.common.utils.AppUtils;
+import com.ijaa.user.common.utils.FeatureFlagUtils;
 import com.ijaa.user.domain.common.ApiResponse;
 import com.ijaa.user.domain.dto.ExperienceDto;
 import com.ijaa.user.domain.dto.InterestDto;
@@ -31,13 +33,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class ProfileResource {
 
     private final ProfileService profileService;
+    private final FeatureFlagUtils featureFlagUtils;
 
     // Get user's profile by userId - Public endpoint
     @GetMapping("/profile/{userId}")
+    @RequiresFeature("user.profile")
     @Operation(summary = "Get User Profile", description = "Get user profile by userId")
     public ResponseEntity<ApiResponse<ProfileDto>> getProfileByUserId(
             @PathVariable String userId) {
         ProfileDto profileDto = profileService.getProfileByUserId(userId);
+        featureFlagUtils.logFeatureUsage(FeatureFlagUtils.USER_PROFILE_FEATURES, userId);
         return ResponseEntity.ok(
                 new ApiResponse<>("Profile fetched successfully", "200", profileDto)
         );
@@ -45,6 +50,7 @@ public class ProfileResource {
 
     @PutMapping("/profile")
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("user.profile")
     @Operation(
         summary = "Update Basic Profile Info",
         description = "Update basic profile information (USER role required)",
@@ -166,6 +172,7 @@ public class ProfileResource {
 
     @PostMapping("/experiences")
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("user.experiences")
     @Operation(
         summary = "Add Experience",
         description = "Add a new experience to user profile (USER role required)",
@@ -211,6 +218,7 @@ public class ProfileResource {
     )
     public ResponseEntity<ApiResponse<ExperienceDto>> addExperience(@Valid @RequestBody ExperienceDto experienceDto) {
         ExperienceDto addedExperience = profileService.addExperience(experienceDto);
+        featureFlagUtils.logFeatureUsage(FeatureFlagUtils.USER_EXPERIENCES, experienceDto.getUserId());
         return ResponseEntity.ok(
                 new ApiResponse<>("Experience added successfully", "200", addedExperience)
         );
@@ -218,6 +226,7 @@ public class ProfileResource {
 
     @DeleteMapping("/experiences/{experienceId}")
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("user.experiences")
     @Operation(
         summary = "Delete Experience", 
         description = "Delete a specific experience by ID (USER role required)",
@@ -275,6 +284,7 @@ public class ProfileResource {
 
     @PutMapping("/experiences/{experienceId}")
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("user.experiences")
     @Operation(
         summary = "Update Experience", 
         description = "Update a specific experience by ID (USER role required)",
@@ -383,6 +393,7 @@ public class ProfileResource {
 
     @PostMapping("/interests")
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("user.interests")
     @Operation(
         summary = "Add Interest",
         description = "Add a new interest to user profile (USER role required)",
@@ -417,6 +428,7 @@ public class ProfileResource {
     )
     public ResponseEntity<ApiResponse<InterestDto>> addInterest(@Valid @RequestBody InterestRequest request) {
         InterestDto addedInterest = profileService.addInterest(request.getInterest());
+        featureFlagUtils.logFeatureUsage(FeatureFlagUtils.USER_INTERESTS, "user");
         return ResponseEntity.ok(
                 new ApiResponse<>("Interest added successfully", "200", addedInterest)
         );
@@ -424,6 +436,7 @@ public class ProfileResource {
 
     @DeleteMapping("/interests/{interestId}")
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("user.interests")
     @Operation(
         summary = "Delete Interest", 
         description = "Delete a specific interest by ID (USER role required)",
@@ -481,6 +494,7 @@ public class ProfileResource {
 
     @PutMapping("/interests/{interestId}")
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("user.interests")
     @Operation(
         summary = "Update Interest", 
         description = "Update a specific interest by ID (USER role required)",
