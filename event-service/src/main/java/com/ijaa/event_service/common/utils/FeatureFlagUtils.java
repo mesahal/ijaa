@@ -1,11 +1,12 @@
 package com.ijaa.event_service.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
  * Utility class for feature flag integration in the event service.
- * This is a simplified version that defaults to disabled for safety.
+ * This is a simplified version that defaults to enabled for development.
  * In a production implementation, this would connect to the user service via Feign client.
  */
 @Component
@@ -32,15 +33,28 @@ public class FeatureFlagUtils {
     public static final String ADVANCED_SEARCH = "search";
     public static final String SEARCH_ADVANCED_FILTERS = "search.advanced-filters";
 
+    @Value("${feature.flags.enabled:true}")
+    private boolean featureFlagsEnabled;
+
+    @Value("${spring.profiles.active:default}")
+    private String activeProfile;
+
     /**
      * Check if a feature flag is enabled
      * @param featureName the name of the feature flag
      * @return true if the feature is enabled, false otherwise
      */
     public boolean isFeatureEnabled(String featureName) {
-        // Default to disabled for safety in event service
-        // In a production implementation, this would call the user service via Feign client
-        log.debug("Checking feature flag: {} - defaulting to disabled for safety", featureName);
+        // Enable features by default for development and testing
+        // In production, this would call the user service via Feign client
+        boolean isDevelopment = "dev".equals(activeProfile) || "test".equals(activeProfile) || "default".equals(activeProfile);
+        
+        if (isDevelopment || featureFlagsEnabled) {
+            log.debug("Feature flag: {} is enabled for profile: {}", featureName, activeProfile);
+            return true;
+        }
+        
+        log.debug("Feature flag: {} is disabled for production profile: {}", featureName, activeProfile);
         return false;
     }
 

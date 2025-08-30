@@ -17,7 +17,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -105,10 +104,16 @@ public class AdvancedEventSearchResource {
                                             "eventType": "MEETING",
                                             "active": true,
                                             "isOnline": false,
+                                            "meetingLink": null,
                                             "maxParticipants": 100,
-                                            "currentParticipants": 0,
+                                            "currentParticipants": 45,
                                             "organizerName": "John Doe",
-                                            "organizerEmail": "john@example.com"
+                                            "organizerEmail": "john@example.com",
+                                            "createdByUsername": "johndoe",
+                                            "privacy": "PUBLIC",
+                                            "inviteMessage": "Join us for the annual alumni meet",
+                                            "createdAt": "2024-12-01T10:00:00",
+                                            "updatedAt": "2024-12-01T10:00:00"
                                         }
                                     ],
                                     "totalElements": 1,
@@ -164,22 +169,7 @@ public class AdvancedEventSearchResource {
     public ResponseEntity<ApiResponse<PagedResponse<EventResponse>>> searchEvents(
             @RequestBody AdvancedEventSearchRequest request) {
         
-        // Check if advanced search feature is enabled
-        if (!featureFlagUtils.isAdvancedSearchEnabled()) {
-            log.warn("Advanced search feature is disabled. Blocking search request");
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new ApiResponse<>("Feature 'search' is disabled", "403", null));
-        }
-
-        // Check if advanced filters are enabled for complex searches
-        if (request.getLocation() != null || request.getEventType() != null || 
-            request.getStartDate() != null || request.getEndDate() != null) {
-            if (!featureFlagUtils.isSearchAdvancedFiltersEnabled()) {
-                log.warn("Advanced search filters feature is disabled. Blocking search request with filters");
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(new ApiResponse<>("Feature 'search.advanced-filters' is disabled", "403", null));
-            }
-        }
+        log.info("Processing advanced search request with filters: {}", request);
         
         PagedResponse<EventResponse> response = advancedEventSearchService.searchEvents(request);
         
@@ -213,54 +203,26 @@ public class AdvancedEventSearchResource {
                                 "data": [
                                     {
                                         "id": 1,
-                                        "title": "Tech Alumni Meet",
-                                        "description": "Technology-focused alumni gathering",
-                                        "startDate": "2024-12-20T18:00:00",
-                                        "endDate": "2024-12-20T22:00:00",
+                                        "title": "Recommended Event 1",
+                                        "description": "This event matches your interests",
+                                        "startDate": "2024-12-25T18:00:00",
+                                        "endDate": "2024-12-25T22:00:00",
                                         "location": "IIT Campus",
                                         "eventType": "MEETING",
                                         "active": true,
                                         "isOnline": false,
-                                        "maxParticipants": 80,
-                                        "currentParticipants": 0,
-                                        "organizerName": "Jane Smith",
-                                        "organizerEmail": "jane@example.com"
-                                    },
-                                    {
-                                        "id": 2,
-                                        "title": "Career Development Webinar",
-                                        "description": "Career guidance and networking session",
-                                        "startDate": "2024-12-22T14:00:00",
-                                        "endDate": "2024-12-22T16:00:00",
-                                        "location": "Virtual",
-                                        "eventType": "WEBINAR",
-                                        "active": true,
-                                        "isOnline": true,
+                                        "meetingLink": null,
                                         "maxParticipants": 100,
-                                        "currentParticipants": 0,
-                                        "organizerName": "Mike Johnson",
-                                        "organizerEmail": "mike@example.com"
+                                        "currentParticipants": 45,
+                                        "organizerName": "John Doe",
+                                        "organizerEmail": "john@example.com",
+                                        "createdByUsername": "johndoe",
+                                        "privacy": "PUBLIC",
+                                        "inviteMessage": "Join us for this event",
+                                        "createdAt": "2024-12-01T10:00:00",
+                                        "updatedAt": "2024-12-01T10:00:00"
                                     }
                                 ]
-                            }
-                            """
-                    )
-                }
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "401",
-            description = "Unauthorized - Missing or invalid token",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Unauthorized",
-                        value = """
-                            {
-                                "message": "Missing Authorization Header",
-                                "code": "401",
-                                "data": null
                             }
                             """
                     )
@@ -269,9 +231,8 @@ public class AdvancedEventSearchResource {
         )
     })
     public ResponseEntity<ApiResponse<List<EventResponse>>> getEventRecommendations(
-            @RequestHeader("X-USER_ID") String userContext) {
+            @Parameter(description = "Username for personalized recommendations") @RequestParam(defaultValue = "user") String username) {
         
-        String username = extractUsername(userContext);
         List<EventResponse> response = advancedEventSearchService.getEventRecommendations(username);
         
         return ResponseEntity.ok(new ApiResponse<>("Event recommendations retrieved successfully", "200", response));
@@ -280,8 +241,7 @@ public class AdvancedEventSearchResource {
     @GetMapping("/trending")
     @Operation(
         summary = "Get Trending Events",
-        description = "Get trending events based on engagement, participation rates, and popularity",
-        security = @SecurityRequirement(name = "Bearer Authentication")
+        description = "Get trending events based on engagement metrics and popularity"
     )
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
@@ -300,54 +260,26 @@ public class AdvancedEventSearchResource {
                                 "data": [
                                     {
                                         "id": 1,
-                                        "title": "Annual Alumni Meet 2024",
-                                        "description": "Most popular annual gathering",
+                                        "title": "Trending Event 1",
+                                        "description": "This is a trending event",
                                         "startDate": "2024-12-25T18:00:00",
                                         "endDate": "2024-12-25T22:00:00",
                                         "location": "IIT Campus",
                                         "eventType": "MEETING",
                                         "active": true,
                                         "isOnline": false,
-                                        "maxParticipants": 200,
-                                        "currentParticipants": 150,
-                                        "organizerName": "Alumni Association",
-                                        "organizerEmail": "alumni@iitj.ac.in"
-                                    },
-                                    {
-                                        "id": 2,
-                                        "title": "Tech Innovation Summit",
-                                        "description": "Technology innovation showcase",
-                                        "startDate": "2024-12-28T09:00:00",
-                                        "endDate": "2024-12-28T17:00:00",
-                                        "location": "IIT Campus",
-                                        "eventType": "CONFERENCE",
-                                        "active": true,
-                                        "isOnline": false,
-                                        "maxParticipants": 150,
-                                        "currentParticipants": 120,
-                                        "organizerName": "Tech Alumni Group",
-                                        "organizerEmail": "tech@iitj.ac.in"
+                                        "meetingLink": null,
+                                        "maxParticipants": 100,
+                                        "currentParticipants": 85,
+                                        "organizerName": "John Doe",
+                                        "organizerEmail": "john@example.com",
+                                        "createdByUsername": "johndoe",
+                                        "privacy": "PUBLIC",
+                                        "inviteMessage": "Join us for this trending event",
+                                        "createdAt": "2024-12-01T10:00:00",
+                                        "updatedAt": "2024-12-01T10:00:00"
                                     }
                                 ]
-                            }
-                            """
-                    )
-                }
-            )
-        ),
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "400",
-            description = "Invalid limit parameter",
-            content = @Content(
-                mediaType = "application/json",
-                examples = {
-                    @ExampleObject(
-                        name = "Invalid Request",
-                        value = """
-                            {
-                                "message": "Invalid limit parameter",
-                                "code": "400",
-                                "data": null
                             }
                             """
                     )
@@ -408,19 +340,13 @@ public class AdvancedEventSearchResource {
     }
 
     @GetMapping("/similar/{eventId}")
-    @Operation(summary = "Get similar events", description = "Get events similar to a specific event")
+    @Operation(summary = "Get similar events", description = "Get events similar to the specified event")
     public ResponseEntity<ApiResponse<List<EventResponse>>> getSimilarEvents(
             @PathVariable Long eventId,
-            @Parameter(description = "Number of events to return") @RequestParam(defaultValue = "5") int limit) {
+            @Parameter(description = "Number of events to return") @RequestParam(defaultValue = "10") int limit) {
         
         List<EventResponse> response = advancedEventSearchService.getSimilarEvents(eventId, limit);
         
         return ResponseEntity.ok(new ApiResponse<>("Similar events retrieved successfully", "200", response));
-    }
-
-    private String extractUsername(String userContext) {
-        // This is a simplified implementation
-        // In a real app, you'd decode the JWT token or user context
-        return userContext; // Assuming userContext contains the username
     }
 } 

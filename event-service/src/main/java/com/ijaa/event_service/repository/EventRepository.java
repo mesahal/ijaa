@@ -1,8 +1,11 @@
 package com.ijaa.event_service.repository;
 
 import com.ijaa.event_service.domain.entity.Event;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -89,38 +92,68 @@ public interface EventRepository extends JpaRepository<Event, Long> {
            "AND (:title IS NULL OR e.title LIKE %:title%) " +
            "AND (:description IS NULL OR e.description LIKE %:description%) " +
            "ORDER BY e.startDate ASC")
-    List<Event> searchEvents(@org.springframework.data.repository.query.Param("location") String location, 
-                           @org.springframework.data.repository.query.Param("eventType") String eventType, 
-                           @org.springframework.data.repository.query.Param("startDate") LocalDateTime startDate, 
-                           @org.springframework.data.repository.query.Param("endDate") LocalDateTime endDate, 
-                           @org.springframework.data.repository.query.Param("isOnline") Boolean isOnline, 
-                           @org.springframework.data.repository.query.Param("organizerName") String organizerName, 
-                           @org.springframework.data.repository.query.Param("title") String title, 
-                           @org.springframework.data.repository.query.Param("description") String description);
+    List<Event> searchEvents(@Param("location") String location, 
+                           @Param("eventType") String eventType, 
+                           @Param("startDate") LocalDateTime startDate, 
+                           @Param("endDate") LocalDateTime endDate, 
+                           @Param("isOnline") Boolean isOnline, 
+                           @Param("organizerName") String organizerName, 
+                           @Param("title") String title, 
+                           @Param("description") String description);
 
     // Advanced search methods for new features
     // Find active events with pagination
     @Query("SELECT e FROM Event e WHERE e.active = true")
-    org.springframework.data.domain.Page<Event> findActiveEvents(org.springframework.data.domain.Pageable pageable);
+    Page<Event> findActiveEvents(Pageable pageable);
 
     // Find active events ordered by creation date
     @Query("SELECT e FROM Event e WHERE e.active = true ORDER BY e.createdAt DESC")
-    org.springframework.data.domain.Page<Event> findActiveEventsOrderByCreatedAtDesc(org.springframework.data.domain.Pageable pageable);
+    Page<Event> findActiveEventsOrderByCreatedAtDesc(Pageable pageable);
 
     // Find active events ordered by current participants
     @Query("SELECT e FROM Event e WHERE e.active = true ORDER BY e.currentParticipants DESC")
-    org.springframework.data.domain.Page<Event> findActiveEventsOrderByCurrentParticipantsDesc(org.springframework.data.domain.Pageable pageable);
+    Page<Event> findActiveEventsOrderByCurrentParticipantsDesc(Pageable pageable);
 
     // Find events by location with pagination
-    List<Event> findByLocationContainingAndActiveTrueOrderByStartDateAsc(String location, org.springframework.data.domain.Pageable pageable);
+    List<Event> findByLocationContainingAndActiveTrueOrderByStartDateAsc(String location, Pageable pageable);
 
     // Find events by organizer with pagination
-    List<Event> findByOrganizerNameContainingAndActiveTrueOrderByStartDateDesc(String organizerName, org.springframework.data.domain.Pageable pageable);
+    List<Event> findByOrganizerNameContainingAndActiveTrueOrderByStartDateDesc(String organizerName, Pageable pageable);
 
     // Find upcoming events
     @Query("SELECT e FROM Event e WHERE e.active = true AND e.startDate > ?1 ORDER BY e.startDate ASC")
-    org.springframework.data.domain.Page<Event> findByStartDateAfterAndActiveTrueOrderByStartDateAsc(LocalDateTime startDate, org.springframework.data.domain.Pageable pageable);
+    Page<Event> findByStartDateAfterAndActiveTrueOrderByStartDateAsc(LocalDateTime startDate, Pageable pageable);
 
     // Find similar events
-    List<Event> findByEventTypeAndLocationAndActiveTrueAndIdNot(String eventType, String location, Long eventId, org.springframework.data.domain.Pageable pageable);
+    List<Event> findByEventTypeAndLocationAndActiveTrueAndIdNot(String eventType, String location, Long eventId, Pageable pageable);
+
+    // Additional methods for advanced search functionality
+    
+    // Find events by location containing (case insensitive)
+    @Query("SELECT e FROM Event e WHERE e.active = true AND LOWER(e.location) LIKE LOWER(CONCAT('%', :location, '%')) ORDER BY e.startDate ASC")
+    Page<Event> findByLocationContainingIgnoreCaseAndActiveTrueOrderByStartDateAsc(@Param("location") String location, Pageable pageable);
+
+    // Find events by organizer name containing (case insensitive)
+    @Query("SELECT e FROM Event e WHERE e.active = true AND LOWER(e.organizerName) LIKE LOWER(CONCAT('%', :organizerName, '%')) ORDER BY e.startDate DESC")
+    Page<Event> findByOrganizerNameContainingIgnoreCaseAndActiveTrueOrderByStartDateDesc(@Param("organizerName") String organizerName, Pageable pageable);
+
+    // Find events with high engagement (high participant count)
+    @Query("SELECT e FROM Event e WHERE e.active = true AND e.currentParticipants >= :minParticipants ORDER BY e.currentParticipants DESC")
+    Page<Event> findByCurrentParticipantsGreaterThanEqualAndActiveTrueOrderByCurrentParticipantsDesc(@Param("minParticipants") Integer minParticipants, Pageable pageable);
+
+    // Find events by event type and active status
+    @Query("SELECT e FROM Event e WHERE e.active = true AND e.eventType = :eventType ORDER BY e.startDate ASC")
+    Page<Event> findByEventTypeAndActiveTrueOrderByStartDateAsc(@Param("eventType") String eventType, Pageable pageable);
+
+    // Find events by privacy setting and active status
+    @Query("SELECT e FROM Event e WHERE e.active = true AND e.privacy = :privacy ORDER BY e.startDate ASC")
+    Page<Event> findByPrivacyAndActiveTrueOrderByStartDateAsc(@Param("privacy") Event.EventPrivacy privacy, Pageable pageable);
+
+    // Find online events
+    @Query("SELECT e FROM Event e WHERE e.active = true AND e.isOnline = true ORDER BY e.startDate ASC")
+    Page<Event> findByIsOnlineTrueAndActiveTrueOrderByStartDateAsc(Pageable pageable);
+
+    // Find offline events
+    @Query("SELECT e FROM Event e WHERE e.active = true AND e.isOnline = false ORDER BY e.startDate ASC")
+    Page<Event> findByIsOnlineFalseAndActiveTrueOrderByStartDateAsc(Pageable pageable);
 } 

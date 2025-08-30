@@ -127,7 +127,7 @@ public class AdvancedEventSearchServiceImpl implements AdvancedEventSearchServic
     public List<EventResponse> getEventsByLocation(String location, int limit) {
         log.info("Getting events by location: {}, limit: {}", location, limit);
 
-        List<Event> events = eventRepository.findByLocationContainingAndActiveTrueOrderByStartDateAsc(location, PageRequest.of(0, limit));
+        List<Event> events = eventRepository.findByLocationContainingIgnoreCaseAndActiveTrueOrderByStartDateAsc(location, PageRequest.of(0, limit)).getContent();
 
         return events.stream()
                 .map(this::mapToEventResponse)
@@ -138,7 +138,7 @@ public class AdvancedEventSearchServiceImpl implements AdvancedEventSearchServic
     public List<EventResponse> getEventsByOrganizer(String organizerName, int limit) {
         log.info("Getting events by organizer: {}, limit: {}", organizerName, limit);
 
-        List<Event> events = eventRepository.findByOrganizerNameContainingAndActiveTrueOrderByStartDateDesc(organizerName, PageRequest.of(0, limit));
+        List<Event> events = eventRepository.findByOrganizerNameContainingIgnoreCaseAndActiveTrueOrderByStartDateDesc(organizerName, PageRequest.of(0, limit)).getContent();
 
         return events.stream()
                 .map(this::mapToEventResponse)

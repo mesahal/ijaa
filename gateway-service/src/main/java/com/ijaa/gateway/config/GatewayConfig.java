@@ -14,14 +14,6 @@ public class GatewayConfig {
     @Bean
     public RouteLocator ijaaRouteConfig(RouteLocatorBuilder builder, AuthenticationFilter filter) {
         return builder.routes()
-                // User service routes (excluding events which are handled by event service)
-                .route(p-> p
-                        .path("/ijaa/api/v1/user/**")
-                        .filters(f-> f
-                                .filter(filter.apply(new AuthenticationFilter.Config()))
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
-                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://user-service"))
                 // Feature flag status check - public endpoint (no authentication required)
                 .route(p-> p
                         .path("/ijaa/api/v1/admin/feature-flags/*/enabled")
@@ -39,15 +31,7 @@ public class GatewayConfig {
                                 .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://user-service"))
-                // Event service routes
-                .route(p-> p
-                        .path("/ijaa/api/v1/events/**")
-                        .filters(f-> f
-                                .filter(filter.apply(new AuthenticationFilter.Config()))
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
-                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://event"))
-                // User events routes (for user-specific event operations)
+                // User events routes (for user-specific event operations) - MUST come before general user routes
                 .route(p-> p
                         .path("/ijaa/api/v1/user/events/**")
                         .filters(f-> f
@@ -55,9 +39,25 @@ public class GatewayConfig {
                                 .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://event"))
-                // User recurring events routes
+                // User recurring events routes - MUST come before general user routes
                 .route(p-> p
                         .path("/ijaa/api/v1/user/recurring-events/**")
+                        .filters(f-> f
+                                .filter(filter.apply(new AuthenticationFilter.Config()))
+                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
+                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
+                        .uri("lb://event"))
+                // User service routes (excluding events which are handled by event service)
+                .route(p-> p
+                        .path("/ijaa/api/v1/user/**")
+                        .filters(f-> f
+                                .filter(filter.apply(new AuthenticationFilter.Config()))
+                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
+                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
+                        .uri("lb://user-service"))
+                // Event service routes
+                .route(p-> p
+                        .path("/ijaa/api/v1/events/**")
                         .filters(f-> f
                                 .filter(filter.apply(new AuthenticationFilter.Config()))
                                 .rewritePath("/ijaa/(?<segment>.*)","/${segment}")

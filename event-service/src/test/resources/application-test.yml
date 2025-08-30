@@ -44,6 +44,11 @@ test:
   security:
     enabled: false
 
+# Feature flags configuration for testing
+feature:
+  flags:
+    enabled: true
+
 # Feign client configuration for testing
 feign:
   client:

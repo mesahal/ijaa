@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 /**
  * Feign client for communicating with the user service to check feature flags
  */
-@FeignClient(name = "user-service", fallback = FeatureFlagClientFallback.class)
+@FeignClient(name = "user-service-feature-flags", fallback = FeatureFlagClientFallback.class)
 public interface FeatureFlagClient {
 
     /**
