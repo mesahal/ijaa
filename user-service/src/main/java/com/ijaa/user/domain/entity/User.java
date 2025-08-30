@@ -1,5 +1,6 @@
 package com.ijaa.user.domain.entity;
 
+ import com.ijaa.user.domain.enums.AuthProvider;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,32 @@ public class User {
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean active = true;
+
+    // Google OAuth fields
+    @Column(unique = true, length = 100)
+    private String email;
+
+    @Column(length = 100)
+    private String firstName;
+
+    @Column(length = 100)
+    private String lastName;
+
+    @Column(length = 255)
+    private String profilePictureUrl;
+
+    @Column(length = 100)
+    private String googleId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private AuthProvider authProvider = AuthProvider.LOCAL;
+
+    @Column(length = 100)
+    private String locale;
+
+    @Column(length = 10)
+    private String emailVerified;
 
     // Add other fields as needed (email, firstName, lastName, etc.)
 }

@@ -5,6 +5,7 @@ import com.ijaa.user.common.exceptions.PasswordChangeException;
 import com.ijaa.user.common.exceptions.UserAlreadyExistsException;
 import com.ijaa.user.common.exceptions.UserNotFoundException;
 import com.ijaa.user.common.exceptions.FeatureDisabledException;
+import com.ijaa.user.common.exceptions.GoogleOAuthException;
 import com.ijaa.user.domain.common.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -82,6 +83,13 @@ public class UserExceptionHandler {
 
     @ExceptionHandler(PasswordChangeException.class)
     public ResponseEntity<ApiResponse<?>> handlePasswordChangeException(PasswordChangeException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new ApiResponse<>(ex.getMessage(), "400", null)
+        );
+    }
+
+    @ExceptionHandler(GoogleOAuthException.class)
+    public ResponseEntity<ApiResponse<?>> handleGoogleOAuthException(GoogleOAuthException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 new ApiResponse<>(ex.getMessage(), "400", null)
         );

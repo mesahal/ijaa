@@ -1,15 +1,19 @@
 package com.ijaa.user.service;
 
 import com.ijaa.user.common.exceptions.AuthenticationFailedException;
+import com.ijaa.user.common.exceptions.GoogleOAuthException;
 import com.ijaa.user.common.exceptions.PasswordChangeException;
 import com.ijaa.user.common.exceptions.UserAlreadyExistsException;
 import com.ijaa.user.common.exceptions.UserNotFoundException;
 import com.ijaa.user.common.utils.UniqueIdGenerator;
 import com.ijaa.user.domain.entity.User;
+import com.ijaa.user.domain.enums.AuthProvider;
 import com.ijaa.user.domain.request.SignInRequest;
 import com.ijaa.user.domain.request.SignUpRequest;
+import com.ijaa.user.domain.request.GoogleSignInRequest;
 import com.ijaa.user.domain.request.UserPasswordChangeRequest;
 import com.ijaa.user.domain.response.AuthResponse;
+import com.ijaa.user.domain.dto.GoogleUserInfo;
 import com.ijaa.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,6 +33,7 @@ public class AuthService {
     private final JWTService jwtService;
     private final AuthenticationManager authenticationManager;
     private final UniqueIdGenerator idGenerator;
+    private final GoogleOAuthService googleOAuthService;
 
     public AuthResponse registerUser(SignUpRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
@@ -43,6 +48,7 @@ public class AuthService {
 
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setAuthProvider(AuthProvider.LOCAL);
 
         userRepository.save(user);
 
@@ -71,33 +77,87 @@ public class AuthService {
     }
 
     /**
+     * Google Sign-In authentication
+     * @param request Google sign-in request containing OAuth tokens
+     * @return AuthResponse with JWT token and user ID
+     */
+    public AuthResponse googleSignIn(GoogleSignInRequest request) {
+        try {
+            // Verify Google OAuth token and extract user information
+            GoogleUserInfo googleUserInfo = googleOAuthService.verifyGoogleToken(request);
+            
+            // Check if user already exists
+            User user = userRepository.findByEmail(googleUserInfo.getEmail())
+                    .orElseGet(() -> createGoogleUser(googleUserInfo));
+            
+            // Generate JWT token
+            String token = jwtService.generateUserToken(user.getUsername(), user.getUserId());
+            
+            return new AuthResponse(token, user.getUserId());
+            
+        } catch (Exception e) {
+            throw new GoogleOAuthException("Google Sign-In failed: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Create a new user from Google OAuth information
+     * @param googleUserInfo Google user information
+     * @return Created user
+     */
+    private User createGoogleUser(GoogleUserInfo googleUserInfo) {
+        // Check if email is already used by a local user
+        if (userRepository.existsByEmail(googleUserInfo.getEmail())) {
+            throw new UserAlreadyExistsException("Email already registered with local account");
+        }
+
+        User user = new User();
+        
+        // Generate unique user ID
+        String userId = generateUniqueUserId();
+        user.setUserId(userId);
+        
+        // Set Google OAuth information
+        user.setGoogleId(googleUserInfo.getSub());
+        user.setEmail(googleUserInfo.getEmail());
+        user.setFirstName(googleUserInfo.getGivenName());
+        user.setLastName(googleUserInfo.getFamilyName());
+        user.setProfilePictureUrl(googleUserInfo.getPicture());
+        user.setLocale(googleUserInfo.getLocale());
+        user.setEmailVerified(googleUserInfo.getEmailVerified() != null ? 
+            googleUserInfo.getEmailVerified().toString() : "false");
+        user.setAuthProvider(AuthProvider.GOOGLE);
+        
+        // Set username as email for Google users
+        user.setUsername(googleUserInfo.getEmail());
+        
+        // Generate a random password for Google users (they won't use it)
+        user.setPassword(passwordEncoder.encode(generateRandomPassword()));
+        user.setActive(true);
+        
+        User savedUser = userRepository.save(user);
+        
+        return savedUser;
+    }
+
+    /**
      * Generates a unique user ID and ensures it doesn't already exist
      */
     private String generateUniqueUserId() {
         String userId;
-        int maxAttempts = 10;
-        int attempts = 0;
-
         do {
-            // Choose your preferred ID format:
-            userId = idGenerator.generateUUID(); // USER_ABC12XYZ
-            // Or use: userId = idGenerator.generateShortId(10); // abc123xyz0
-            // Or use: userId = idGenerator.generateSnowflakeId(); // 1234567890123456
-
-            attempts++;
-
-            if (attempts >= maxAttempts) {
-                throw new RuntimeException("Failed to generate unique user ID after " + maxAttempts + " attempts");
-            }
-
+            userId = idGenerator.generateUserIdWithPrefix();
         } while (userRepository.existsByUserId(userId));
-
         return userId;
     }
 
     /**
-     * Change user password
+     * Generate a random password for Google OAuth users
      */
+    private String generateRandomPassword() {
+        return java.util.UUID.randomUUID().toString();
+    }
+
     public void changePassword(UserPasswordChangeRequest request) {
         // Get current authenticated user
         String currentUsername = getCurrentUsername();
@@ -107,6 +167,11 @@ public class AuthService {
 
         User user = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        // Check if user is a Google OAuth user
+        if (AuthProvider.GOOGLE.equals(user.getAuthProvider())) {
+            throw new AuthenticationFailedException("Password change not allowed for Google OAuth users");
+        }
 
         // Verify current password
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {

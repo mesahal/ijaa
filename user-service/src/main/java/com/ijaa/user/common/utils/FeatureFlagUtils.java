@@ -29,6 +29,7 @@ public class FeatureFlagUtils {
     public static final String USER_PROFILE_FEATURES = "user.profile";
     public static final String USER_EXPERIENCES = "user.experiences";
     public static final String USER_INTERESTS = "user.interests";
+    public static final String USER_GOOGLE_SIGNIN = "user.google-signin";
 
     // Chat Features
     public static final String CHAT_FEATURE = "chat";
@@ -132,6 +133,10 @@ public class FeatureFlagUtils {
 
     public boolean isUserInterestsEnabled() {
         return isFeatureEnabled(USER_INTERESTS);
+    }
+
+    public boolean isUserGoogleSignInEnabled() {
+        return isFeatureEnabled(USER_GOOGLE_SIGNIN);
     }
 
     // Chat Features
