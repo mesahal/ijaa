@@ -96,7 +96,7 @@ git push origin main
 # Verify Dockerfiles exist
 ls -la */Dockerfile
 
-# Check render.yml syntax
+# Check render.yaml syntax
 python3 -c "import yaml; yaml.safe_load(open('render.yml', 'r'))"
 
 # Verify git status
