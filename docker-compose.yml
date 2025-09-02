@@ -10,11 +10,16 @@ services:
       POSTGRES_USER: ijaa_user
       POSTGRES_PASSWORD: ijaa_password
     ports:
-      - "5432:5432"
+      - "5435:5432"
     volumes:
       - user-db-data:/var/lib/postgresql/data
     networks:
       - ijaa-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ijaa_user -d ijaa_users"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   event-db:
     image: postgres:15
@@ -24,11 +29,16 @@ services:
       POSTGRES_USER: ijaa_event
       POSTGRES_PASSWORD: ijaa_password
     ports:
-      - "5433:5432"
+      - "5436:5432"
     volumes:
       - event-db-data:/var/lib/postgresql/data
     networks:
       - ijaa-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ijaa_event -d ijaa_events"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   file-db:
     image: postgres:15
@@ -38,13 +48,18 @@ services:
       POSTGRES_USER: ijaa_file
       POSTGRES_PASSWORD: ijaa_password
     ports:
-      - "5434:5432"
+      - "5437:5432"
     volumes:
       - file-db-data:/var/lib/postgresql/data
     networks:
       - ijaa-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ijaa_file -d ijaa_files"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # Discovery Service
+  # Discovery Service - Must start first
   discovery-service:
     build:
       context: ./discovery-service
@@ -59,29 +74,45 @@ services:
       - EUREKA_INSTANCE_PREFER_IP_ADDRESS=false
       - EUREKA_INSTANCE_HOSTNAME=discovery-service
     depends_on:
-      - user-db
-      - event-db
-      - file-db
+      user-db:
+        condition: service_healthy
+      event-db:
+        condition: service_healthy
+      file-db:
+        condition: service_healthy
     networks:
       - ijaa-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
-  # Config Service
+  # Config Service - Must start second
   config-service:
     build:
       context: ./config-service
       dockerfile: Dockerfile
     container_name: ijaa-config-service
     ports:
-      - "8888:8888"
+      - "8888:8071"
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - SERVER_PORT=8888
+      - SPRING_PROFILES_ACTIVE=native
+      - SERVER_PORT=8071
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-service:8761/eureka/
       - EUREKA_INSTANCE_HOSTNAME=config-service
     depends_on:
-      - discovery-service
+      discovery-service:
+        condition: service_healthy
     networks:
       - ijaa-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8071/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   # User Service
   user-service:
@@ -98,6 +129,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=ijaa_user
       - SPRING_DATASOURCE_PASSWORD=ijaa_password
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE_OVERRIDE=http://discovery-service:8761/eureka/
       - EUREKA_INSTANCE_HOSTNAME=user-service
       - JWT_SECRET=dev-secret-key
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
@@ -105,10 +137,18 @@ services:
       - SPRING_SQL_INIT_SCHEMA_LOCATIONS=classpath:db/schema.sql
       - SPRING_SQL_INIT_DATA_LOCATIONS=classpath:db/data.sql
     depends_on:
-      - discovery-service
-      - user-db
+      discovery-service:
+        condition: service_healthy
+      user-db:
+        condition: service_healthy
     networks:
       - ijaa-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   # Event Service
   event-service:
@@ -125,6 +165,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=ijaa_event
       - SPRING_DATASOURCE_PASSWORD=ijaa_password
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE_OVERRIDE=http://discovery-service:8761/eureka/
       - EUREKA_INSTANCE_HOSTNAME=event-service
       - JWT_SECRET=dev-secret-key
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
@@ -132,10 +173,18 @@ services:
       - SPRING_SQL_INIT_SCHEMA_LOCATIONS=classpath:db/schema.sql
       - SPRING_SQL_INIT_DATA_LOCATIONS=classpath:db/data.sql
     depends_on:
-      - discovery-service
-      - event-db
+      discovery-service:
+        condition: service_healthy
+      event-db:
+        condition: service_healthy
     networks:
       - ijaa-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   # File Service
   file-service:
@@ -152,20 +201,26 @@ services:
       - SPRING_DATASOURCE_USERNAME=ijaa_file
       - SPRING_DATASOURCE_PASSWORD=ijaa_password
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE_OVERRIDE=http://discovery-service:8761/eureka/
       - EUREKA_INSTANCE_HOSTNAME=file-service
       - JWT_SECRET=dev-secret-key
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_SQL_INIT_MODE=always
-      - SPRING_SQL_INIT_SCHEMA_LOCATIONS=classpath:db/schema.sql
-      - SPRING_SQL_INIT_DATA_LOCATIONS=classpath:db/data.sql
       - FILE_STORAGE_PATH=/tmp/uploaded-files
     depends_on:
-      - discovery-service
-      - file-db
+      discovery-service:
+        condition: service_healthy
+      file-db:
+        condition: service_healthy
     networks:
       - ijaa-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
-  # Gateway Service
+  # Gateway Service - Must start last
   gateway-service:
     build:
       context: ./gateway-service
@@ -177,18 +232,27 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - SERVER_PORT=8080
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE_OVERRIDE=http://discovery-service:8761/eureka/
       - EUREKA_INSTANCE_HOSTNAME=gateway-service
       - JWT_SECRET=dev-secret-key
       - USER_SERVICE_URL=http://user-service:8081
       - EVENT_SERVICE_URL=http://event-service:8082
       - FILE_SERVICE_URL=http://file-service:8083
     depends_on:
-      - discovery-service
-      - user-service
-      - event-service
-      - file-service
+      discovery-service:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+      file-service:
+        condition: service_healthy
     networks:
       - ijaa-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
 volumes:
   user-db-data:

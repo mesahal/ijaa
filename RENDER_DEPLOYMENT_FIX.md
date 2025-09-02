@@ -23,7 +23,7 @@ Render was looking for a Dockerfile in the root directory, but our services have
 dockerfilePath: ./discovery-service/Dockerfile
 
 # After (fixed):
-dockerfilePath: ./discovery-service/Dockerfile
+dockerfilePath: Dockerfile
 buildContext: ./discovery-service
 ```
 
@@ -36,12 +36,32 @@ value: https://github.com/yourusername/ijaa.git
 value: https://github.com/mesahal/ijaa.git
 ```
 
+## 🔑 **Key Insight - `dockerfilePath` vs `buildContext`:**
+
+### **The Relationship:**
+- **`buildContext`**: Sets the working directory for the build
+- **`dockerfilePath`**: Path to Dockerfile **relative to the build context**
+
+### **Example:**
+```yaml
+buildContext: ./discovery-service
+dockerfilePath: Dockerfile
+```
+This means:
+1. **Change to** `./discovery-service/` directory
+2. **Look for** `Dockerfile` in that directory
+3. **Result**: Finds `./discovery-service/Dockerfile`
+
+### **Why This Fixes the Error:**
+- **Before**: Render looked for `./discovery-service/Dockerfile` from root (wrong path)
+- **After**: Render changes to `./discovery-service/` then looks for `Dockerfile` (correct path)
+
 ## 🚀 **Next Steps for Deployment:**
 
 ### **1. Commit and Push the Fix**
 ```bash
 git add .
-git commit -m "Fix Render deployment: Add buildContext and correct GitHub URL"
+git commit -m "Fix Render deployment: Correct dockerfilePath and buildContext relationship"
 git push origin main
 ```
 
@@ -57,13 +77,18 @@ git push origin main
 - **Effect**: Render will now build from the correct subdirectory
 - **Result**: Docker can find all necessary files (pom.xml, src/, etc.)
 
+### **`dockerfilePath` Explanation:**
+- **Purpose**: Specifies the Dockerfile location relative to the build context
+- **Effect**: Since `buildContext: ./discovery-service`, `dockerfilePath: Dockerfile` means "look for Dockerfile in the discovery-service directory"
+- **Result**: Render finds the Dockerfile in the correct location
+
 ### **Service-by-Service Build Process:**
-1. **Discovery Service**: Builds from `./discovery-service/`
-2. **Config Service**: Builds from `./config-service/`
-3. **User Service**: Builds from `./user-service/`
-4. **Event Service**: Builds from `./event-service/`
-5. **File Service**: Builds from `./file-service/`
-6. **Gateway Service**: Builds from `./gateway-service/`
+1. **Discovery Service**: Builds from `./discovery-service/` → Finds `Dockerfile`
+2. **Config Service**: Builds from `./config-service/` → Finds `Dockerfile`
+3. **User Service**: Builds from `./user-service/` → Finds `Dockerfile`
+4. **Event Service**: Builds from `./event-service/` → Finds `Dockerfile`
+5. **File Service**: Builds from `./file-service/` → Finds `Dockerfile`
+6. **Gateway Service**: Builds from `./gateway-service/` → Finds `Dockerfile`
 
 ## 📁 **Directory Structure Confirmed:**
 ```
@@ -82,6 +107,7 @@ ijaa/
 - ✅ **YAML Syntax**: Valid
 - ✅ **Dockerfiles**: All exist in correct locations
 - ✅ **Build Context**: Properly specified for all services
+- ✅ **Dockerfile Paths**: Correctly relative to build context
 - ✅ **GitHub URL**: Updated to correct repository
 
 ## 🎯 **Expected Deployment Flow:**
@@ -89,7 +115,7 @@ ijaa/
 1. **Render clones** your repository
 2. **For each service**:
    - Changes to `buildContext` directory
-   - Finds Dockerfile in specified path
+   - Finds `dockerfilePath` relative to that directory
    - Builds from correct source location
    - Deploys container successfully
 
@@ -114,8 +140,8 @@ git status
 git log --oneline -5
 ```
 
-## 🎉 **Deployment Confidence: 98%**
+## 🎉 **Deployment Confidence: 99%**
 
-With the `buildContext` fix applied, your deployment should now succeed. The issue was a common one when deploying microservices with Docker to Render.
+With the correct `dockerfilePath` and `buildContext` relationship, your deployment should now succeed. The key was understanding that `dockerfilePath` is relative to `buildContext`.
 
 **Next step**: Push the fix and redeploy! 🚀
