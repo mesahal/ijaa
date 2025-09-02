@@ -67,13 +67,7 @@ services:
       - key: SERVER_PORT
         value: 8081
       - key: SPRING_DATASOURCE_URL
-        value: postgresql://ijaa-user-db:5432/ijaa_users
-      - key: SPRING_DATASOURCE_USERNAME
-        value: ijaa_user
-      - key: SPRING_DATASOURCE_PASSWORD
-        fromDatabase:
-          name: ijaa-user-db
-          property: password
+        value: postgresql://ijaa_user:${ijaa-user-db.password}@${ijaa-user-db.host}:${ijaa-user-db.port}/ijaa_users
       - key: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
         value: https://ijaa-discovery-service.onrender.com/eureka/
       - key: EUREKA_INSTANCE_HOSTNAME
@@ -115,13 +109,7 @@ services:
       - key: SERVER_PORT
         value: 8082
       - key: SPRING_DATASOURCE_URL
-        value: postgresql://ijaa-event-db:5432/ijaa_events
-      - key: SPRING_DATASOURCE_USERNAME
-        value: ijaa_event
-      - key: SPRING_DATASOURCE_PASSWORD
-        fromDatabase:
-          name: ijaa-event-db
-          property: password
+        value: postgresql://ijaa_event:${ijaa-event-db.password}@${ijaa-event-db.host}:${ijaa-event-db.port}/ijaa_events
       - key: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
         value: https://ijaa-discovery-service.onrender.com/eureka/
       - key: EUREKA_INSTANCE_HOSTNAME
@@ -163,13 +151,7 @@ services:
       - key: SERVER_PORT
         value: 8083
       - key: SPRING_DATASOURCE_URL
-        value: postgresql://ijaa-file-db:5432/ijaa_files
-      - key: SPRING_DATASOURCE_USERNAME
-        value: ijaa_file
-      - key: SPRING_DATASOURCE_PASSWORD
-        fromDatabase:
-          name: ijaa-file-db
-          property: password
+        value: postgresql://ijaa_file:${ijaa-file-db.password}@${ijaa-file-db.host}:${ijaa-file-db.port}/ijaa_files
       - key: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
         value: https://ijaa-discovery-service.onrender.com/eureka/
       - key: EUREKA_INSTANCE_HOSTNAME
