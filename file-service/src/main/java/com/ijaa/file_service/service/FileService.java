@@ -22,4 +22,13 @@ public interface FileService {
     void deleteProfilePhoto(String userId);
     
     void deleteCoverPhoto(String userId);
+    
+    // Event Banner methods
+    FileUploadResponse uploadEventBanner(String eventId, MultipartFile file);
+    
+    PhotoUrlResponse getEventBannerUrl(String eventId);
+    
+    Resource getEventBannerFile(String eventId, String fileName);
+    
+    void deleteEventBanner(String eventId);
 }

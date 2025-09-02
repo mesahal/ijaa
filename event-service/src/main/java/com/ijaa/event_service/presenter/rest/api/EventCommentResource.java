@@ -2,6 +2,7 @@ package com.ijaa.event_service.presenter.rest.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ijaa.event_service.common.annotation.RequiresFeature;
+import com.ijaa.event_service.common.service.BaseService;
 import com.ijaa.event_service.domain.common.ApiResponse;
 import com.ijaa.event_service.domain.common.PagedResponse;
 import com.ijaa.event_service.domain.request.EventCommentRequest;
@@ -26,11 +27,12 @@ import java.util.List;
 @RequestMapping("/api/v1/user/events/comments")
 @Slf4j
 @Tag(name = "Event Comments", description = "APIs for managing event comments and discussions")
-public class EventCommentResource {
+public class EventCommentResource extends BaseService {
 
     private final EventCommentService eventCommentService;
 
-    public EventCommentResource(EventCommentService eventCommentService) {
+    public EventCommentResource(EventCommentService eventCommentService, ObjectMapper objectMapper) {
+        super(objectMapper);
         this.eventCommentService = eventCommentService;
     }
 
@@ -115,8 +117,10 @@ public class EventCommentResource {
         )
     })
     public ResponseEntity<ApiResponse<EventCommentResponse>> createComment(@Valid @RequestBody EventCommentRequest request) {
-        // TODO: Get username from security context
-        String username = "test-user"; // This should come from JWT token
+        String username = getCurrentUsername();
+        if (username == null) {
+            return ResponseEntity.status(401).body(new ApiResponse<>("Authentication required", "401", null));
+        }
         EventCommentResponse comment = eventCommentService.createComment(request, username);
         return ResponseEntity.status(201).body(new ApiResponse<>("Comment created successfully", "201", comment));
     }
@@ -137,32 +141,13 @@ public class EventCommentResource {
         )
     })
     public ResponseEntity<ApiResponse<List<EventCommentResponse>>> getEventComments(@PathVariable Long eventId) {
-        // Default pagination parameters
-        int page = 0;
-        int size = 10;
-        PagedResponse<EventCommentResponse> pagedComments = eventCommentService.getEventComments(eventId, page, size);
-        return ResponseEntity.ok(new ApiResponse<>("Event comments retrieved successfully", "200", pagedComments.getContent()));
+        // Get all comments with nested replies for the event
+        String currentUsername = getCurrentUsername();
+        List<EventCommentResponse> comments = eventCommentService.getEventCommentsWithReplies(eventId, currentUsername);
+        return ResponseEntity.ok(new ApiResponse<>("Event comments retrieved successfully", "200", comments));
     }
 
-    @GetMapping("/event/{eventId}/all")
-    @Operation(
-        summary = "Get All Event Comments",
-        description = "Get all comments for an event including replies and nested threads"
-    )
-    @ApiResponses(value = {
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "200",
-            description = "All event comments retrieved successfully",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = com.ijaa.event_service.domain.common.ApiResponse.class)
-            )
-        )
-    })
-    public ResponseEntity<ApiResponse<List<EventCommentResponse>>> getAllEventComments(@PathVariable Long eventId) {
-        List<EventCommentResponse> comments = eventCommentService.getEventCommentsWithReplies(eventId);
-        return ResponseEntity.ok(new ApiResponse<>("All event comments retrieved successfully", "200", comments));
-    }
+
 
     @GetMapping("/{commentId}")
     @Operation(
@@ -199,7 +184,8 @@ public class EventCommentResource {
         )
     })
     public ResponseEntity<ApiResponse<EventCommentResponse>> getCommentById(@PathVariable Long commentId) {
-        EventCommentResponse comment = eventCommentService.getComment(commentId);
+        String currentUsername = getCurrentUsername();
+        EventCommentResponse comment = eventCommentService.getComment(commentId, currentUsername);
         return ResponseEntity.ok(new ApiResponse<>("Comment retrieved successfully", "200", comment));
     }
 
@@ -269,8 +255,10 @@ public class EventCommentResource {
     public ResponseEntity<ApiResponse<EventCommentResponse>> updateComment(
             @PathVariable Long commentId,
             @Valid @RequestBody EventCommentRequest request) {
-        // TODO: Get username from security context
-        String username = "test-user"; // This should come from JWT token
+        String username = getCurrentUsername();
+        if (username == null) {
+            return ResponseEntity.status(401).body(new ApiResponse<>("Authentication required", "401", null));
+        }
         EventCommentResponse comment = eventCommentService.updateComment(commentId, request.getContent(), username);
         return ResponseEntity.ok(new ApiResponse<>("Comment updated successfully", "200", comment));
     }
@@ -331,8 +319,10 @@ public class EventCommentResource {
         )
     })
     public ResponseEntity<ApiResponse<Void>> deleteComment(@PathVariable Long commentId) {
-        // TODO: Get username from security context
-        String username = "test-user"; // This should come from JWT token
+        String username = getCurrentUsername();
+        if (username == null) {
+            return ResponseEntity.status(401).body(new ApiResponse<>("Authentication required", "401", null));
+        }
         eventCommentService.deleteComment(commentId, username);
         return ResponseEntity.ok(new ApiResponse<>("Comment deleted successfully", "200", null));
     }
@@ -374,39 +364,20 @@ public class EventCommentResource {
         )
     })
     public ResponseEntity<ApiResponse<EventCommentResponse>> toggleCommentLike(@PathVariable Long commentId) {
-        // TODO: Get username from security context
-        String username = "test-user"; // This should come from JWT token
+        String username = getCurrentUsername();
+        if (username == null) {
+            return ResponseEntity.status(401).body(new ApiResponse<>("Authentication required", "401", null));
+        }
         EventCommentResponse comment = eventCommentService.toggleLike(commentId, username);
         return ResponseEntity.ok(new ApiResponse<>("Comment like status updated successfully", "200", comment));
     }
 
-    @GetMapping("/user/{username}")
-    @Operation(
-        summary = "Get User Comments",
-        description = "Get all comments made by a specific user"
-    )
-    @ApiResponses(value = {
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "200",
-            description = "User comments retrieved successfully",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = com.ijaa.event_service.domain.common.ApiResponse.class)
-            )
-        )
-    })
-    public ResponseEntity<ApiResponse<List<EventCommentResponse>>> getUserComments(@PathVariable String username) {
-        // Default pagination parameters
-        int page = 0;
-        int size = 10;
-        PagedResponse<EventCommentResponse> pagedComments = eventCommentService.getUserComments(username, page, size);
-        return ResponseEntity.ok(new ApiResponse<>("User comments retrieved successfully", "200", pagedComments.getContent()));
-    }
+
 
     @GetMapping("/recent")
     @Operation(
         summary = "Get Recent Comments",
-        description = "Get the most recent comments across all events"
+        description = "Get the most recent comments for a specific event"
     )
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
@@ -418,18 +389,19 @@ public class EventCommentResource {
             )
         )
     })
-    public ResponseEntity<ApiResponse<List<EventCommentResponse>>> getRecentComments() {
+    public ResponseEntity<ApiResponse<List<EventCommentResponse>>> getRecentComments(@RequestParam Long eventId) {
         // Default pagination parameters
         int page = 0;
         int size = 10;
-        PagedResponse<EventCommentResponse> pagedComments = eventCommentService.getRecentComments(page, size);
+        String currentUsername = getCurrentUsername();
+        PagedResponse<EventCommentResponse> pagedComments = eventCommentService.getRecentCommentsByEventId(eventId, page, size, currentUsername);
         return ResponseEntity.ok(new ApiResponse<>("Recent comments retrieved successfully", "200", pagedComments.getContent()));
     }
 
     @GetMapping("/popular")
     @Operation(
         summary = "Get Popular Comments",
-        description = "Get the most popular comments (most liked) across all events"
+        description = "Get the most popular comments (most liked) for a specific event"
     )
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
@@ -441,11 +413,12 @@ public class EventCommentResource {
             )
         )
     })
-    public ResponseEntity<ApiResponse<List<EventCommentResponse>>> getPopularComments() {
+    public ResponseEntity<ApiResponse<List<EventCommentResponse>>> getPopularComments(@RequestParam Long eventId) {
         // Default pagination parameters
         int page = 0;
         int size = 10;
-        PagedResponse<EventCommentResponse> pagedComments = eventCommentService.getPopularComments(page, size);
+        String currentUsername = getCurrentUsername();
+        PagedResponse<EventCommentResponse> pagedComments = eventCommentService.getPopularCommentsByEventId(eventId, page, size, currentUsername);
         return ResponseEntity.ok(new ApiResponse<>("Popular comments retrieved successfully", "200", pagedComments.getContent()));
     }
 } 

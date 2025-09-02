@@ -5,6 +5,7 @@ import com.ijaa.event_service.common.annotation.RequiresFeature;
 import com.ijaa.event_service.common.utils.FeatureFlagUtils;
 import com.ijaa.event_service.domain.common.ApiResponse;
 import com.ijaa.event_service.domain.request.EventRequest;
+import com.ijaa.event_service.domain.request.EventSearchRequest;
 import com.ijaa.event_service.domain.response.EventResponse;
 import com.ijaa.event_service.common.service.BaseService;
 import com.ijaa.event_service.service.EventService;
@@ -782,29 +783,17 @@ public class UserEventResource extends BaseService {
             )
         )
     })
-    public ResponseEntity<ApiResponse<List<EventResponse>>> searchEvents(
-            @RequestParam(required = false) String location,
-            @RequestParam(required = false) String eventType,
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate,
-            @RequestParam(required = false) Boolean isOnline,
-            @RequestParam(required = false) String organizerName,
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String description) {
-        
-        // Parse dates if provided
-        LocalDateTime startDateTime = null;
-        LocalDateTime endDateTime = null;
-        
-        if (startDate != null && !startDate.isEmpty()) {
-            startDateTime = LocalDateTime.parse(startDate);
-        }
-        if (endDate != null && !endDate.isEmpty()) {
-            endDateTime = LocalDateTime.parse(endDate);
-        }
-        
-        List<EventResponse> events = eventService.searchEvents(location, eventType, startDateTime, 
-                                                              endDateTime, isOnline, organizerName, title, description);
+    public ResponseEntity<ApiResponse<List<EventResponse>>> searchEvents(@RequestBody EventSearchRequest request) {
+        List<EventResponse> events = eventService.searchEvents(
+            request.getLocation(), 
+            request.getEventType(), 
+            request.getStartDate(), 
+            request.getEndDate(), 
+            request.getIsOnline(), 
+            request.getOrganizerName(), 
+            request.getTitle(), 
+            request.getDescription()
+        );
         return ResponseEntity.ok(new ApiResponse<>("Events found successfully", "200", events));
     }
 } 

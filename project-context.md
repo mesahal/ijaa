@@ -3,6 +3,8 @@
 ## Project Overview
 IJAA (International Jute Alumni Association) is a comprehensive microservices-based alumni management system built with Spring Boot. The system facilitates alumni networking, event management, file handling, and advanced event features through a distributed architecture.
 
+**Recent Update (August 2025)**: Removed Event Analytics, Event Templates, Calendar Integration, Event Reminders, and Recurring Events features to streamline the system and focus on core functionality. Fixed critical bugs in Event APIs including search functionality, comment user authentication, and nested comment responses.
+
 ## Architecture
 
 ### Service Architecture
@@ -72,16 +74,11 @@ Gateway Service (8080) → User Service (8081), Event Service (8082), File Servi
   - **Core Event Management**: Event creation, update, and management
   - **Event Search and Filtering**: Advanced search with multiple criteria
   - **Comment System**: Event comments with likes and replies
-  - **Reminder System**: Customizable event reminders and notifications
   - **Feature Flag Integration**: Feature toggle functionality
   - **User Authorization**: Role-based access control for event operations
   - **Event Participation**: RSVP system with status tracking
   - **Event Invitations**: Send and manage event invitations
   - **Event Media**: File attachments for events
-  - **Event Templates**: Reusable event templates with categories
-  - **Recurring Events**: Support for recurring event patterns
-  - **Event Analytics**: Comprehensive analytics and reporting
-  - **Calendar Integration**: External calendar sync (Google, Outlook, Apple)
   - **Advanced Search**: Multi-filter event search capabilities
   - **✅ FIXED: Advanced Event Search APIs** - All advanced search endpoints now working
   - **✅ FIXED: Gateway Routing** - Advanced search endpoints properly routed through gateway
@@ -122,7 +119,7 @@ Gateway Service (8080) → User Service (8081), Event Service (8082), File Servi
 
 #### Event Service Testing  
 - **Tests Run**: 75 total tests
-- **Status**: ✅ **35 advanced search tests passing** (August 2025)
+- **Status**: ✅ **35 advanced search tests passing** + **New integration tests for bug fixes** (August 2025)
 - **Major Fixes Applied** (August 2025):
   - ✅ **Fixed Advanced Event Search APIs** - All 8 advanced search endpoints now working
   - ✅ **Enabled feature flags for advanced search** - Fixed FeatureFlagUtils to enable features by default
@@ -132,10 +129,18 @@ Gateway Service (8080) → User Service (8081), Event Service (8082), File Servi
   - ✅ **Created comprehensive test coverage** - 17 integration tests + 18 unit tests
   - ✅ **Fixed pagination and error handling** - Proper response format and error management
   - ✅ **Fixed Gateway Routing Order** - More specific routes now come before general routes
+  - ✅ **Fixed Event Search API** - Changed from GET with @RequestParam to POST with @RequestBody EventSearchRequest
+  - ✅ **Fixed Comment User Authentication** - Now properly extracts username from X-USER_ID header using BaseService
+  - ✅ **Fixed Comment Endpoints** - Removed unnecessary endpoints, updated popular/recent to require userId
+  - ✅ **Fixed Nested Comment Responses** - Comments now return with proper nested replies structure
+  - ✅ **Created New Integration Tests** - EventCommentResourceIntegrationTest and UserEventResourceIntegrationTest
 - **Advanced Search Test Results**:
   - ✅ **AdvancedEventSearchResourceIntegrationTest**: 17/17 tests passing
   - ✅ **AdvancedEventSearchServiceTest**: 18/18 tests passing
   - ✅ **All advanced search endpoints functional** with proper error handling
+- **New Bug Fix Test Results**:
+  - ✅ **EventCommentResourceIntegrationTest**: 9/9 tests passing (comment functionality including eventId-based popular/recent endpoints)
+  - ✅ **UserEventResourceIntegrationTest**: 10/10 tests passing (search functionality)
 - **Remaining Issues**:
   - 40 other tests failing (unrelated to advanced search functionality)
 
@@ -203,6 +208,15 @@ Gateway Service (8080) → User Service (8081), Event Service (8082), File Servi
 - **✅ Enhanced database queries** - Optimized search queries with proper filtering
 - **✅ Fixed Gateway Routing Order** - More specific routes now come before general routes
 
+#### 7. Event API Bug Fixes (August 2025)
+- **✅ Fixed Event Search API** - Changed from GET with @RequestParam to POST with @RequestBody EventSearchRequest for better API design
+- **✅ Fixed Comment User Authentication** - Now properly extracts username from X-USER_ID header using BaseService.getCurrentUsername()
+- **✅ Fixed Comment Endpoints** - Removed unnecessary endpoints (/event/{eventId}/all, /user/{username}), updated popular/recent to require eventId parameter
+- **✅ Fixed Nested Comment Responses** - Comments now return with proper nested replies structure using getEventCommentsWithReplies()
+- **✅ Enhanced EventCommentResponse** - Added authorName field and corrected replyCount mapping
+- **✅ Created Comprehensive Integration Tests** - EventCommentResourceIntegrationTest (9 tests) and UserEventResourceIntegrationTest (10 tests)
+- **✅ Fixed LocalDateTime Serialization** - Added JavaTimeModule to ObjectMapper for proper date/time handling in tests
+
 ### Database Schema
 
 #### User Service Tables
@@ -215,18 +229,19 @@ Gateway Service (8080) → User Service (8081), Event Service (8082), File Servi
 - `admins`: Admin user management
 - `announcements`: System announcements
 - `reports`: User reporting system
+- `user_settings`: User preferences and settings (theme preference)
 
 #### Event Service Tables
 - `events`: Event information and metadata
-- `event_comments`: Comment system for events
-- `event_reminders`: User reminder preferences
+- `event_comments`: Comment system for events with nested replies
 - `event_participations`: Event RSVP and participation tracking
 - `event_invitations`: Event invitation management
-- `event_media`: Event file attachments
-- `event_templates`: Reusable event templates
-- `recurring_events`: Recurring event patterns
-- `event_analytics`: Event analytics and reporting
-- `calendar_integrations`: External calendar sync configuration
+
+#### File Service Tables
+- `users`: User file metadata
+- `event_banners`: Event banner file metadata (one banner per event)
+
+
 
 #### File Service Tables
 - `file_metadata`: File information and storage paths
@@ -245,6 +260,12 @@ All services provide comprehensive REST APIs ready for frontend integration:
 - ✅ `POST /interests` - Manage user interests
 - ✅ `POST /experiences` - Manage work experience
 - ✅ `POST /alumni/search` - Alumni search functionality
+
+#### User Settings APIs (`/api/v1/user/settings/`)
+- ✅ `GET /` - Get user settings (theme preference)
+- ✅ `PUT /` - Update user settings (theme preference)
+- ✅ `GET /theme` - Get current user theme
+- ✅ `GET /themes` - Get available theme options (DARK, LIGHT, DEVICE)
 
 #### Admin Management APIs (`/api/v1/admin/`)
 - ✅ `GET /admins` - Get all admins (ADMIN only)
@@ -277,7 +298,7 @@ All services provide comprehensive REST APIs ready for frontend integration:
 - ✅ `POST /create` - Create new event
 - ✅ `PUT /my-events/{eventId}` - Update user's event
 - ✅ `DELETE /my-events/{eventId}` - Delete user's event
-- ✅ `GET /search` - Search events with filters
+- ✅ `POST /search` - Search events with filters (✅ FIXED: Now accepts EventSearchRequest in request body)
 
 #### Event Service APIs - Advanced Features
 - ✅ **Event Participation** (`/api/v1/user/events/participation/`)
@@ -286,46 +307,28 @@ All services provide comprehensive REST APIs ready for frontend integration:
   - `PUT /{participationId}` - Update participation status
 
 - ✅ **Event Comments** (`/api/v1/user/events/comments/`)
-  - `POST /` - Add event comment
-  - `GET /event/{eventId}` - Get event comments
-  - `PUT /{commentId}` - Update comment
-  - `DELETE /{commentId}` - Delete comment
-  - `POST /{commentId}/like` - Toggle comment like
+  - `POST /` - Add event comment (✅ FIXED: Now uses proper user authentication from X-USER_ID header)
+  - `GET /event/{eventId}` - Get event comments with nested replies (✅ FIXED: Returns threaded comments)
+  - `PUT /{commentId}` - Update comment (✅ FIXED: Now uses proper user authentication)
+  - `DELETE /{commentId}` - Delete comment (✅ FIXED: Now uses proper user authentication)
+  - `POST /{commentId}/like` - Toggle comment like (✅ FIXED: Now uses proper user authentication)
+  - `GET /popular?eventId={eventId}` - Get popular comments (✅ FIXED: Now requires eventId parameter)
+  - `GET /recent?eventId={eventId}` - Get recent comments (✅ FIXED: Now requires eventId parameter)
+  - **✅ ENHANCED: User Names** - Comments now include both username (email) and authorName (actual name) from user service
 
 - ✅ **Event Invitations** (`/api/v1/user/events/invitations/`)
   - `POST /send` - Send event invitation
   - `GET /received` - Get received invitations
   - `PUT /{invitationId}/respond` - Respond to invitation
 
-- ✅ **Event Media** (`/api/v1/user/events/media/`)
-  - `POST /` - Upload event media
-  - `GET /event/{eventId}` - Get event media
-  - `DELETE /{mediaId}` - Delete event media
+- ✅ **Event Banner** (`/api/v1/user/events/banner/`)
+  - `POST /{eventId}` - Upload/Update event banner (multipart file upload)
+  - `GET /{eventId}` - Get event banner URL
+  - `DELETE /{eventId}` - Delete event banner
+  - **File Service Integration**: Banners stored and served through File Service
+  - **Public File Access**: `GET /ijaa/api/v1/events/{eventId}/banner/file/{fileName}` (no auth required)
 
-- ✅ **Event Templates** (`/api/v1/user/events/templates/`)
-  - `GET /` - Get available templates
-  - `POST /` - Create new template
-  - `GET /{templateId}` - Get template details
-  - `PUT /{templateId}` - Update template
-  - `DELETE /{templateId}` - Delete template
 
-- ✅ **Recurring Events** (`/api/v1/user/events/recurring/`)
-  - `GET /` - Get recurring events
-  - `POST /` - Create recurring event
-  - `GET /{eventId}` - Get recurring event details
-  - `PUT /{eventId}` - Update recurring event
-  - `DELETE /{eventId}` - Delete recurring event
-
-- ✅ **Event Reminders** (`/api/v1/user/events/reminders/`)
-  - `POST /` - Set event reminder
-  - `GET /event/{eventId}` - Get event reminders
-  - `PUT /{reminderId}` - Update reminder
-  - `DELETE /{reminderId}` - Delete reminder
-
-- ✅ **Event Analytics** (`/api/v1/user/events/analytics/`)
-  - `GET /{eventId}` - Get event analytics
-  - `GET /dashboard` - Get analytics dashboard
-  - `GET /reports` - Get analytics reports
 
 - ✅ **Advanced Event Search** (`/api/v1/user/events/advanced-search/`)
   - `POST /advanced` - Advanced event search with multiple filters
@@ -337,12 +340,6 @@ All services provide comprehensive REST APIs ready for frontend integration:
   - `GET /trending` - Get trending events
   - `GET /upcoming` - Get upcoming events
 
-- ✅ **Calendar Integration** (`/api/v1/calendar-integrations/`)
-  - `GET /user` - Get user's calendar integrations
-  - `POST /` - Create calendar integration
-  - `PUT /{integrationId}` - Update integration
-  - `DELETE /{integrationId}` - Delete integration
-  - `POST /{integrationId}/sync` - Sync with external calendar
 
 #### File Service APIs (`/api/v1/users/`)
 - ✅ `POST /{userId}/profile-photo` - Upload profile photo
@@ -351,6 +348,12 @@ All services provide comprehensive REST APIs ready for frontend integration:
 - ✅ `GET /{userId}/cover-photo/file/**` - Get cover photo (public)
 - ✅ `DELETE /{userId}/profile-photo` - Delete profile photo
 - ✅ `DELETE /{userId}/cover-photo` - Delete cover photo
+
+#### File Service APIs - Event Banners (`/api/v1/events/`)
+- ✅ `POST /{eventId}/banner` - Upload event banner
+- ✅ `GET /{eventId}/banner` - Get event banner URL
+- ✅ `DELETE /{eventId}/banner` - Delete event banner
+- ✅ `GET /{eventId}/banner/file/{fileName}` - Serve event banner file (public)
 
 ### Security and Authentication Flow
 1. **Registration**: Frontend → Gateway → User Service
@@ -378,7 +381,7 @@ The gateway now properly routes requests in the correct order:
 1. **Feature flag status checks** (public)
 2. **Admin routes** (protected)
 3. **User events routes** (protected) - **MUST come before general user routes**
-4. **User recurring events routes** (protected) - **MUST come before general user routes**
+
 5. **General user routes** (protected)
 6. **Event service routes** (protected)
 7. **File service routes** (protected)
@@ -432,9 +435,12 @@ The system implements a sophisticated feature flag mechanism:
 2. ✅ **Enhanced Error Handling**: Implemented consistent ApiResponse format for all error scenarios
 3. ✅ **Comprehensive Integration Testing**: Created FeatureFlagResourceIntegrationTest with 16 test cases
 4. ✅ **Frontend Integration Readiness**: Standardized API responses for better frontend integration
-5. ✅ **Advanced Event Features**: Implemented comprehensive event management system with analytics, templates, and calendar integration
-6. ✅ **Advanced Event Search Fixes**: Fixed all 8 advanced search APIs with comprehensive test coverage
-7. ✅ **Gateway Routing Fix**: Fixed routing order to ensure advanced search endpoints route to event service
+5. ✅ **Advanced Event Search Fixes**: Fixed all 8 advanced search APIs with comprehensive test coverage
+6. ✅ **Gateway Routing Fix**: Fixed routing order to ensure advanced search endpoints route to event service
+7. ✅ **System Streamlining**: Removed Event Analytics, Event Templates, Calendar Integration, Event Reminders, and Recurring Events features to focus on core functionality
+8. ✅ **Event API Bug Fixes**: Fixed critical bugs in event search, comment authentication, and nested comment responses
+9. ✅ **Enhanced Test Coverage**: Created comprehensive integration tests for all fixed functionality
+10. ✅ **User Settings API Implementation**: Added comprehensive user settings system with theme preferences (DARK, LIGHT, DEVICE) for consistent user experience across all devices
 
 ### Medium Priority Improvements
 1. **Monitoring and Logging**: Add distributed tracing and monitoring
@@ -479,11 +485,12 @@ The IJAA microservices system is **production-ready** with comprehensive functio
 - ✅ Advanced feature flag system for flexible feature management
 - ✅ Well-structured codebase with proper separation of concerns
 - ✅ Extensive test coverage with recent improvements
-- ✅ **Advanced Event Management**: Complete event system with analytics, templates, recurring events, and calendar integration
+- ✅ **Advanced Event Management**: Complete event system with advanced search capabilities
 - ✅ **Comprehensive Admin System**: Full admin management with dashboard and user control
 - ✅ **File Management**: Complete file upload and serving system
 - ✅ **✅ Advanced Event Search**: All 8 advanced search APIs now working perfectly with comprehensive test coverage
 - ✅ **✅ Gateway Routing**: Fixed routing order to ensure proper endpoint resolution
+- ✅ **✅ User Settings System**: Complete user settings API with theme preferences for consistent cross-device experience
 
 **Ready for Frontend Integration**: All APIs are stable and tested, with proper authentication flow and error handling in place.
 

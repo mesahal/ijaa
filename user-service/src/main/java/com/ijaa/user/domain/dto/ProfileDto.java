@@ -11,7 +11,12 @@ public class ProfileDto {
     private String name;
     @NotBlank(message = "Profession must not be blank")
     private String profession;
-    private String location;
+    // Location fields
+    private String location; // Keep for backward compatibility
+    private Long cityId;
+    private Long countryId;
+    private String cityName; // For display purposes
+    private String countryName; // For display purposes
     private String bio;
     private String phone;
     private String linkedIn;

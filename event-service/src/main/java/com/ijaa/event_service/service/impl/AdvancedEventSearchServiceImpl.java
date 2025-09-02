@@ -5,7 +5,6 @@ import com.ijaa.event_service.domain.entity.Event;
 import com.ijaa.event_service.domain.request.AdvancedEventSearchRequest;
 import com.ijaa.event_service.domain.response.EventResponse;
 import com.ijaa.event_service.repository.EventCommentRepository;
-import com.ijaa.event_service.repository.EventMediaRepository;
 import com.ijaa.event_service.repository.EventRepository;
 import com.ijaa.event_service.service.AdvancedEventSearchService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,6 @@ public class AdvancedEventSearchServiceImpl implements AdvancedEventSearchServic
 
     private final EventRepository eventRepository;
     private final EventCommentRepository eventCommentRepository;
-    private final EventMediaRepository eventMediaRepository;
 
     @Override
     public PagedResponse<EventResponse> searchEvents(AdvancedEventSearchRequest request) {
@@ -75,11 +73,12 @@ public class AdvancedEventSearchServiceImpl implements AdvancedEventSearchServic
                     .collect(Collectors.toList());
         }
 
-        if (hasMedia != null && hasMedia) {
-            filteredEvents = filteredEvents.stream()
-                    .filter(event -> eventMediaRepository.countByEventId(event.getId()) > 0)
-                    .collect(Collectors.toList());
-        }
+        // Note: Media filtering removed as we simplified to banner-only system
+        // if (hasMedia != null && hasMedia) {
+        //     filteredEvents = filteredEvents.stream()
+        //             .filter(event -> eventBannerRepository.existsByEventId(event.getId()))
+        //             .collect(Collectors.toList());
+        // }
 
         // Convert to responses
         List<EventResponse> responses = filteredEvents.stream()
@@ -156,8 +155,8 @@ public class AdvancedEventSearchServiceImpl implements AdvancedEventSearchServic
         List<Event> highEngagementEvents = events.stream()
                 .filter(event -> {
                     long commentCount = eventCommentRepository.countByEventId(event.getId());
-                    long mediaCount = eventMediaRepository.countByEventId(event.getId());
-                    return event.getCurrentParticipants() > 5 || commentCount > 2 || mediaCount > 1;
+                    // Note: Media filtering removed as we simplified to banner-only system
+                    return event.getCurrentParticipants() > 5 || commentCount > 2;
                 })
                 .limit(limit)
                 .collect(Collectors.toList());

@@ -14,6 +14,7 @@ public class FileStorageConfig {
     private String basePath;
     private String profilePhotosPath;
     private String coverPhotosPath;
+    private String eventBannersPath;
     private List<String> allowedImageTypes;
     private int maxFileSizeMb;
 
@@ -21,6 +22,7 @@ public class FileStorageConfig {
     public String getBasePath() { return basePath; }
     public String getProfilePhotosPath() { return profilePhotosPath; }
     public String getCoverPhotosPath() { return coverPhotosPath; }
+    public String getEventBannersPath() { return eventBannersPath; }
     public List<String> getAllowedImageTypes() { return allowedImageTypes; }
     public int getMaxFileSizeMb() { return maxFileSizeMb; }
 }

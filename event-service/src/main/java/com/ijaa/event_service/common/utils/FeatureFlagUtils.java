@@ -23,11 +23,8 @@ public class FeatureFlagUtils {
     public static final String EVENT_INVITATIONS = "events.invitations";
     public static final String EVENT_COMMENTS = "events.comments";
     public static final String EVENT_MEDIA = "events.media";
-    public static final String EVENT_TEMPLATES = "events.templates";
-    public static final String RECURRING_EVENTS = "events.recurring";
-    public static final String EVENT_ANALYTICS = "events.analytics";
-    public static final String EVENT_REMINDERS = "events.reminders";
-    public static final String CALENDAR_INTEGRATION = "calendar.integration";
+
+
 
     // Search Features
     public static final String ADVANCED_SEARCH = "search";
@@ -95,25 +92,9 @@ public class FeatureFlagUtils {
         return isFeatureEnabled(EVENT_MEDIA);
     }
 
-    public boolean isEventTemplatesEnabled() {
-        return isFeatureEnabled(EVENT_TEMPLATES);
-    }
 
-    public boolean isRecurringEventsEnabled() {
-        return isFeatureEnabled(RECURRING_EVENTS);
-    }
 
-    public boolean isEventAnalyticsEnabled() {
-        return isFeatureEnabled(EVENT_ANALYTICS);
-    }
 
-    public boolean isEventRemindersEnabled() {
-        return isFeatureEnabled(EVENT_REMINDERS);
-    }
-
-    public boolean isCalendarIntegrationEnabled() {
-        return isFeatureEnabled(CALENDAR_INTEGRATION);
-    }
 
     // Search Features
     public boolean isAdvancedSearchEnabled() {

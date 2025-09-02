@@ -44,10 +44,9 @@ public class SwaggerConfig {
                                 "- **Event Comments**: Event commenting system\n" +
                                 "- **Event Media**: Event media attachments\n" +
                                 "- **Event Invitations**: Event invitation management\n" +
-                                "- **Event Templates**: Reusable event templates\n" +
                                 "- **Recurring Events**: Recurring event patterns\n" +
-                                "- **Event Analytics**: Event analytics and reporting\n" +
-                                "- **Calendar Integration**: External calendar sync\n" +
+
+
                                 "- **Advanced Event Search**: Advanced search and recommendations\n" +
                                 "- **Event Reminders**: Event reminder management\n\n" +
                                 "## 🎯 Event Management Features\n" +
@@ -57,10 +56,9 @@ public class SwaggerConfig {
                                 "- **Event Invitations**: Send and manage invitations\n" +
                                 "- **Event Comments**: Commenting system for events\n" +
                                 "- **Event Media**: Media attachment support\n" +
-                                "- **Event Templates**: Reusable event templates\n" +
                                 "- **Recurring Events**: Support for recurring event patterns\n" +
-                                "- **Event Analytics**: Comprehensive analytics and reporting\n" +
-                                "- **Calendar Integration**: External calendar synchronization\n" +
+
+
                                 "- **Advanced Search**: Advanced search with multiple filters\n" +
                                 "- **Event Reminders**: Automated reminder system\n\n" +
                                 "## 📊 Sample Event Data\n" +

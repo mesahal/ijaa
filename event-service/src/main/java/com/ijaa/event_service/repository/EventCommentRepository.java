@@ -35,7 +35,15 @@ public interface EventCommentRepository extends JpaRepository<EventComment, Long
     @Query("SELECT c FROM EventComment c WHERE c.isDeleted = false ORDER BY c.createdAt DESC")
     Page<EventComment> findRecentComments(Pageable pageable);
 
+    // Find recent comments for a specific event
+    @Query("SELECT c FROM EventComment c WHERE c.eventId = :eventId AND c.isDeleted = false ORDER BY c.createdAt DESC")
+    Page<EventComment> findRecentCommentsByEventId(@Param("eventId") Long eventId, Pageable pageable);
+
     // Find comments with high engagement (likes)
     @Query("SELECT c FROM EventComment c WHERE c.isDeleted = false ORDER BY c.likes DESC")
     Page<EventComment> findPopularComments(Pageable pageable);
+
+    // Find popular comments for a specific event
+    @Query("SELECT c FROM EventComment c WHERE c.eventId = :eventId AND c.isDeleted = false ORDER BY c.likes DESC")
+    Page<EventComment> findPopularCommentsByEventId(@Param("eventId") Long eventId, Pageable pageable);
 } 

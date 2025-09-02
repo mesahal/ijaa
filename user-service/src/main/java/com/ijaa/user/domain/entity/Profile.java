@@ -30,6 +30,14 @@ public class Profile {
     @Column(length = 255)
     private String profession;
 
+    // Location fields - replaced single location with city and country
+    @Column(name = "city_id")
+    private Long cityId;
+
+    @Column(name = "country_id")
+    private Long countryId;
+
+    // Keep location for backward compatibility during migration
     @Column(length = 255)
     private String location;
 

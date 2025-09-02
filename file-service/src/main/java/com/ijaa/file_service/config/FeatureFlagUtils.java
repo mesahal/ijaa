@@ -20,6 +20,7 @@ public class FeatureFlagUtils {
     public static final String FILE_UPLOAD = "file-upload";
     public static final String FILE_UPLOAD_PROFILE_PHOTO = "file-upload.profile-photo";
     public static final String FILE_UPLOAD_COVER_PHOTO = "file-upload.cover-photo";
+    public static final String FILE_UPLOAD_EVENT_BANNER = "file-upload.event-banner";
     public static final String FILE_DOWNLOAD = "file-download";
     public static final String FILE_DELETE = "file-delete";
 
@@ -69,6 +70,14 @@ public class FeatureFlagUtils {
      */
     public boolean isCoverPhotoUploadEnabled() {
         return isFeatureEnabled(FILE_UPLOAD_COVER_PHOTO);
+    }
+
+    /**
+     * Check if event banner upload is enabled
+     * @return true if event banner upload is enabled
+     */
+    public boolean isEventBannerUploadEnabled() {
+        return isFeatureEnabled(FILE_UPLOAD_EVENT_BANNER);
     }
 
     /**

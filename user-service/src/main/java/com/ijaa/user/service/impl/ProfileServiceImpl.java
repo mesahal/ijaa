@@ -1,6 +1,8 @@
 package com.ijaa.user.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ijaa.user.domain.dto.CityDto;
+import com.ijaa.user.domain.dto.CountryDto;
 import com.ijaa.user.domain.dto.ExperienceDto;
 import com.ijaa.user.domain.dto.InterestDto;
 import com.ijaa.user.domain.dto.ProfileDto;
@@ -13,6 +15,7 @@ import com.ijaa.user.repository.InterestRepository;
 import com.ijaa.user.repository.ProfileRepository;
 import com.ijaa.user.repository.UserRepository;
 import com.ijaa.user.service.BaseService;
+import com.ijaa.user.service.LocationService;
 import com.ijaa.user.service.ProfileService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,17 +31,20 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
     private final ExperienceRepository experienceRepository;
     private final InterestRepository interestRepository;
     private final UserRepository userRepository;
+    private final LocationService locationService;
 
     public ProfileServiceImpl(ProfileRepository profileRepository,
                               ObjectMapper objectMapper,
                               ExperienceRepository experienceRepository,
                               InterestRepository interestRepository,
-                              UserRepository userRepository) {
+                              UserRepository userRepository,
+                              LocationService locationService) {
         super(objectMapper);
         this.profileRepository = profileRepository;
         this.experienceRepository = experienceRepository;
         this.interestRepository = interestRepository;
         this.userRepository = userRepository;
+        this.locationService = locationService;
     }
 
     @Override
@@ -218,6 +224,8 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
         if (dto.getName() != null) entity.setName(dto.getName());
         if (dto.getProfession() != null) entity.setProfession(dto.getProfession());
         if (dto.getLocation() != null) entity.setLocation(dto.getLocation());
+        if (dto.getCityId() != null) entity.setCityId(dto.getCityId());
+        if (dto.getCountryId() != null) entity.setCountryId(dto.getCountryId());
         if (dto.getBio() != null) entity.setBio(dto.getBio());
         if (dto.getPhone() != null) entity.setPhone(dto.getPhone());
         if (dto.getLinkedIn() != null) entity.setLinkedIn(dto.getLinkedIn());
@@ -241,9 +249,30 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
         dto.setName(entity.getName());
         dto.setProfession(entity.getProfession());
         dto.setLocation(entity.getLocation());
+        dto.setCityId(entity.getCityId());
+        dto.setCountryId(entity.getCountryId());
         dto.setBio(entity.getBio());
         dto.setBatch(entity.getBatch());
         dto.setConnections(entity.getConnections());
+        
+        // Populate location names if IDs are present
+        if (entity.getCityId() != null) {
+            try {
+                CityDto cityDto = locationService.getCityById(entity.getCityId());
+                dto.setCityName(cityDto.getName());
+            } catch (Exception e) {
+                // If city not found, keep the ID but don't set the name
+            }
+        }
+        
+        if (entity.getCountryId() != null) {
+            try {
+                CountryDto countryDto = locationService.getCountryById(entity.getCountryId());
+                dto.setCountryName(countryDto.getName());
+            } catch (Exception e) {
+                // If country not found, keep the ID but don't set the name
+            }
+        }
 
         // Always include visibility flags
         dto.setShowPhone(entity.getShowPhone());

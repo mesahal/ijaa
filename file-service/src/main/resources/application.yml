@@ -46,6 +46,7 @@ file:
     # OR use: base-path: ./uploads  # For project relative path
     profile-photos-path: ${file.storage.base-path}/profile
     cover-photos-path: ${file.storage.base-path}/cover
+    event-banners-path: ${file.storage.base-path}/event-banners
     allowed-image-types: jpg,jpeg,png,webp
     max-file-size-mb: 5
 

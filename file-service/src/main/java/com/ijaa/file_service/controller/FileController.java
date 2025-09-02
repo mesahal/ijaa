@@ -450,25 +450,25 @@ public class FileController {
         }
     }
 
-    @GetMapping("/{userId}/cover-photo/file/{fileName}")
+        @GetMapping("/{userId}/cover-photo/file/{fileName}")
     @Operation(
-            summary = "Get Cover Photo File",
-            description = "Serve the actual cover photo file. This endpoint returns the image file directly. **Public endpoint - no authentication required.**"
+        summary = "Get Cover Photo File",
+        description = "Serve the actual cover photo file. This endpoint returns the image file directly. **Public endpoint - no authentication required.**"
     )
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(
-                    responseCode = "200",
-                    description = "Cover photo file served successfully",
-                    content = @Content(mediaType = "image/*")
-            ),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(
-                    responseCode = "404",
-                    description = "Cover photo file not found"
-            )
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Cover photo file served successfully",
+            content = @Content(mediaType = "image/*")
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "404",
+            description = "Cover photo file not found"
+        )
     })
     public ResponseEntity<Resource> getCoverPhotoFile(
-            @Parameter(description = "User ID", example = "e76dbb07-7790-4862-95b0-e0aa96f7b2a3") @PathVariable String userId,
-            @Parameter(description = "File name", example = "abc123.jpg") @PathVariable String fileName) {
+        @Parameter(description = "User ID", example = "e76dbb07-7790-4862-95b0-e0aa96f7b2a3") @PathVariable String userId,
+        @Parameter(description = "File name", example = "abc123.jpg") @PathVariable String fileName) {
 
         log.info("Received cover photo file request for user: {}, file: {}", userId, fileName);
 

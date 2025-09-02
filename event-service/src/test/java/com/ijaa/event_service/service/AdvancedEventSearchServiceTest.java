@@ -5,7 +5,6 @@ import com.ijaa.event_service.domain.entity.Event;
 import com.ijaa.event_service.domain.request.AdvancedEventSearchRequest;
 import com.ijaa.event_service.domain.response.EventResponse;
 import com.ijaa.event_service.repository.EventCommentRepository;
-import com.ijaa.event_service.repository.EventMediaRepository;
 import com.ijaa.event_service.repository.EventRepository;
 import com.ijaa.event_service.service.impl.AdvancedEventSearchServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,8 +36,7 @@ class AdvancedEventSearchServiceTest {
     @Mock
     private EventCommentRepository eventCommentRepository;
 
-    @Mock
-    private EventMediaRepository eventMediaRepository;
+
 
     @InjectMocks
     private AdvancedEventSearchServiceImpl advancedEventSearchService;
@@ -302,9 +300,6 @@ class AdvancedEventSearchServiceTest {
         when(eventCommentRepository.countByEventId(2L)).thenReturn(5L);
         when(eventCommentRepository.countByEventId(1L)).thenReturn(3L);
         when(eventCommentRepository.countByEventId(3L)).thenReturn(1L);
-        when(eventMediaRepository.countByEventId(2L)).thenReturn(2L);
-        when(eventMediaRepository.countByEventId(1L)).thenReturn(1L);
-        when(eventMediaRepository.countByEventId(3L)).thenReturn(0L);
 
         // When
         List<EventResponse> result = advancedEventSearchService.getHighEngagementEvents(10);
@@ -314,7 +309,6 @@ class AdvancedEventSearchServiceTest {
         assertTrue(result.size() > 0);
         verify(eventRepository).findActiveEventsOrderByCurrentParticipantsDesc(any(Pageable.class));
         verify(eventCommentRepository, atLeastOnce()).countByEventId(anyLong());
-        verify(eventMediaRepository, atLeastOnce()).countByEventId(anyLong());
     }
 
     @Test
@@ -429,7 +423,6 @@ class AdvancedEventSearchServiceTest {
         Page<Event> eventPage = new PageImpl<>(Arrays.asList(testEvent1, testEvent2, testEvent3));
         when(eventRepository.findActiveEvents(any(Pageable.class))).thenReturn(eventPage);
         when(eventCommentRepository.countByEventId(anyLong())).thenReturn(5L);
-        when(eventMediaRepository.countByEventId(anyLong())).thenReturn(2L);
 
         // When
         PagedResponse<EventResponse> result = advancedEventSearchService.searchEvents(request);
@@ -439,6 +432,5 @@ class AdvancedEventSearchServiceTest {
         assertTrue(result.getContent().size() > 0);
         verify(eventRepository).findActiveEvents(any(Pageable.class));
         verify(eventCommentRepository, atLeastOnce()).countByEventId(anyLong());
-        verify(eventMediaRepository, atLeastOnce()).countByEventId(anyLong());
     }
 }

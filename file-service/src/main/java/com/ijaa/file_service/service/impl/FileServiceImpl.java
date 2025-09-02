@@ -4,10 +4,12 @@ import com.ijaa.file_service.config.FileStorageConfig;
 import com.ijaa.file_service.domain.dto.FileUploadResponse;
 import com.ijaa.file_service.domain.dto.PhotoUrlResponse;
 import com.ijaa.file_service.domain.entity.User;
+import com.ijaa.file_service.domain.entity.EventBanner;
 import com.ijaa.file_service.exceptions.FileStorageException;
 import com.ijaa.file_service.exceptions.InvalidFileTypeException;
 import com.ijaa.file_service.exceptions.UserNotFoundException;
 import com.ijaa.file_service.repository.UserRepository;
+import com.ijaa.file_service.repository.EventBannerRepository;
 import com.ijaa.file_service.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,7 @@ public class FileServiceImpl implements FileService {
 
     private final FileStorageConfig fileStorageConfig;
     private final UserRepository userRepository;
+    private final EventBannerRepository eventBannerRepository;
 
     @Override
     public FileUploadResponse uploadProfilePhoto(String userId, MultipartFile file) {
@@ -343,6 +346,163 @@ public class FileServiceImpl implements FileService {
             }
         } catch (IOException e) {
             log.warn("Could not delete file: {}", filePath, e);
+        }
+    }
+
+    // Event Banner methods
+    @Override
+    public FileUploadResponse uploadEventBanner(String eventId, MultipartFile file) {
+        log.info("Uploading event banner for event: {}", eventId);
+
+        try {
+            validateFile(file);
+            log.debug("File validation passed for event: {}", eventId);
+            // Create directory if it doesn't exist
+            Path uploadDir = Paths.get(fileStorageConfig.getEventBannersPath());
+            log.debug("Event banner upload directory: {}", uploadDir);
+            
+            // Check if directory exists and is writable
+            if (!Files.exists(uploadDir)) {
+                log.debug("Creating event banner upload directory: {}", uploadDir);
+                Files.createDirectories(uploadDir);
+                log.debug("Created event banner upload directory: {}", uploadDir);
+            }
+            
+            // Verify directory is writable
+            if (!Files.isWritable(uploadDir)) {
+                throw new FileStorageException("Upload directory is not writable: " + uploadDir);
+            }
+            
+            log.debug("Event banner upload directory is ready: {}", uploadDir);
+
+            // Delete old banner if exists
+            log.debug("Checking for existing banner for event: {}", eventId);
+            EventBanner existingBanner = eventBannerRepository.findByEventId(eventId).orElse(null);
+            if (existingBanner != null) {
+                log.debug("Found existing banner, deleting old file: {}", existingBanner.getFileName());
+                deleteFile(Paths.get(fileStorageConfig.getEventBannersPath()).resolve(existingBanner.getFileName()));
+            } else {
+                log.debug("No existing banner found for event: {}", eventId);
+            }
+
+            // Generate unique filename
+            String fileName = generateUniqueFileName(file.getOriginalFilename());
+            Path filePath = uploadDir.resolve(fileName);
+
+            // Save the file
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            // Store the banner info in the database
+            log.debug("Saving banner info to database for event: {}", eventId);
+            EventBanner banner = existingBanner != null ? existingBanner : new EventBanner();
+            banner.setEventId(eventId);
+            banner.setFileName(fileName);
+            banner.setFileSize(file.getSize());
+            banner.setFileType(file.getContentType());
+            
+            // Temporarily removing timestamp setting to test basic functionality
+            // LocalDateTime now = LocalDateTime.now();
+            // if (existingBanner == null) {
+            //     banner.setCreatedAt(now);
+            // }
+            // banner.setUpdatedAt(now);
+            
+            EventBanner savedBanner = eventBannerRepository.save(banner);
+            log.debug("Banner saved to database with ID: {}", savedBanner.getId());
+
+            String fileUrl = "/ijaa/api/v1/events/" + eventId + "/banner/file/" + fileName;
+
+            log.info("Event banner uploaded successfully for event: {}, file: {}", eventId, fileName);
+
+            return new FileUploadResponse(
+                    "Event banner uploaded successfully",
+                    fileUrl,
+                    fileName,
+                    file.getSize()
+            );
+
+        } catch (IOException e) {
+            log.error("IO Error uploading event banner for event: {} - Error: {}", eventId, e.getMessage(), e);
+            throw new FileStorageException("Failed to upload event banner: IO Error", e);
+        } catch (Exception e) {
+            log.error("Unexpected error uploading event banner for event: {} - Error: {} - Type: {}", 
+                     eventId, e.getMessage(), e.getClass().getSimpleName(), e);
+            throw new FileStorageException("Failed to upload event banner: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public PhotoUrlResponse getEventBannerUrl(String eventId) {
+        log.info("Getting event banner URL for event: {}", eventId);
+
+        try {
+            log.debug("Querying database for banner with eventId: {}", eventId);
+            EventBanner banner = eventBannerRepository.findByEventId(eventId)
+                    .orElse(null);
+
+            if (banner == null) {
+                log.debug("No banner found for event: {}", eventId);
+                return new PhotoUrlResponse(null, "No event banner found", false);
+            }
+
+            log.debug("Found banner for event: {}, fileName: {}", eventId, banner.getFileName());
+            String fileUrl = "/ijaa/api/v1/events/" + eventId + "/banner/file/" + banner.getFileName();
+
+            return new PhotoUrlResponse(fileUrl, "Event banner found", true);
+        } catch (Exception e) {
+            log.error("Error getting event banner URL for event: {}", eventId, e);
+            throw new RuntimeException("Failed to get event banner URL", e);
+        }
+    }
+
+    @Override
+    public Resource getEventBannerFile(String eventId, String fileName) {
+        log.info("Getting event banner file for event: {}, file: {}", eventId, fileName);
+
+        EventBanner banner = eventBannerRepository.findByEventId(eventId)
+                .orElse(null);
+
+        if (banner == null) {
+            throw new FileStorageException("No event banner found for event: " + eventId);
+        }
+
+        // Validate that the requested filename matches the stored filename
+        if (!fileName.equals(banner.getFileName())) {
+            throw new FileStorageException("File access denied: filename mismatch");
+        }
+
+        try {
+            Path filePath = Paths.get(fileStorageConfig.getEventBannersPath()).resolve(fileName);
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                return resource;
+            } else {
+                throw new FileStorageException("Event banner file not found: " + fileName);
+            }
+        } catch (Exception e) {
+            log.error("Error getting event banner file for event: {}, file: {}", eventId, fileName, e);
+            throw new FileStorageException("Failed to get event banner file", e);
+        }
+    }
+
+    @Override
+    public void deleteEventBanner(String eventId) {
+        log.info("Deleting event banner for event: {}", eventId);
+
+        EventBanner banner = eventBannerRepository.findByEventId(eventId)
+                .orElse(null);
+
+        if (banner != null) {
+            try {
+                Path filePath = Paths.get(fileStorageConfig.getEventBannersPath()).resolve(banner.getFileName());
+                deleteFile(filePath);
+                eventBannerRepository.delete(banner);
+                log.info("Event banner deleted successfully for event: {}", eventId);
+            } catch (Exception e) {
+                log.error("Error deleting event banner for event: {}", eventId, e);
+                throw new FileStorageException("Failed to delete event banner", e);
+            }
         }
     }
 }

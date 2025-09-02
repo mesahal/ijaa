@@ -39,14 +39,6 @@ public class GatewayConfig {
                                 .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://event"))
-                // User recurring events routes - MUST come before general user routes
-                .route(p-> p
-                        .path("/ijaa/api/v1/user/recurring-events/**")
-                        .filters(f-> f
-                                .filter(filter.apply(new AuthenticationFilter.Config()))
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
-                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://event"))
                 // User service routes (excluding events which are handled by event service)
                 .route(p-> p
                         .path("/ijaa/api/v1/user/**")
@@ -85,47 +77,12 @@ public class GatewayConfig {
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://event"))
                 .route(p-> p
-                        .path("/ijaa/api/v1/event-media/**")
+                        .path("/ijaa/api/v1/events/*/banner/**")
                         .filters(f-> f
                                 .filter(filter.apply(new AuthenticationFilter.Config()))
                                 .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://event"))
-                .route(p-> p
-                        .path("/ijaa/api/v1/event-reminders/**")
-                        .filters(f-> f
-                                .filter(filter.apply(new AuthenticationFilter.Config()))
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
-                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://event"))
-                .route(p-> p
-                        .path("/ijaa/api/v1/recurring-events/**")
-                        .filters(f-> f
-                                .filter(filter.apply(new AuthenticationFilter.Config()))
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
-                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://event"))
-                .route(p-> p
-                        .path("/ijaa/api/v1/event-templates/**")
-                        .filters(f-> f
-                                .filter(filter.apply(new AuthenticationFilter.Config()))
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
-                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://event"))
-                .route(p-> p
-                        .path("/ijaa/api/v1/event-analytics/**")
-                        .filters(f-> f
-                                .filter(filter.apply(new AuthenticationFilter.Config()))
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
-                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://event"))
-                .route(p-> p
-                        .path("/ijaa/api/v1/calendar-integrations/**")
-                        .filters(f-> f
-                                .filter(filter.apply(new AuthenticationFilter.Config()))
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
-                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://event"))
+                        .uri("lb://file-service"))
                 // File service routes - for user profile and cover photo management
                 .route(p-> p
                         .path("/ijaa/api/v1/users/**")
