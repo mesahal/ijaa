@@ -19,8 +19,7 @@ services:
     env: docker
     plan: free
     autoDeploy: true
-    dockerfilePath: Dockerfile
-    buildContext: ./discovery-service
+    dockerfilePath: ./discovery-service/Dockerfile
     containerPort: 8761
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -40,8 +39,7 @@ services:
     env: docker
     plan: free
     autoDeploy: true
-    dockerfilePath: Dockerfile
-    buildContext: ./config-service
+    dockerfilePath: ./config-service/Dockerfile
     containerPort: 8888
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -61,8 +59,7 @@ services:
     env: docker
     plan: free
     autoDeploy: true
-    dockerfilePath: Dockerfile
-    buildContext: ./user-service
+    dockerfilePath: ./user-service/Dockerfile
     containerPort: 8081
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -104,8 +101,7 @@ services:
     env: docker
     plan: free
     autoDeploy: true
-    dockerfilePath: Dockerfile
-    buildContext: ./event-service
+    dockerfilePath: ./event-service/Dockerfile
     containerPort: 8082
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -147,8 +143,7 @@ services:
     env: docker
     plan: free
     autoDeploy: true
-    dockerfilePath: Dockerfile
-    buildContext: ./file-service
+    dockerfilePath: ./file-service/Dockerfile
     containerPort: 8083
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -192,8 +187,7 @@ services:
     env: docker
     plan: free
     autoDeploy: true
-    dockerfilePath: Dockerfile
-    buildContext: ./gateway-service
+    dockerfilePath: ./gateway-service/Dockerfile
     containerPort: 8080
     envVars:
       - key: SPRING_PROFILES_ACTIVE
