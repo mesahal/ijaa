@@ -19,7 +19,8 @@ services:
     env: docker
     plan: free
     autoDeploy: true
-    dockerfilePath: discovery-service/Dockerfile
+    buildContext: discovery-service  # Add this line
+    dockerfilePath: Dockerfile
     containerPort: 8761
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -39,7 +40,8 @@ services:
     env: docker
     plan: free
     autoDeploy: true
-    dockerfilePath: config-service/Dockerfile
+    buildContext: config-service  # Add this line
+    dockerfilePath: Dockerfile
     containerPort: 8888
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -59,7 +61,8 @@ services:
     env: docker
     plan: free
     autoDeploy: true
-    dockerfilePath: user-service/Dockerfile
+    buildContext: user-service  # Add this line
+    dockerfilePath: Dockerfile
     containerPort: 8081
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -101,7 +104,8 @@ services:
     env: docker
     plan: free
     autoDeploy: true
-    dockerfilePath: event-service/Dockerfile
+    buildContext: event-service  # Add this line
+    dockerfilePath: Dockerfile
     containerPort: 8082
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -143,7 +147,8 @@ services:
     env: docker
     plan: free
     autoDeploy: true
-    dockerfilePath: file-service/Dockerfile
+    buildContext: file-service  # Add this line
+    dockerfilePath: Dockerfile       # Update path relative to buildContext
     containerPort: 8083
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -187,7 +192,8 @@ services:
     env: docker
     plan: free
     autoDeploy: true
-    dockerfilePath: gateway-service/Dockerfile
+    buildContext: gateway-service  # Add this line
+    dockerfilePath: Dockerfile       # Update path relative to buildContext
     containerPort: 8080
     envVars:
       - key: SPRING_PROFILES_ACTIVE
