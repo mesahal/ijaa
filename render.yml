@@ -1,17 +1,26 @@
 databases:
-  - name: ijaa-postgres
-    databaseName: ijaa_db
+  - name: ijaa-user-db
+    databaseName: ijaa_users
     user: ijaa_user
+    plan: free
+  - name: ijaa-event-db
+    databaseName: ijaa_events
+    user: ijaa_event
+    plan: free
+  - name: ijaa-file-db
+    databaseName: ijaa_files
+    user: ijaa_file
     plan: free
 
 services:
-  # Discovery Service (Eureka Server)
+  # Discovery Service (Eureka Server) - Must start first for service discovery
   - type: web
     name: ijaa-discovery-service
-    env: java
+    env: docker
     plan: free
-    buildCommand: cd discovery-service && mvn clean package -DskipTests
-    startCommand: cd discovery-service && java -jar target/discovery-service-0.0.1-SNAPSHOT.jar
+    autoDeploy: true
+    dockerfilePath: ./discovery-service/Dockerfile
+    containerPort: 8761
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -24,13 +33,14 @@ services:
       - key: EUREKA_INSTANCE_HOSTNAME
         value: ijaa-discovery-service.onrender.com
 
-  # Config Service
+  # Config Service - Must start second for configuration management
   - type: web
     name: ijaa-config-service
-    env: java
+    env: docker
     plan: free
-    buildCommand: cd config-service && mvn clean package -DskipTests
-    startCommand: cd config-service && java -jar target/config-service-0.0.1-SNAPSHOT.jar
+    autoDeploy: true
+    dockerfilePath: ./config-service/Dockerfile
+    containerPort: 8888
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -43,25 +53,26 @@ services:
       - key: EUREKA_INSTANCE_HOSTNAME
         value: ijaa-config-service.onrender.com
 
-  # User Service
+  # User Service - Core user management and authentication
   - type: web
     name: ijaa-user-service
-    env: java
+    env: docker
     plan: free
-    buildCommand: cd user-service && mvn clean package -DskipTests
-    startCommand: cd user-service && java -jar target/user-service-0.0.1-SNAPSHOT.jar
+    autoDeploy: true
+    dockerfilePath: ./user-service/Dockerfile
+    containerPort: 8081
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: SERVER_PORT
         value: 8081
       - key: SPRING_DATASOURCE_URL
-        value: postgresql://ijaa-postgres:5432/ijaa_db
+        value: postgresql://ijaa-user-db:5432/ijaa_users
       - key: SPRING_DATASOURCE_USERNAME
         value: ijaa_user
       - key: SPRING_DATASOURCE_PASSWORD
         fromDatabase:
-          name: ijaa-postgres
+          name: ijaa-user-db
           property: password
       - key: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
         value: https://ijaa-discovery-service.onrender.com/eureka/
@@ -69,6 +80,12 @@ services:
         value: ijaa-user-service.onrender.com
       - key: JWT_SECRET
         generateValue: true
+      - key: SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE
+        value: 10
+      - key: SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE
+        value: 5
+      - key: SPRING_DATASOURCE_HIKARI_CONNECTION_TIMEOUT
+        value: 30000
       - key: SPRING_JPA_HIBERNATE_DDL_AUTO
         value: update
       - key: SPRING_JPA_SHOW_SQL
@@ -79,26 +96,31 @@ services:
         value: classpath:db/schema.sql
       - key: SPRING_SQL_INIT_DATA_LOCATIONS
         value: classpath:db/data.sql
+      - key: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+        value: health,info,metrics
+      - key: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
+        value: always
 
-  # Event Service
+  # Event Service - Event management and advanced search
   - type: web
     name: ijaa-event-service
-    env: java
+    env: docker
     plan: free
-    buildCommand: cd event-service && mvn clean package -DskipTests
-    startCommand: cd event-service && java -jar target/event-service-0.0.1-SNAPSHOT.jar
+    autoDeploy: true
+    dockerfilePath: ./event-service/Dockerfile
+    containerPort: 8082
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: SERVER_PORT
         value: 8082
       - key: SPRING_DATASOURCE_URL
-        value: postgresql://ijaa-postgres:5432/ijaa_db
+        value: postgresql://ijaa-event-db:5432/ijaa_events
       - key: SPRING_DATASOURCE_USERNAME
-        value: ijaa_user
+        value: ijaa_event
       - key: SPRING_DATASOURCE_PASSWORD
         fromDatabase:
-          name: ijaa-postgres
+          name: ijaa-event-db
           property: password
       - key: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
         value: https://ijaa-discovery-service.onrender.com/eureka/
@@ -106,6 +128,12 @@ services:
         value: ijaa-event-service.onrender.com
       - key: JWT_SECRET
         generateValue: true
+      - key: SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE
+        value: 10
+      - key: SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE
+        value: 5
+      - key: SPRING_DATASOURCE_HIKARI_CONNECTION_TIMEOUT
+        value: 30000
       - key: SPRING_JPA_HIBERNATE_DDL_AUTO
         value: update
       - key: SPRING_JPA_SHOW_SQL
@@ -116,26 +144,31 @@ services:
         value: classpath:db/schema.sql
       - key: SPRING_SQL_INIT_DATA_LOCATIONS
         value: classpath:db/data.sql
+      - key: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+        value: health,info,metrics
+      - key: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
+        value: always
 
-  # File Service
+  # File Service - File upload and management
   - type: web
     name: ijaa-file-service
-    env: java
+    env: docker
     plan: free
-    buildCommand: cd file-service && mvn clean package -DskipTests
-    startCommand: cd file-service && java -jar target/file-service-0.0.1-SNAPSHOT.jar
+    autoDeploy: true
+    dockerfilePath: ./file-service/Dockerfile
+    containerPort: 8083
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: SERVER_PORT
         value: 8083
       - key: SPRING_DATASOURCE_URL
-        value: postgresql://ijaa-postgres:5432/ijaa_db
+        value: postgresql://ijaa-file-db:5432/ijaa_files
       - key: SPRING_DATASOURCE_USERNAME
-        value: ijaa_user
+        value: ijaa_file
       - key: SPRING_DATASOURCE_PASSWORD
         fromDatabase:
-          name: ijaa-postgres
+          name: ijaa-file-db
           property: password
       - key: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
         value: https://ijaa-discovery-service.onrender.com/eureka/
@@ -143,6 +176,12 @@ services:
         value: ijaa-file-service.onrender.com
       - key: JWT_SECRET
         generateValue: true
+      - key: SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE
+        value: 10
+      - key: SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE
+        value: 5
+      - key: SPRING_DATASOURCE_HIKARI_CONNECTION_TIMEOUT
+        value: 30000
       - key: SPRING_JPA_HIBERNATE_DDL_AUTO
         value: update
       - key: SPRING_JPA_SHOW_SQL
@@ -153,16 +192,21 @@ services:
         value: classpath:db/schema.sql
       - key: SPRING_SQL_INIT_DATA_LOCATIONS
         value: classpath:db/data.sql
+      - key: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+        value: health,info,metrics
+      - key: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
+        value: always
       - key: FILE_STORAGE_PATH
         value: /tmp/uploaded-files
 
-  # Gateway Service
+  # Gateway Service - API Gateway and routing (must start last)
   - type: web
     name: ijaa-gateway-service
-    env: java
+    env: docker
     plan: free
-    buildCommand: cd gateway-service && mvn clean package -DskipTests
-    startCommand: cd gateway-service && java -jar target/gateway-service-0.0.1-SNAPSHOT.jar
+    autoDeploy: true
+    dockerfilePath: ./gateway-service/Dockerfile
+    containerPort: 8080
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -180,3 +224,7 @@ services:
         value: https://ijaa-event-service.onrender.com
       - key: FILE_SERVICE_URL
         value: https://ijaa-file-service.onrender.com
+      - key: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+        value: health,info,metrics
+      - key: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
+        value: always

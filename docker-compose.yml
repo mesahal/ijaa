@@ -1,0 +1,200 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Databases
+  user-db:
+    image: postgres:15
+    container_name: ijaa-user-db
+    environment:
+      POSTGRES_DB: ijaa_users
+      POSTGRES_USER: ijaa_user
+      POSTGRES_PASSWORD: ijaa_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - user-db-data:/var/lib/postgresql/data
+    networks:
+      - ijaa-network
+
+  event-db:
+    image: postgres:15
+    container_name: ijaa-event-db
+    environment:
+      POSTGRES_DB: ijaa_events
+      POSTGRES_USER: ijaa_event
+      POSTGRES_PASSWORD: ijaa_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - event-db-data:/var/lib/postgresql/data
+    networks:
+      - ijaa-network
+
+  file-db:
+    image: postgres:15
+    container_name: ijaa-file-db
+    environment:
+      POSTGRES_DB: ijaa_files
+      POSTGRES_USER: ijaa_file
+      POSTGRES_PASSWORD: ijaa_password
+    ports:
+      - "5434:5432"
+    volumes:
+      - file-db-data:/var/lib/postgresql/data
+    networks:
+      - ijaa-network
+
+  # Discovery Service
+  discovery-service:
+    build:
+      context: ./discovery-service
+      dockerfile: Dockerfile
+    container_name: ijaa-discovery-service
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SERVER_PORT=8761
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=false
+      - EUREKA_INSTANCE_HOSTNAME=discovery-service
+    depends_on:
+      - user-db
+      - event-db
+      - file-db
+    networks:
+      - ijaa-network
+
+  # Config Service
+  config-service:
+    build:
+      context: ./config-service
+      dockerfile: Dockerfile
+    container_name: ijaa-config-service
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SERVER_PORT=8888
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=config-service
+    depends_on:
+      - discovery-service
+    networks:
+      - ijaa-network
+
+  # User Service
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    container_name: ijaa-user-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SERVER_PORT=8081
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://user-db:5432/ijaa_users
+      - SPRING_DATASOURCE_USERNAME=ijaa_user
+      - SPRING_DATASOURCE_PASSWORD=ijaa_password
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=user-service
+      - JWT_SECRET=dev-secret-key
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_SQL_INIT_MODE=always
+      - SPRING_SQL_INIT_SCHEMA_LOCATIONS=classpath:db/schema.sql
+      - SPRING_SQL_INIT_DATA_LOCATIONS=classpath:db/data.sql
+    depends_on:
+      - discovery-service
+      - user-db
+    networks:
+      - ijaa-network
+
+  # Event Service
+  event-service:
+    build:
+      context: ./event-service
+      dockerfile: Dockerfile
+    container_name: ijaa-event-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SERVER_PORT=8082
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://event-db:5432/ijaa_events
+      - SPRING_DATASOURCE_USERNAME=ijaa_event
+      - SPRING_DATASOURCE_PASSWORD=ijaa_password
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=event-service
+      - JWT_SECRET=dev-secret-key
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_SQL_INIT_MODE=always
+      - SPRING_SQL_INIT_SCHEMA_LOCATIONS=classpath:db/schema.sql
+      - SPRING_SQL_INIT_DATA_LOCATIONS=classpath:db/data.sql
+    depends_on:
+      - discovery-service
+      - event-db
+    networks:
+      - ijaa-network
+
+  # File Service
+  file-service:
+    build:
+      context: ./file-service
+      dockerfile: Dockerfile
+    container_name: ijaa-file-service
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SERVER_PORT=8083
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://file-db:5432/ijaa_files
+      - SPRING_DATASOURCE_USERNAME=ijaa_file
+      - SPRING_DATASOURCE_PASSWORD=ijaa_password
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=file-service
+      - JWT_SECRET=dev-secret-key
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_SQL_INIT_MODE=always
+      - SPRING_SQL_INIT_SCHEMA_LOCATIONS=classpath:db/schema.sql
+      - SPRING_SQL_INIT_DATA_LOCATIONS=classpath:db/data.sql
+      - FILE_STORAGE_PATH=/tmp/uploaded-files
+    depends_on:
+      - discovery-service
+      - file-db
+    networks:
+      - ijaa-network
+
+  # Gateway Service
+  gateway-service:
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    container_name: ijaa-gateway-service
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SERVER_PORT=8080
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=gateway-service
+      - JWT_SECRET=dev-secret-key
+      - USER_SERVICE_URL=http://user-service:8081
+      - EVENT_SERVICE_URL=http://event-service:8082
+      - FILE_SERVICE_URL=http://file-service:8083
+    depends_on:
+      - discovery-service
+      - user-service
+      - event-service
+      - file-service
+    networks:
+      - ijaa-network
+
+volumes:
+  user-db-data:
+  event-db-data:
+  file-db-data:
+
+networks:
+  ijaa-network:
+    driver: bridge
