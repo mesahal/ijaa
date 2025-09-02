@@ -81,7 +81,7 @@ git push origin main
 
 **Solution**: 
 1. ✅ **FIXED**: We've switched from Docker to Java deployment
-2. Verify that `render.yml` uses `env: java` for all services
+2. Verify that `render.yaml` uses `runtime: java` for all services
 3. Check that build commands use correct service directories
 4. Ensure GitHub repository is up to date
 

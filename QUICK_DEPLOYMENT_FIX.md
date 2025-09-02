@@ -22,7 +22,7 @@ containerPort: 8761  # ❌ This field was causing the error
 ### **After (Working):**
 ```yaml
 # ✅ No containerPort field - Render handles ports automatically
-env: java
+runtime: java
 buildCommand: cd discovery-service && mvn clean package -Dmaven.test.skip=true
 startCommand: cd discovery-service && java -jar target/discovery-service-0.0.1-SNAPSHOT.jar
 ```
@@ -64,6 +64,6 @@ After deployment, you'll have:
 - **Use Blueprint deployment** - Don't create individual services
 - **File must be named `render.yaml`** (Render expects `.yaml` extension)
 - **No `containerPort` fields** - Render handles ports automatically
-- **All services use `env: java`** - Best compatibility with Render
+- **All services use `runtime: java`** - Best compatibility with Render
 
 **Push this fix and deploy - it will work now!** 🚀

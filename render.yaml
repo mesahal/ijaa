@@ -16,7 +16,7 @@ services:
   # Discovery Service (Eureka Server) - Must start first for service discovery
   - type: web
     name: ijaa-discovery-service
-    env: java
+    runtime: java
     plan: free
     autoDeploy: true
     buildCommand: cd discovery-service && mvn clean package -Dmaven.test.skip=true
@@ -36,7 +36,7 @@ services:
   # Config Service - Must start second for configuration management
   - type: web
     name: ijaa-config-service
-    env: java
+    runtime: java
     plan: free
     autoDeploy: true
     buildCommand: cd config-service && mvn clean package -Dmaven.test.skip=true
@@ -56,7 +56,7 @@ services:
   # User Service - Core user management and authentication
   - type: web
     name: ijaa-user-service
-    env: java
+    runtime: java
     plan: free
     autoDeploy: true
     buildCommand: cd user-service && mvn clean package -Dmaven.test.skip=true
@@ -98,7 +98,7 @@ services:
   # Event Service - Event management and advanced search
   - type: web
     name: ijaa-event-service
-    env: java
+    runtime: java
     plan: free
     autoDeploy: true
     buildCommand: cd event-service && mvn clean package -Dmaven.test.skip=true
@@ -140,7 +140,7 @@ services:
   # File Service - File upload and management
   - type: web
     name: ijaa-file-service
-    env: java
+    runtime: java
     plan: free
     autoDeploy: true
     buildCommand: cd file-service && mvn clean package -Dmaven.test.skip=true
@@ -176,7 +176,7 @@ services:
   # Gateway Service - API Gateway and routing (must start last)
   - type: web
     name: ijaa-gateway-service
-    env: java
+    runtime: java
     plan: free
     autoDeploy: true
     buildCommand: cd gateway-service && mvn clean package -Dmaven.test.skip=true
