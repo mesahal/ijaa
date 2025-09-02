@@ -5,13 +5,13 @@ FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 
 # Copy pom.xml first for better layer caching
-COPY pom.xml .
+COPY file-service/pom.xml .
 
 # Download dependencies
 RUN mvn dependency:go-offline -B
 
 # Copy source code
-COPY src ./src
+COPY file-service/src ./src
 
 # Build the application
 RUN mvn clean package -Dmaven.test.skip=true
@@ -22,14 +22,14 @@ FROM eclipse-temurin:17-jre-jammy
 # Install curl for health checks
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
+# Create upload directory
+RUN mkdir -p /tmp/uploaded-files
+
 # Set working directory
 WORKDIR /app
 
 # Copy the built JAR from build stage
 COPY --from=build /app/target/file-service-0.0.1-SNAPSHOT.jar app.jar
-
-# Create upload directory
-RUN mkdir -p /tmp/uploaded-files
 
 # Expose port
 EXPOSE 8083

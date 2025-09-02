@@ -5,13 +5,13 @@ FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 
 # Copy pom.xml first for better layer caching
-COPY pom.xml .
+COPY discovery-service/pom.xml .
 
 # Download dependencies
 RUN mvn dependency:go-offline -B
 
 # Copy source code
-COPY src ./src
+COPY discovery-service/src ./src
 
 # Build the application
 RUN mvn clean package -Dmaven.test.skip=true

@@ -5,13 +5,13 @@ FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 
 # Copy pom.xml first for better layer caching
-COPY pom.xml .
+COPY config-service/pom.xml .
 
 # Download dependencies
 RUN mvn dependency:go-offline -B
 
 # Copy source code
-COPY src ./src
+COPY config-service/src ./src
 
 # Build the application
 RUN mvn clean package -Dmaven.test.skip=true
@@ -29,11 +29,11 @@ WORKDIR /app
 COPY --from=build /app/target/config-service-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose port
-EXPOSE 8888
+EXPOSE 8071
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
-  CMD curl -f http://localhost:8888/actuator/health || exit 1
+  CMD curl -f http://localhost:8071/actuator/health || exit 1
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
