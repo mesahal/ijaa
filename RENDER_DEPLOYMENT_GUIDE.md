@@ -9,19 +9,20 @@
 ## 🔧 **Current Configuration Status**
 
 ### ✅ **Fixed Issues:**
-1. **Dockerfile Paths**: All services now use correct relative paths
-2. **Test Compilation**: All Dockerfiles use `-Dmaven.test.skip=true`
-3. **Database Configuration**: Separate databases for each service
-4. **Environment Variables**: Proper configuration for production deployment
-5. **Service Dependencies**: Correct startup order defined
+1. **Deployment Strategy**: Changed from Docker to Java deployment for better Render compatibility
+2. **Build Commands**: Each service uses `cd <service> && mvn clean package -Dmaven.test.skip=true`
+3. **Start Commands**: Each service uses `cd <service> && java -jar target/<service>-0.0.1-SNAPSHOT.jar`
+4. **Database Configuration**: Separate databases for each service
+5. **Environment Variables**: Proper configuration for production deployment
+6. **Service Dependencies**: Correct startup order defined
 
-### 📁 **Service Dockerfiles:**
-- `./discovery-service/Dockerfile` ✅
-- `./config-service/Dockerfile` ✅
-- `./user-service/Dockerfile` ✅
-- `./event-service/Dockerfile` ✅
-- `./file-service/Dockerfile` ✅
-- `./gateway-service/Dockerfile` ✅
+### 📁 **Service Build Commands:**
+- `cd discovery-service && mvn clean package -Dmaven.test.skip=true` ✅
+- `cd config-service && mvn clean package -Dmaven.test.skip=true` ✅
+- `cd user-service && mvn clean package -Dmaven.test.skip=true` ✅
+- `cd event-service && mvn clean package -Dmaven.test.skip=true` ✅
+- `cd file-service && mvn clean package -Dmaven.test.skip=true` ✅
+- `cd gateway-service && mvn clean package -Dmaven.test.skip=true` ✅
 
 ## 🚀 **Deployment Steps**
 
@@ -74,14 +75,15 @@ git push origin main
 
 ## 🚨 **Troubleshooting**
 
-### **If You Still Get Dockerfile Error:**
+### **If You Still Get Build Error:**
 
 **Error**: `failed to read dockerfile: open Dockerfile: no such file or directory`
 
 **Solution**: 
-1. Verify all Dockerfiles exist in their directories
-2. Check that `render.yml` has correct `dockerfilePath` values
-3. Ensure GitHub repository is up to date
+1. ✅ **FIXED**: We've switched from Docker to Java deployment
+2. Verify that `render.yml` uses `env: java` for all services
+3. Check that build commands use correct service directories
+4. Ensure GitHub repository is up to date
 
 ### **Common Issues:**
 

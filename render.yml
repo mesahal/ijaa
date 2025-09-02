@@ -16,11 +16,11 @@ services:
   # Discovery Service (Eureka Server) - Must start first for service discovery
   - type: web
     name: ijaa-discovery-service
-    env: docker
+    env: java
     plan: free
     autoDeploy: true
-    buildContext: discovery-service  # Add this line
-    dockerfilePath: Dockerfile
+    buildCommand: cd discovery-service && mvn clean package -Dmaven.test.skip=true
+    startCommand: cd discovery-service && java -jar target/discovery-service-0.0.1-SNAPSHOT.jar
     containerPort: 8761
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -37,11 +37,11 @@ services:
   # Config Service - Must start second for configuration management
   - type: web
     name: ijaa-config-service
-    env: docker
+    env: java
     plan: free
     autoDeploy: true
-    buildContext: config-service  # Add this line
-    dockerfilePath: Dockerfile
+    buildCommand: cd config-service && mvn clean package -Dmaven.test.skip=true
+    startCommand: cd config-service && java -jar target/config-service-0.0.1-SNAPSHOT.jar
     containerPort: 8888
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -58,11 +58,11 @@ services:
   # User Service - Core user management and authentication
   - type: web
     name: ijaa-user-service
-    env: docker
+    env: java
     plan: free
     autoDeploy: true
-    buildContext: user-service  # Add this line
-    dockerfilePath: Dockerfile
+    buildCommand: cd user-service && mvn clean package -Dmaven.test.skip=true
+    startCommand: cd user-service && java -jar target/user-service-0.0.1-SNAPSHOT.jar
     containerPort: 8081
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -101,11 +101,11 @@ services:
   # Event Service - Event management and advanced search
   - type: web
     name: ijaa-event-service
-    env: docker
+    env: java
     plan: free
     autoDeploy: true
-    buildContext: event-service  # Add this line
-    dockerfilePath: Dockerfile
+    buildCommand: cd event-service && mvn clean package -Dmaven.test.skip=true
+    startCommand: cd event-service && java -jar target/event-service-0.0.1-SNAPSHOT.jar
     containerPort: 8082
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -144,11 +144,11 @@ services:
   # File Service - File upload and management
   - type: web
     name: ijaa-file-service
-    env: docker
+    env: java
     plan: free
     autoDeploy: true
-    buildContext: file-service  # Add this line
-    dockerfilePath: Dockerfile       # Update path relative to buildContext
+    buildCommand: cd file-service && mvn clean package -Dmaven.test.skip=true
+    startCommand: cd file-service && java -jar target/file-service-0.0.1-SNAPSHOT.jar
     containerPort: 8083
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -189,11 +189,11 @@ services:
   # Gateway Service - API Gateway and routing (must start last)
   - type: web
     name: ijaa-gateway-service
-    env: docker
+    env: java
     plan: free
     autoDeploy: true
-    buildContext: gateway-service  # Add this line
-    dockerfilePath: Dockerfile       # Update path relative to buildContext
+    buildCommand: cd gateway-service && mvn clean package -Dmaven.test.skip=true
+    startCommand: cd gateway-service && java -jar target/gateway-service-0.0.1-SNAPSHOT.jar
     containerPort: 8080
     envVars:
       - key: SPRING_PROFILES_ACTIVE
