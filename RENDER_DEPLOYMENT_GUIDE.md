@@ -42,7 +42,7 @@ git push origin main
 
 ### **Step 3: Deploy with Blueprint**
 
-1. **Render will automatically detect the `render.yml`**
+1. **Render will automatically detect the `render.yaml`**
 2. **Click "Apply" to deploy all services**
 3. **Wait for deployment to complete** (this may take 10-15 minutes)
 

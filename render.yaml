@@ -21,7 +21,6 @@ services:
     autoDeploy: true
     buildCommand: cd discovery-service && mvn clean package -Dmaven.test.skip=true
     startCommand: cd discovery-service && java -jar target/discovery-service-0.0.1-SNAPSHOT.jar
-    containerPort: 8761
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -42,7 +41,6 @@ services:
     autoDeploy: true
     buildCommand: cd config-service && mvn clean package -Dmaven.test.skip=true
     startCommand: cd config-service && java -jar target/config-service-0.0.1-SNAPSHOT.jar
-    containerPort: 8888
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -63,7 +61,6 @@ services:
     autoDeploy: true
     buildCommand: cd user-service && mvn clean package -Dmaven.test.skip=true
     startCommand: cd user-service && java -jar target/user-service-0.0.1-SNAPSHOT.jar
-    containerPort: 8081
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -106,7 +103,6 @@ services:
     autoDeploy: true
     buildCommand: cd event-service && mvn clean package -Dmaven.test.skip=true
     startCommand: cd event-service && java -jar target/event-service-0.0.1-SNAPSHOT.jar
-    containerPort: 8082
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -149,20 +145,19 @@ services:
     autoDeploy: true
     buildCommand: cd file-service && mvn clean package -Dmaven.test.skip=true
     startCommand: cd file-service && java -jar target/file-service-0.0.1-SNAPSHOT.jar
-    containerPort: 8083
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: SERVER_PORT
         value: 8083
-      - key: SPRING_DATASOURCE_URL
-        value: postgresql://ijaa_file:${ijaa-file-db.password}@${ijaa-file-db.host}:${ijaa-file-db.port}/ijaa_files
       - key: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
         value: https://ijaa-discovery-service.onrender.com/eureka/
       - key: EUREKA_INSTANCE_HOSTNAME
         value: ijaa-file-service.onrender.com
       - key: JWT_SECRET
         generateValue: true
+      - key: SPRING_DATASOURCE_URL
+        value: postgresql://ijaa_file:${ijaa-file-db.password}@${ijaa-file-db.host}:${ijaa-file-db.port}/ijaa_files
       - key: SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE
         value: 10
       - key: SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE
@@ -173,18 +168,10 @@ services:
         value: update
       - key: SPRING_JPA_SHOW_SQL
         value: false
-      - key: SPRING_SQL_INIT_MODE
-        value: always
-      - key: SPRING_SQL_INIT_SCHEMA_LOCATIONS
-        value: classpath:db/schema.sql
-      - key: SPRING_SQL_INIT_DATA_LOCATIONS
-        value: classpath:db/data.sql
       - key: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
         value: health,info,metrics
       - key: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
         value: always
-      - key: FILE_STORAGE_PATH
-        value: /tmp/uploaded-files
 
   # Gateway Service - API Gateway and routing (must start last)
   - type: web
@@ -194,7 +181,6 @@ services:
     autoDeploy: true
     buildCommand: cd gateway-service && mvn clean package -Dmaven.test.skip=true
     startCommand: cd gateway-service && java -jar target/gateway-service-0.0.1-SNAPSHOT.jar
-    containerPort: 8080
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -206,13 +192,39 @@ services:
         value: ijaa-gateway-service.onrender.com
       - key: JWT_SECRET
         generateValue: true
-      - key: USER_SERVICE_URL
-        value: https://ijaa-user-service.onrender.com
-      - key: EVENT_SERVICE_URL
-        value: https://ijaa-event-service.onrender.com
-      - key: FILE_SERVICE_URL
-        value: https://ijaa-file-service.onrender.com
-      - key: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
-        value: health,info,metrics
-      - key: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
-        value: always
+      - key: SPRING_CLOUD_GATEWAY_ROUTES_0_ID
+        value: user-service
+      - key: SPRING_CLOUD_GATEWAY_ROUTES_0_URI
+        value: lb://ijaa-user-service
+      - key: SPRING_CLOUD_GATEWAY_ROUTES_0_PREDICATES_0
+        value: Path=/ijaa/api/v1/user/**
+      - key: SPRING_CLOUD_GATEWAY_ROUTES_1_ID
+        value: event-service
+      - key: SPRING_CLOUD_GATEWAY_ROUTES_1_URI
+        value: lb://ijaa-event-service
+      - key: SPRING_CLOUD_GATEWAY_ROUTES_1_PREDICATES_0
+        value: Path=/ijaa/api/v1/user/events/**
+      - key: SPRING_CLOUD_GATEWAY_ROUTES_2_ID
+        value: file-service
+      - key: SPRING_CLOUD_GATEWAY_ROUTES_2_URI
+        value: lb://ijaa-file-service
+      - key: SPRING_CLOUD_GATEWAY_ROUTES_2_PREDICATES_0
+        value: Path=/ijaa/api/v1/users/**
+      - key: SPRING_CLOUD_GATEWAY_ROUTES_3_ID
+        value: admin-service
+      - key: SPRING_CLOUD_GATEWAY_ROUTES_3_URI
+        value: lb://ijaa-user-service
+      - key: SPRING_CLOUD_GATEWAY_ROUTES_3_PREDICATES_0
+        value: Path=/ijaa/api/v1/admin/**
+      - key: SPRING_CLOUD_GATEWAY_ROUTES_4_ID
+        value: public-files
+      - key: SPRING_CLOUD_GATEWAY_ROUTES_4_URI
+        value: lb://ijaa-file-service
+      - key: SPRING_CLOUD_GATEWAY_ROUTES_4_PREDICATES_0
+        value: Path=/ijaa/api/v1/events/*/banner/file/**
+      - key: SPRING_CLOUD_GATEWAY_ROUTES_5_ID
+        value: feature-flags
+      - key: SPRING_CLOUD_GATEWAY_ROUTES_5_URI
+        value: lb://ijaa-user-service
+      - key: SPRING_CLOUD_GATEWAY_ROUTES_5_PREDICATES_0
+        value: Path=/ijaa/api/v1/admin/feature-flags/*/enabled
