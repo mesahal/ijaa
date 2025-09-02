@@ -19,6 +19,7 @@ services:
     env: docker
     plan: free
     autoDeploy: true
+    dockerContext: ./discovery-service
     dockerfilePath: ./discovery-service/Dockerfile
     containerPort: 8761
     envVars:
@@ -39,6 +40,7 @@ services:
     env: docker
     plan: free
     autoDeploy: true
+    dockerContext: ./config-service
     dockerfilePath: ./config-service/Dockerfile
     containerPort: 8888
     envVars:
@@ -59,6 +61,7 @@ services:
     env: docker
     plan: free
     autoDeploy: true
+    dockerContext: ./user-service
     dockerfilePath: ./user-service/Dockerfile
     containerPort: 8081
     envVars:
@@ -101,6 +104,7 @@ services:
     env: docker
     plan: free
     autoDeploy: true
+    dockerContext: ./event-service
     dockerfilePath: ./event-service/Dockerfile
     containerPort: 8082
     envVars:
@@ -143,6 +147,7 @@ services:
     env: docker
     plan: free
     autoDeploy: true
+    dockerContext: ./file-service
     dockerfilePath: ./file-service/Dockerfile
     containerPort: 8083
     envVars:
@@ -187,6 +192,7 @@ services:
     env: docker
     plan: free
     autoDeploy: true
+    dockerContext: ./gateway-service
     dockerfilePath: ./gateway-service/Dockerfile
     containerPort: 8080
     envVars:
