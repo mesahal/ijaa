@@ -7,9 +7,9 @@ field containerport not found in typefile.service
 
 ## ✅ **The Solution Applied:**
 
-1. **Removed `containerPort` fields** - These were causing the parsing error
-2. **Fixed file extension** - Changed from `render.yml` to `render.yaml` (Render expects `.yaml`)
-3. **Simplified configuration** - Removed unnecessary fields that Render doesn't expect
+1. **Switched to Docker deployment** - Using `env: docker` with individual Dockerfiles
+2. **Fixed file extension** - Using `render.yaml` (Render expects `.yaml`)
+3. **Simplified configuration** - Removed problematic `runtime` fields
 4. **Added proper gateway routing** - Configured all API routes properly
 
 ## 🔧 **What Was Fixed:**
@@ -21,10 +21,9 @@ containerPort: 8761  # ❌ This field was causing the error
 
 ### **After (Working):**
 ```yaml
-# ✅ No containerPort field - Render handles ports automatically
-runtime: java
-buildCommand: cd discovery-service && mvn clean package -Dmaven.test.skip=true
-startCommand: cd discovery-service && java -jar target/discovery-service-0.0.1-SNAPSHOT.jar
+# ✅ Using Docker deployment with individual Dockerfiles
+env: docker
+dockerfilePath: ./discovery-service/Dockerfile
 ```
 
 ## 🚀 **Next Steps:**
@@ -64,6 +63,6 @@ After deployment, you'll have:
 - **Use Blueprint deployment** - Don't create individual services
 - **File must be named `render.yaml`** (Render expects `.yaml` extension)
 - **No `containerPort` fields** - Render handles ports automatically
-- **All services use `runtime: java`** - Best compatibility with Render
+- **All services use `env: docker`** - Best compatibility with Render Blueprint
 
 **Push this fix and deploy - it will work now!** 🚀

@@ -16,11 +16,10 @@ services:
   # Discovery Service (Eureka Server) - Must start first for service discovery
   - type: web
     name: ijaa-discovery-service
-    runtime: java
+    env: docker
     plan: free
     autoDeploy: true
-    buildCommand: cd discovery-service && mvn clean package -Dmaven.test.skip=true
-    startCommand: cd discovery-service && java -jar target/discovery-service-0.0.1-SNAPSHOT.jar
+    dockerfilePath: ./discovery-service/Dockerfile
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -36,11 +35,10 @@ services:
   # Config Service - Must start second for configuration management
   - type: web
     name: ijaa-config-service
-    runtime: java
+    env: docker
     plan: free
     autoDeploy: true
-    buildCommand: cd config-service && mvn clean package -Dmaven.test.skip=true
-    startCommand: cd config-service && java -jar target/config-service-0.0.1-SNAPSHOT.jar
+    dockerfilePath: ./config-service/Dockerfile
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -56,11 +54,10 @@ services:
   # User Service - Core user management and authentication
   - type: web
     name: ijaa-user-service
-    runtime: java
+    env: docker
     plan: free
     autoDeploy: true
-    buildCommand: cd user-service && mvn clean package -Dmaven.test.skip=true
-    startCommand: cd user-service && java -jar target/user-service-0.0.1-SNAPSHOT.jar
+    dockerfilePath: ./user-service/Dockerfile
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -98,11 +95,10 @@ services:
   # Event Service - Event management and advanced search
   - type: web
     name: ijaa-event-service
-    runtime: java
+    env: docker
     plan: free
     autoDeploy: true
-    buildCommand: cd event-service && mvn clean package -Dmaven.test.skip=true
-    startCommand: cd event-service && java -jar target/event-service-0.0.1-SNAPSHOT.jar
+    dockerfilePath: ./event-service/Dockerfile
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -140,11 +136,10 @@ services:
   # File Service - File upload and management
   - type: web
     name: ijaa-file-service
-    runtime: java
+    env: docker
     plan: free
     autoDeploy: true
-    buildCommand: cd file-service && mvn clean package -Dmaven.test.skip=true
-    startCommand: cd file-service && java -jar target/file-service-0.0.1-SNAPSHOT.jar
+    dockerfilePath: ./file-service/Dockerfile
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -176,11 +171,10 @@ services:
   # Gateway Service - API Gateway and routing (must start last)
   - type: web
     name: ijaa-gateway-service
-    runtime: java
+    env: docker
     plan: free
     autoDeploy: true
-    buildCommand: cd gateway-service && mvn clean package -Dmaven.test.skip=true
-    startCommand: cd gateway-service && java -jar target/gateway-service-0.0.1-SNAPSHOT.jar
+    dockerfilePath: ./gateway-service/Dockerfile
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
