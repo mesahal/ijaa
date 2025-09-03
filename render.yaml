@@ -95,20 +95,6 @@
       value: health,info,metrics
     - key: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
       value: always
-    - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_UPDATES
-      value: true
-    - key: SPRING_JPA_PROPERTIES_HIBERNATE_BATCH_VERSIONED_DATA
-      value: true
-    - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_BATCH_SIZE
-      value: 20
-    - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_FETCH_SIZE
-      value: 20
-    - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE
-      value: UTC
-    - key: SPRING_JPA_PROPERTIES_HIBERNATE_CONNECTION_PROVIDER_DISABLES_AUTOCOMMIT
-      value: true
-    - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_INSERTS
-      value: true
     - key: SPRINGDOC_SWAGGER_UI_SERVERS_0_URL
       value: https://ijaa-user-service.onrender.com
     - key: SPRINGDOC_SERVERS_0_URL
