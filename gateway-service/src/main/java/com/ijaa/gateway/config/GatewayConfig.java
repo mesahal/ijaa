@@ -100,6 +100,27 @@ public class GatewayConfig {
                                 .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://file-service"))
+                // Health endpoints - public endpoints for service health checks
+                .route(p-> p
+                        .path("/ijaa/api/v1/health/**")
+                        .filters(f-> f
+                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
+                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
+                        .uri("lb://file-service"))
+                // Test endpoints - public endpoints for service testing
+                .route(p-> p
+                        .path("/ijaa/test/**")
+                        .filters(f-> f
+                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
+                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
+                        .uri("lb://event"))
+                // Catch-all route for any other API patterns - route to user service as default
+                .route(p-> p
+                        .path("/ijaa/api/v1/**")
+                        .filters(f-> f
+                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
+                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
+                        .uri("lb://user-service"))
                 .build();
     }
 }

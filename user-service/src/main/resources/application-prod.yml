@@ -9,18 +9,28 @@ spring:
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
-    hikari:
-      connection-timeout: 30000
-      idle-timeout: 600000
-      max-lifetime: 1800000
-      maximum-pool-size: 5
-      minimum-idle: 2
-      pool-name: HikariPool-UserService
-      leak-detection-threshold: 60000
+    properties:
+      ssl: true
+      sslmode: require
+      sslfactory: org.postgresql.ssl.NonValidatingFactory
+      connectionTimeout: 30000
+      socketTimeout: 60000
+      connectTimeout: 30000
+      tcpKeepAlive: true
+      applicationName: user-service
+      logUnclosedConnections: true
+      # Override any conflicting Hikari properties from environment
+      hikari.connection-test-query: SELECT 1
+      hikari.validation-timeout: 3000
+      hikari.connection-timeout: 30000
+      hikari.maximum-pool-size: 10
+      hikari.minimum-idle: 2
+      hikari.idle-timeout: 300000
+      hikari.max-lifetime: 1200000
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: false
@@ -39,7 +49,7 @@ spring:
         batch_versioned_data: true
   sql:
     init:
-      mode: always
+      mode: never
       schema-locations: classpath:db/schema.sql
       data-locations: classpath:db/data.sql
       continue-on-error: true
@@ -53,11 +63,19 @@ eureka:
   instance:
     preferIpAddress: false
     hostname: ${EUREKA_INSTANCE_HOSTNAME:localhost}
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
   client:
     fetchRegistry: true
     registerWithEureka: true
     serviceUrl:
       defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE:http://localhost:8761/eureka/}
+    registry-fetch-interval-seconds: 30
+    eureka-server-connect-timeout-seconds: 30
+    eureka-server-read-timeout-seconds: 30
+    initial-instance-info-replication-interval-seconds: 40
+    instance-info-replication-interval-seconds: 30
+    eureka-connection-idle-timeout-seconds: 30
 
 jwt:
   secret: ${JWT_SECRET:16f7e412ee66030c3bf769281a076955f595be7479189c4e5ab1f90d2ae3c82e0c5170afcceba1e0f638648c01a468ff82b0723a970011f7fc0dd1a4ba70b0e1}
