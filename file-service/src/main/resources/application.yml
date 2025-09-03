@@ -2,9 +2,9 @@ spring:
   application:
     name: file-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/ijaa_files
-    username: root
-    password: Admin@123
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/ijaa_files}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:Admin@123}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -27,7 +27,7 @@ spring:
       enabled: false
 
 server:
-  port: 8083
+  port: ${SERVER_PORT:8083}
   # Add these for better file handling
   tomcat:
     max-swallow-size: 10MB
@@ -36,7 +36,7 @@ server:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE:http://localhost:8761/eureka/}
 
 # File storage configuration - FIXED PATHS
 file:

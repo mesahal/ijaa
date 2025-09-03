@@ -64,7 +64,7 @@ services:
       - key: SERVER_PORT
         value: 8081
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://${ijaa-user-db.host}:${ijaa-user-db.port}/${ijaa-user-db.databaseName}
+        value: jdbc:postgresql://${ijaa-user-db.internalHost}:${ijaa-user-db.internalPort}/${ijaa-user-db.databaseName}
       - key: SPRING_DATASOURCE_USERNAME
         value: ${ijaa-user-db.user}
       - key: SPRING_DATASOURCE_PASSWORD
@@ -117,80 +117,6 @@ services:
         value: true
       - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_INSERTS
         value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_UPDATES
-        value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_BATCH_VERSIONED_DATA
-        value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_BATCH_SIZE
-        value: 20
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_FETCH_SIZE
-        value: 20
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE
-        value: UTC
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_CONNECTION_PROVIDER_DISABLES_AUTOCOMMIT
-        value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_INSERTS
-        value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_UPDATES
-        value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_BATCH_VERSIONED_DATA
-        value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_BATCH_SIZE
-        value: 20
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_FETCH_SIZE
-        value: 20
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE
-        value: UTC
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_CONNECTION_PROVIDER_DISABLES_AUTOCOMMIT
-        value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_INSERTS
-        value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_UPDATES
-        value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_BATCH_VERSIONED_DATA
-        value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_BATCH_SIZE
-        value: 20
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_FETCH_SIZE
-        value: 20
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE
-        value: UTC
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_CONNECTION_PROVIDER_DISABLES_AUTOCOMMIT
-        value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_INSERTS
-        value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_UPDATES
-        value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_BATCH_VERSIONED_DATA
-        value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_BATCH_SIZE
-        value: 20
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_FETCH_SIZE
-        value: 20
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE
-        value: UTC
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_CONNECTION_PROVIDER_DISABLES_AUTOCOMMIT
-        value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_INSERTS
-        value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_UPDATES
-        value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_BATCH_VERSIONED_DATA
-        value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_BATCH_SIZE
-        value: 20
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_FETCH_SIZE
-        value: 20
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE
-        value: UTC
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_CONNECTION_PROVIDER_DISABLES_AUTOCOMMIT
-        value: true
-      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_INSERTS
-        value: true
-      - key: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
-        value: health,info,metrics
-      - key: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
-        value: always
 
   # Event Service - Event management and advanced search
   - type: web
@@ -205,7 +131,7 @@ services:
       - key: SERVER_PORT
         value: 8082
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://${ijaa-event-db.host}:${ijaa-event-db.port}/${ijaa-event-db.databaseName}
+        value: jdbc:postgresql://${ijaa-event-db.internalHost}:${ijaa-event-db.internalPort}/${ijaa-event-db.databaseName}
       - key: SPRING_DATASOURCE_USERNAME
         value: ${ijaa-event-db.user}
       - key: SPRING_DATASOURCE_PASSWORD
@@ -258,7 +184,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://${ijaa-file-db.host}:${ijaa-file-db.port}/${ijaa-file-db.databaseName}
+        value: jdbc:postgresql://${ijaa-file-db.internalHost}:${ijaa-file-db.internalPort}/${ijaa-file-db.databaseName}
       - key: SPRING_DATASOURCE_USERNAME
         value: ${ijaa-file-db.user}
       - key: SPRING_DATASOURCE_PASSWORD
