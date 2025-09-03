@@ -64,7 +64,13 @@ services:
       - key: SERVER_PORT
         value: 8081
       - key: SPRING_DATASOURCE_URL
-        value: postgresql://ijaa_user:${ijaa-user-db.password}@${ijaa-user-db.host}:${ijaa-user-db.port}/ijaa_users
+        value: jdbc:postgresql://${ijaa-user-db.host}:${ijaa-user-db.port}/${ijaa-user-db.databaseName}
+      - key: SPRING_DATASOURCE_USERNAME
+        value: ${ijaa-user-db.user}
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: ${ijaa-user-db.password}
+      - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+        value: org.postgresql.Driver
       - key: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
         value: https://ijaa-discovery-service.onrender.com/eureka/
       - key: EUREKA_INSTANCE_HOSTNAME
@@ -87,6 +93,100 @@ services:
         value: classpath:db/schema.sql
       - key: SPRING_SQL_INIT_DATA_LOCATIONS
         value: classpath:db/data.sql
+      - key: SPRING_SQL_INIT_CONTINUE_ON_ERROR
+        value: true
+      - key: SPRING_SQL_INIT_PLATFORM
+        value: postgresql
+      - key: SPRING_SQL_INIT_ENCODING
+        value: UTF-8
+      - key: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+        value: health,info,metrics
+      - key: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
+        value: always
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_UPDATES
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_BATCH_VERSIONED_DATA
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_BATCH_SIZE
+        value: 20
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_FETCH_SIZE
+        value: 20
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE
+        value: UTC
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_CONNECTION_PROVIDER_DISABLES_AUTOCOMMIT
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_INSERTS
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_UPDATES
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_BATCH_VERSIONED_DATA
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_BATCH_SIZE
+        value: 20
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_FETCH_SIZE
+        value: 20
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE
+        value: UTC
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_CONNECTION_PROVIDER_DISABLES_AUTOCOMMIT
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_INSERTS
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_UPDATES
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_BATCH_VERSIONED_DATA
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_BATCH_SIZE
+        value: 20
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_FETCH_SIZE
+        value: 20
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE
+        value: UTC
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_CONNECTION_PROVIDER_DISABLES_AUTOCOMMIT
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_INSERTS
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_UPDATES
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_BATCH_VERSIONED_DATA
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_BATCH_SIZE
+        value: 20
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_FETCH_SIZE
+        value: 20
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE
+        value: UTC
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_CONNECTION_PROVIDER_DISABLES_AUTOCOMMIT
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_INSERTS
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_UPDATES
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_BATCH_VERSIONED_DATA
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_BATCH_SIZE
+        value: 20
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_FETCH_SIZE
+        value: 20
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE
+        value: UTC
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_CONNECTION_PROVIDER_DISABLES_AUTOCOMMIT
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_INSERTS
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_UPDATES
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_BATCH_VERSIONED_DATA
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_BATCH_SIZE
+        value: 20
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_FETCH_SIZE
+        value: 20
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE
+        value: UTC
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_CONNECTION_PROVIDER_DISABLES_AUTOCOMMIT
+        value: true
+      - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_INSERTS
+        value: true
       - key: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
         value: health,info,metrics
       - key: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
@@ -105,7 +205,13 @@ services:
       - key: SERVER_PORT
         value: 8082
       - key: SPRING_DATASOURCE_URL
-        value: postgresql://ijaa_event:${ijaa-event-db.password}@${ijaa-event-db.host}:${ijaa-event-db.port}/ijaa_events
+        value: jdbc:postgresql://${ijaa-event-db.host}:${ijaa-event-db.port}/${ijaa-event-db.databaseName}
+      - key: SPRING_DATASOURCE_USERNAME
+        value: ${ijaa-event-db.user}
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: ${ijaa-event-db.password}
+      - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+        value: org.postgresql.Driver
       - key: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
         value: https://ijaa-discovery-service.onrender.com/eureka/
       - key: EUREKA_INSTANCE_HOSTNAME
@@ -152,7 +258,13 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: SPRING_DATASOURCE_URL
-        value: postgresql://ijaa_file:${ijaa-file-db.password}@${ijaa-file-db.host}:${ijaa-file-db.port}/ijaa_files
+        value: jdbc:postgresql://${ijaa-file-db.host}:${ijaa-file-db.port}/${ijaa-file-db.databaseName}
+      - key: SPRING_DATASOURCE_USERNAME
+        value: ${ijaa-file-db.user}
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: ${ijaa-file-db.password}
+      - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+        value: org.postgresql.Driver
       - key: SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE
         value: 10
       - key: SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE
