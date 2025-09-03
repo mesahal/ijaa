@@ -20,8 +20,6 @@ spring:
       max-lifetime: 1200000
       connection-init-sql: SET timezone = 'UTC'
       pool-name: UserServiceHikariCP
-      register-mbeans: true
-      allow-pool-suspension: false
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:

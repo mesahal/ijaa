@@ -64,7 +64,7 @@ services:
       - key: SERVER_PORT
         value: 8081
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://dpg-d2rk1ke3jp1c73fojn7g-a:5432/ijaa_users
+        value: jdbc:postgresql://dpg-d2rk1ke3jp1c73fojn7g-a:5432/ijaa_users?sslmode=require&connectTimeout=30&socketTimeout=30
       - key: SPRING_DATASOURCE_USERNAME
         value: ijaa_user
       - key: SPRING_DATASOURCE_PASSWORD
@@ -131,7 +131,7 @@ services:
       - key: SERVER_PORT
         value: 8082
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://dpg-d2rk1km3jp1c73fojnjg-a:5432/ijaa_events
+        value: jdbc:postgresql://dpg-d2rk1km3jp1c73fojnjg-a:5432/ijaa_events?sslmode=require&connectTimeout=30&socketTimeout=30
       - key: SPRING_DATASOURCE_USERNAME
         value: ijaa_event
       - key: SPRING_DATASOURCE_PASSWORD
@@ -184,7 +184,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://dpg-d2rk1km3jp1c73fojnj0-a:5432/ijaa_files
+        value: jdbc:postgresql://dpg-d2rk1km3jp1c73fojnj0-a:5432/ijaa_files?sslmode=require&connectTimeout=30&socketTimeout=30
       - key: SPRING_DATASOURCE_USERNAME
         value: ijaa_file
       - key: SPRING_DATASOURCE_PASSWORD
