@@ -20,35 +20,22 @@ spring:
       connection-test-query: SELECT 1
       validation-timeout: 3000
       initialization-fail-timeout: 60000
-      connection-init-sql: SELECT 1
       data-source-properties:
         ssl: false
         sslmode: disable
         tcpKeepAlive: true
         applicationName: user-service
-        logUnclosedConnections: true
         connectionTimeout: 30000
         socketTimeout: 60000
         connectTimeout: 30000
-        reWriteBatchedInserts: true
-        cachePrepStmts: true
-        prepStmtCacheSize: 250
-        prepStmtCacheSqlLimit: 2048
-        useServerPrepStmts: true
-        failOnReadOnly: false
-        readOnly: false
-        allowMultiQueries: true
-        useUnicode: true
-        characterEncoding: UTF-8
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: false
     open-in-view: false
-    defer-datasource-initialization: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -59,22 +46,13 @@ spring:
           fetch_size: 20
         connection:
           provider_disables_autocommit: true
-          autocommit: false
-          validation:
-            mode: auto
-            query: SELECT 1
-            timeout: 3000
         order_inserts: true
         order_updates: true
         batch_versioned_data: true
   sql:
     init:
       mode: never
-      schema-locations: classpath:db/schema.sql
-      data-locations: classpath:db/data.sql
       continue-on-error: true
-      platform: postgresql
-      encoding: UTF-8
 
 server:
   port: 8081
