@@ -17,7 +17,6 @@ spring:
       minimum-idle: 2
       pool-name: HikariPool-UserService
       leak-detection-threshold: 60000
-      connection-test-query: SELECT 1
       validation-timeout: 3000
       initialization-fail-timeout: 60000
       data-source-properties:
@@ -31,7 +30,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: false
