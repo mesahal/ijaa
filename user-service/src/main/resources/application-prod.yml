@@ -21,7 +21,6 @@ spring:
       validation-timeout: 3000
       initialization-fail-timeout: 60000
       connection-init-sql: SELECT 1
-      # Additional properties for better connection handling
       data-source-properties:
         ssl: false
         sslmode: disable
@@ -31,6 +30,16 @@ spring:
         connectionTimeout: 30000
         socketTimeout: 60000
         connectTimeout: 30000
+        reWriteBatchedInserts: true
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+        failOnReadOnly: false
+        readOnly: false
+        allowMultiQueries: true
+        useUnicode: true
+        characterEncoding: UTF-8
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
@@ -39,6 +48,7 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: false
     open-in-view: false
+    defer-datasource-initialization: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -49,17 +59,14 @@ spring:
           fetch_size: 20
         connection:
           provider_disables_autocommit: true
-        order_inserts: true
-        order_updates: true
-        batch_versioned_data: true
-        # Connection validation
-        connection:
-          provider_disables_autocommit: true
           autocommit: false
           validation:
             mode: auto
             query: SELECT 1
             timeout: 3000
+        order_inserts: true
+        order_updates: true
+        batch_versioned_data: true
   sql:
     init:
       mode: never
