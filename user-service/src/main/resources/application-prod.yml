@@ -9,6 +9,8 @@ spring:
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
+    # Use a custom configuration to avoid environment variable conflicts
+    type: com.zaxxer.hikari.HikariDataSource
     hikari:
       connection-timeout: 30000
       idle-timeout: 600000
@@ -19,6 +21,8 @@ spring:
       leak-detection-threshold: 60000
       validation-timeout: 3000
       initialization-fail-timeout: 60000
+      # Explicitly set to override environment variable
+      connection-test-query: "SELECT 1"
       data-source-properties:
         ssl: false
         sslmode: disable
