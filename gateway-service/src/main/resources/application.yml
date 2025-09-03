@@ -72,6 +72,9 @@ springdoc:
   servers:
     - url: https://ijaa-gateway-service.onrender.com
       description: Production Server
+  # Force the server URL in OpenAPI spec
+  default-produces-media-type: application/json
+  default-consumes-media-type: application/json
 
 info:
   app:

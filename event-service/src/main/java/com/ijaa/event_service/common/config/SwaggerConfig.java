@@ -10,14 +10,51 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
+import java.util.ArrayList;
 
 @Configuration
 public class SwaggerConfig {
 
+    @Value("${spring.profiles.active:dev}")
+    private String activeProfile;
+
+    @Value("${production.server.url:https://ijaa-event-service.onrender.com}")
+    private String productionServerUrl;
+
+    @Value("${service.hostname:localhost}")
+    private String serviceHostname;
+
+    @Value("${service.port:8082}")
+    private String servicePort;
+
     @Bean
     public OpenAPI customOpenAPI() {
+        List<Server> servers = new ArrayList<>();
+        
+        // Add servers based on environment
+        if ("prod".equals(activeProfile)) {
+            // Production environment - add production servers
+            servers.add(new Server()
+                    .url(productionServerUrl != null && !productionServerUrl.isEmpty() ? productionServerUrl : "https://ijaa-event-service.onrender.com")
+                    .description("Production Server"));
+            
+            servers.add(new Server()
+                    .url("https://ijaa-gateway-service.onrender.com/ijaa")
+                    .description("Production Gateway Server"));
+        } else {
+            // Local development environment - add local servers
+            servers.add(new Server()
+                    .url("http://localhost:8000/ijaa")
+                    .description("Local Development Server (via Gateway)"));
+            
+            servers.add(new Server()
+                    .url("http://" + serviceHostname + ":" + servicePort)
+                    .description("Direct Event Service"));
+        }
+
         return new OpenAPI()
                 .info(new Info()
                         .title("IJAA Event Service API")
@@ -136,14 +173,7 @@ public class SwaggerConfig {
                         .license(new License()
                                 .name("MIT License")
                                 .url("https://opensource.org/licenses/MIT")))
-                .servers(List.of(
-                        new Server()
-                                .url("http://localhost:8000/ijaa")
-                                .description("Development Server (via Gateway)"),
-                        new Server()
-                                .url("http://localhost:8082")
-                                .description("Direct Event Service")
-                ))
+                .servers(servers)
                 .components(new Components()
                         .addSecuritySchemes("Bearer Authentication", new SecurityScheme()
                                 .type(SecurityScheme.Type.HTTP)

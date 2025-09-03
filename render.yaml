@@ -225,6 +225,20 @@ services:
         value: https://ijaa-file-service.onrender.com
       - key: SPRINGDOC_SERVERS_0_URL
         value: https://ijaa-file-service.onrender.com
+      - key: SPRINGDOC_API_DOCS_PATH
+        value: /api-docs
+      - key: SPRINGDOC_SWAGGER_UI_PATH
+        value: /swagger-ui.html
+      - key: SPRINGDOC_SWAGGER_UI_CONFIG_URL
+        value: /api-docs/swagger-config
+      - key: SPRINGDOC_SWAGGER_UI_URL
+        value: /api-docs
+      - key: PRODUCTION_SERVER_URL
+        value: https://ijaa-file-service.onrender.com
+      - key: SERVICE_HOSTNAME
+        value: ijaa-file-service.onrender.com
+      - key: SERVICE_PORT
+        value: 8083
 
   # Gateway Service - API Gateway and routing (must start last)
   - type: web
