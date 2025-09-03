@@ -9,35 +9,11 @@ spring:
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
-    hikari:
-      pool-name: HikariPool-UserService
-      connection-test-query: "SELECT 1"
-      data-source-properties:
-        ssl: false
-        sslmode: disable
-        tcpKeepAlive: true
-        applicationName: user-service
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: create-drop
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: update
     show-sql: false
-    open-in-view: false
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: false
-        jdbc:
-          time_zone: UTC
-          batch_size: 20
-          fetch_size: 20
-        connection:
-          provider_disables_autocommit: true
-        order_inserts: true
-        order_updates: true
-        batch_versioned_data: true
   sql:
     init:
       mode: never
@@ -50,19 +26,12 @@ eureka:
   instance:
     preferIpAddress: false
     hostname: ${EUREKA_INSTANCE_HOSTNAME:localhost}
-    lease-renewal-interval-in-seconds: 30
-    lease-expiration-duration-in-seconds: 90
   client:
     fetchRegistry: true
     registerWithEureka: true
     serviceUrl:
       defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE:http://localhost:8761/eureka/}
-    registry-fetch-interval-seconds: 30
-    eureka-server-connect-timeout-seconds: 30
-    eureka-server-read-timeout-seconds: 30
-    initial-instance-info-replication-interval-seconds: 40
-    instance-info-replication-interval-seconds: 30
-    eureka-connection-idle-timeout-seconds: 30
+
 
 jwt:
   secret: ${JWT_SECRET:16f7e412ee66030c3bf769281a076955f595be7479189c4e5ab1f90d2ae3c82e0c5170afcceba1e0f638648c01a468ff82b0723a970011f7fc0dd1a4ba70b0e1}
