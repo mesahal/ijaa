@@ -64,11 +64,11 @@ services:
       - key: SERVER_PORT
         value: 8081
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://${ijaa-user-db.internalHost}:${ijaa-user-db.internalPort}/${ijaa-user-db.databaseName}
+        value: jdbc:postgresql://dpg-d2rk1ke3jp1c73fojn7g-a:5432/ijaa_users
       - key: SPRING_DATASOURCE_USERNAME
-        value: ${ijaa-user-db.user}
+        value: ijaa_user
       - key: SPRING_DATASOURCE_PASSWORD
-        value: ${ijaa-user-db.password}
+        value: pLnGRAeLWUTWTBHR5U3W1uWgfTVyyZBv
       - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
         value: org.postgresql.Driver
       - key: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
@@ -131,11 +131,11 @@ services:
       - key: SERVER_PORT
         value: 8082
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://${ijaa-event-db.internalHost}:${ijaa-event-db.internalPort}/${ijaa-event-db.databaseName}
+        value: jdbc:postgresql://dpg-d2rk1km3jp1c73fojnjg-a:5432/ijaa_events
       - key: SPRING_DATASOURCE_USERNAME
-        value: ${ijaa-event-db.user}
+        value: ijaa_event
       - key: SPRING_DATASOURCE_PASSWORD
-        value: ${ijaa-event-db.password}
+        value: vl1l3KLmSA01JD2rLOyCSBu78VEx2BZQ
       - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
         value: org.postgresql.Driver
       - key: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
@@ -184,11 +184,11 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://${ijaa-file-db.internalHost}:${ijaa-file-db.internalPort}/${ijaa-file-db.databaseName}
+        value: jdbc:postgresql://dpg-d2rk1km3jp1c73fojnj0-a:5432/ijaa_files
       - key: SPRING_DATASOURCE_USERNAME
-        value: ${ijaa-file-db.user}
+        value: ijaa_file
       - key: SPRING_DATASOURCE_PASSWORD
-        value: ${ijaa-file-db.password}
+        value: OOVLUeG4cx37CD6VtxqYsTdbgej0N8iX
       - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
         value: org.postgresql.Driver
       - key: SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE
