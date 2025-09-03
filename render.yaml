@@ -49,7 +49,7 @@
     - key: JWT_SECRET
       generateValue: true
 
-# User Service - User management and authentication
+# User Service - User management and authentication (Minimal Config)
 - type: web
   name: ijaa-user-service
   env: docker
@@ -59,60 +59,20 @@
   envVars:
     - key: SPRING_PROFILES_ACTIVE
       value: prod
-    - key: SERVER_PORT
-      value: 8081
     - key: SPRING_DATASOURCE_URL
       value: jdbc:postgresql://dpg-d2rk1km3jp1c73fojnjg-a:5432/ijaa_users?sslmode=require&connectTimeout=30&socketTimeout=30
     - key: SPRING_DATASOURCE_USERNAME
       value: ijaa_user
     - key: SPRING_DATASOURCE_PASSWORD
       value: pLnGRAeLWUTWTBHR5U3W1uWgfTVyyZBv
-    - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
-      value: org.postgresql.Driver
+
+    # Essential Service Configuration
     - key: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
       value: https://ijaa-discovery-service.onrender.com/eureka/
     - key: EUREKA_INSTANCE_HOSTNAME
       value: ijaa-user-service.onrender.com
     - key: JWT_SECRET
       generateValue: true
-    - key: SPRING_JPA_HIBERNATE_DDL_AUTO
-      value: update
-    - key: SPRING_JPA_SHOW_SQL
-      value: false
-    - key: SPRING_SQL_INIT_MODE
-      value: always
-    - key: SPRING_SQL_INIT_SCHEMA_LOCATIONS
-      value: classpath:db/schema.sql
-    - key: SPRING_SQL_INIT_DATA_LOCATIONS
-      value: classpath:db/data.sql
-    - key: SPRING_SQL_INIT_CONTINUE_ON_ERROR
-      value: true
-    - key: SPRING_SQL_INIT_PLATFORM
-      value: postgresql
-    - key: SPRING_SQL_INIT_ENCODING
-      value: UTF-8
-    - key: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
-      value: health,info,metrics
-    - key: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
-      value: always
-    - key: SPRINGDOC_SWAGGER_UI_SERVERS_0_URL
-      value: https://ijaa-user-service.onrender.com
-    - key: SPRINGDOC_SERVERS_0_URL
-      value: https://ijaa-user-service.onrender.com
-    - key: SPRINGDOC_API_DOCS_PATH
-      value: /api-docs
-    - key: SPRINGDOC_SWAGGER_UI_PATH
-      value: /swagger-ui.html
-    - key: SPRINGDOC_SWAGGER_UI_CONFIG_URL
-      value: /api-docs/swagger-config
-    - key: SPRINGDOC_SWAGGER_UI_URL
-      value: /api-docs
-    - key: PRODUCTION_SERVER_URL
-      value: https://ijaa-user-service.onrender.com
-    - key: SERVICE_HOSTNAME
-      value: ijaa-user-service.onrender.com
-    - key: SERVICE_PORT
-      value: 8081
 
 # Event Service - Event management and advanced search
 - type: web

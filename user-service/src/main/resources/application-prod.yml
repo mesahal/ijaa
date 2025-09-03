@@ -9,14 +9,14 @@ spring:
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
-#    hikari:
-#      connection-test-query: SELECT 1
-#      maximum-pool-size: 10
-#      minimum-idle: 5
-#      connection-timeout: 30000
-#      idle-timeout: 600000
-#      max-lifetime: 1800000
-#      leak-detection-threshold: 60000
+    hikari:
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 5
+      minimum-idle: 2
+      pool-name: HikariPool-UserService
+      leak-detection-threshold: 60000
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
@@ -70,14 +70,11 @@ springdoc:
     path: /swagger-ui.html
     tags-sorter: alpha
     operations-sorter: alpha
-    # Set the correct base URL for Render deployment
     config-url: /api-docs/swagger-config
     url: /api-docs
-    # Override the default server URL
     servers:
       - url: https://ijaa-user-service.onrender.com
         description: Production Server
-  # Set the default server URL for API documentation
   servers:
     - url: https://ijaa-user-service.onrender.com
       description: Production Server
