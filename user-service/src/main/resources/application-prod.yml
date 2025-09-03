@@ -15,10 +15,6 @@ spring:
       connection-timeout: 30000
       connection-test-query: SELECT 1
       validation-timeout: 5000
-      leak-detection-threshold: 60000
-      idle-timeout: 300000
-      max-lifetime: 1200000
-      connection-init-sql: SET timezone = 'UTC'
       pool-name: UserServiceHikariCP
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect

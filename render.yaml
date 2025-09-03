@@ -93,6 +93,8 @@ services:
         value: classpath:db/schema.sql
       - key: SPRING_SQL_INIT_DATA_LOCATIONS
         value: classpath:db/data.sql
+      - key: SPRING_DATASOURCE_HIKARI_INITIALIZATION_FAIL_TIMEOUT
+        value: 30000
       - key: SPRING_SQL_INIT_CONTINUE_ON_ERROR
         value: true
       - key: SPRING_SQL_INIT_PLATFORM
@@ -121,6 +123,12 @@ services:
         value: https://ijaa-user-service.onrender.com
       - key: SPRINGDOC_SERVERS_0_URL
         value: https://ijaa-user-service.onrender.com
+      - key: SPRING_DATASOURCE_HIKARI_CONNECTION_TEST_QUERY
+        value: SELECT 1
+      - key: SPRING_DATASOURCE_HIKARI_VALIDATION_TIMEOUT
+        value: 5000
+      - key: SPRING_DATASOURCE_HIKARI_INITIALIZATION_FAIL_TIMEOUT
+        value: 30000
 
   # Event Service - Event management and advanced search
   - type: web
