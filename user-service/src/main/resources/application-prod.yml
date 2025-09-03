@@ -73,6 +73,17 @@ springdoc:
     path: /swagger-ui.html
     tags-sorter: alpha
     operations-sorter: alpha
+    # Set the correct base URL for Render deployment
+    config-url: /api-docs/swagger-config
+    url: /api-docs
+    # Override the default server URL
+    servers:
+      - url: https://ijaa-user-service.onrender.com
+        description: Production Server
+  # Set the default server URL for API documentation
+  servers:
+    - url: https://ijaa-user-service.onrender.com
+      description: Production Server
   packages-to-scan: com.ijaa.user.presenter.rest.api
 
 # Management endpoints for health checks

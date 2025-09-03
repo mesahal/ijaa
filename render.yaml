@@ -117,6 +117,10 @@ services:
         value: true
       - key: SPRING_JPA_PROPERTIES_HIBERNATE_ORDER_INSERTS
         value: true
+      - key: SPRINGDOC_SWAGGER_UI_SERVERS_0_URL
+        value: https://ijaa-user-service.onrender.com
+      - key: SPRINGDOC_SERVERS_0_URL
+        value: https://ijaa-user-service.onrender.com
 
   # Event Service - Event management and advanced search
   - type: web
@@ -164,6 +168,10 @@ services:
         value: health,info,metrics
       - key: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
         value: always
+      - key: SPRINGDOC_SWAGGER_UI_SERVERS_0_URL
+        value: https://ijaa-event-service.onrender.com
+      - key: SPRINGDOC_SERVERS_0_URL
+        value: https://ijaa-event-service.onrender.com
 
   # File Service - File upload and management
   - type: web
@@ -205,6 +213,10 @@ services:
         value: health,info,metrics
       - key: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
         value: always
+      - key: SPRINGDOC_SWAGGER_UI_SERVERS_0_URL
+        value: https://ijaa-file-service.onrender.com
+      - key: SPRINGDOC_SERVERS_0_URL
+        value: https://ijaa-file-service.onrender.com
 
   # Gateway Service - API Gateway and routing (must start last)
   - type: web
@@ -260,3 +272,7 @@ services:
         value: lb://ijaa-user-service
       - key: SPRING_CLOUD_GATEWAY_ROUTES_5_PREDICATES_0
         value: Path=/ijaa/api/v1/admin/feature-flags/*/enabled
+      - key: SPRINGDOC_SWAGGER_UI_SERVERS_0_URL
+        value: https://ijaa-gateway-service.onrender.com
+      - key: SPRINGDOC_SERVERS_0_URL
+        value: https://ijaa-gateway-service.onrender.com
