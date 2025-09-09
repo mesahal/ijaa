@@ -20,6 +20,9 @@ public class RouteValidator {
                     "/ijaa/api/v1/users",
                     "/ijaa/actuator/**",
                     "/ijaa/api/v1/health/**",
+                    "/ijaa/api/v1/health/user/**",
+                    "/ijaa/api/v1/health/event/**",
+                    "/ijaa/api/v1/health/file/**",
                     "/ijaa/test/**"
             )
             .noneMatch(uri -> request.getURI().getPath().contains(uri));

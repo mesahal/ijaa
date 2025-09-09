@@ -1,5 +1,6 @@
 package com.ijaa.user.presenter.rest.api;
 
+import com.ijaa.user.common.annotation.RequiresFeature;
 import com.ijaa.user.domain.dto.CityDto;
 import com.ijaa.user.domain.dto.CountryDto;
 import com.ijaa.user.service.LocationService;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,12 +23,14 @@ import java.util.List;
 @RestController
 @RequestMapping(AppUtils.BASE_URL + "/location")
 @RequiredArgsConstructor
-@Tag(name = "Location Management", description = "APIs for countries and cities management")
+@Tag(name = "Location Management")
 public class LocationResource {
 
     private final LocationService locationService;
 
     @GetMapping("/countries")
+    @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("user.location")
     @Operation(
         summary = "Get All Countries", 
         description = "Get list of all active countries sorted alphabetically"
@@ -49,19 +53,11 @@ public class LocationResource {
                                 "data": [
                                     {
                                         "id": 1,
-                                        "name": "Afghanistan",
-                                        "iso2": "AF",
-                                        "iso3": "AFG",
-                                        "emoji": "🇦🇫",
-                                        "flag": "1"
+                                        "name": "Afghanistan"
                                     },
                                     {
                                         "id": 2,
-                                        "name": "Albania",
-                                        "iso2": "AL",
-                                        "iso3": "ALB",
-                                        "emoji": "🇦🇱",
-                                        "flag": "1"
+                                        "name": "Albania"
                                     }
                                 ]
                             }
@@ -78,81 +74,6 @@ public class LocationResource {
         );
     }
 
-    @GetMapping("/countries/search")
-    @Operation(
-        summary = "Search Countries", 
-        description = "Search countries by name (case-insensitive partial match)"
-    )
-    @ApiResponses(value = {
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "200",
-            description = "Countries search completed successfully",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = ApiResponse.class),
-                examples = {
-                    @ExampleObject(
-                        name = "Search Results",
-                        summary = "Countries matching search term",
-                        value = """
-                            {
-                                "message": "Countries search completed",
-                                "status": "200",
-                                "data": [
-                                    {
-                                        "id": 1,
-                                        "name": "United States",
-                                        "iso2": "US",
-                                        "iso3": "USA",
-                                        "emoji": "🇺🇸",
-                                        "flag": "1"
-                                    },
-                                    {
-                                        "id": 2,
-                                        "name": "United Kingdom",
-                                        "iso2": "GB",
-                                        "iso3": "GBR",
-                                        "emoji": "🇬🇧",
-                                        "flag": "1"
-                                    }
-                                ]
-                            }
-                            """
-                    )
-                }
-            )
-        )
-    })
-    public ResponseEntity<ApiResponse<List<CountryDto>>> searchCountries(
-            @Parameter(description = "Search term for country name (e.g., 'United', 'America')") 
-            @RequestParam String searchTerm) {
-        List<CountryDto> countries = locationService.searchCountries(searchTerm);
-        return ResponseEntity.ok(
-                new ApiResponse<>("Countries search completed", "200", countries)
-        );
-    }
-
-    @GetMapping("/countries/{id}")
-    @Operation(summary = "Get Country by ID", description = "Get country details by ID")
-    public ResponseEntity<ApiResponse<CountryDto>> getCountryById(
-            @Parameter(description = "Country ID") 
-            @PathVariable Long id) {
-        CountryDto country = locationService.getCountryById(id);
-        return ResponseEntity.ok(
-                new ApiResponse<>("Country fetched successfully", "200", country)
-        );
-    }
-
-    @GetMapping("/countries/iso2/{iso2}")
-    @Operation(summary = "Get Country by ISO2", description = "Get country details by ISO2 code")
-    public ResponseEntity<ApiResponse<CountryDto>> getCountryByIso2(
-            @Parameter(description = "Country ISO2 code") 
-            @PathVariable String iso2) {
-        CountryDto country = locationService.getCountryByIso2(iso2);
-        return ResponseEntity.ok(
-                new ApiResponse<>("Country fetched successfully", "200", country)
-        );
-    }
 
     @GetMapping("/countries/{countryId}/cities")
     @Operation(
@@ -178,18 +99,12 @@ public class LocationResource {
                                     {
                                         "id": 1,
                                         "name": "New York",
-                                        "countryId": 1,
-                                        "countryCode": "US",
-                                        "stateId": 1,
-                                        "stateCode": "NY"
+                                        "countryId": 1
                                     },
                                     {
                                         "id": 2,
                                         "name": "Los Angeles",
-                                        "countryId": 1,
-                                        "countryCode": "US",
-                                        "stateId": 2,
-                                        "stateCode": "CA"
+                                        "countryId": 1
                                     }
                                 ]
                             }
@@ -208,38 +123,4 @@ public class LocationResource {
         );
     }
 
-    @GetMapping("/countries/{countryId}/cities/search")
-    @Operation(summary = "Search Cities by Country", description = "Search cities within a specific country")
-    public ResponseEntity<ApiResponse<List<CityDto>>> searchCitiesByCountry(
-            @Parameter(description = "Country ID") 
-            @PathVariable Long countryId,
-            @Parameter(description = "Search term for city name") 
-            @RequestParam String searchTerm) {
-        List<CityDto> cities = locationService.searchCitiesByCountry(countryId, searchTerm);
-        return ResponseEntity.ok(
-                new ApiResponse<>("Cities search completed", "200", cities)
-        );
-    }
-
-    @GetMapping("/cities/search")
-    @Operation(summary = "Search Cities", description = "Search cities globally")
-    public ResponseEntity<ApiResponse<List<CityDto>>> searchCities(
-            @Parameter(description = "Search term for city name") 
-            @RequestParam String searchTerm) {
-        List<CityDto> cities = locationService.searchCities(searchTerm);
-        return ResponseEntity.ok(
-                new ApiResponse<>("Cities search completed", "200", cities)
-        );
-    }
-
-    @GetMapping("/cities/{id}")
-    @Operation(summary = "Get City by ID", description = "Get city details by ID")
-    public ResponseEntity<ApiResponse<CityDto>> getCityById(
-            @Parameter(description = "City ID") 
-            @PathVariable Long id) {
-        CityDto city = locationService.getCityById(id);
-        return ResponseEntity.ok(
-                new ApiResponse<>("City fetched successfully", "200", city)
-        );
-    }
 }

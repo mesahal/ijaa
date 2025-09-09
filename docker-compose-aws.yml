@@ -1,0 +1,144 @@
+version: '3.8'
+
+services:
+  # Discovery Service - Must start first
+  discovery-service:
+    build:
+      context: ./discovery-service
+      dockerfile: Dockerfile
+    container_name: ijaa-discovery-service
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SERVER_PORT=8761
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://localhost:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=localhost
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - ijaa-network
+    restart: unless-stopped
+
+  # Config Service - Must start second
+  config-service:
+    build:
+      context: ./config-service
+      dockerfile: Dockerfile
+    container_name: ijaa-config-service
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_PROFILES_ACTIVE=native
+      - SERVER_PORT=8888
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://localhost:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=localhost
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - discovery-service
+    networks:
+      - ijaa-network
+    restart: unless-stopped
+
+  # User Service
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    container_name: ijaa-user-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SERVER_PORT=8081
+      - SPRING_DATASOURCE_URL=${USER_DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${USER_DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${USER_DB_PASSWORD}
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://localhost:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=localhost
+      - JWT_SECRET=${JWT_SECRET}
+      - PRODUCTION_SERVER_URL=${EC2_PUBLIC_IP}
+      - GATEWAY_SERVER_URL=${EC2_PUBLIC_IP}
+    depends_on:
+      - discovery-service
+    networks:
+      - ijaa-network
+    restart: unless-stopped
+
+  # Event Service
+  event-service:
+    build:
+      context: ./event-service
+      dockerfile: Dockerfile
+    container_name: ijaa-event-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SERVER_PORT=8082
+      - SPRING_DATASOURCE_URL=${EVENT_DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${EVENT_DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${EVENT_DB_PASSWORD}
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://localhost:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=localhost
+      - JWT_SECRET=${JWT_SECRET}
+      - PRODUCTION_SERVER_URL=${EC2_PUBLIC_IP}
+      - GATEWAY_SERVER_URL=${EC2_PUBLIC_IP}
+    depends_on:
+      - discovery-service
+    networks:
+      - ijaa-network
+    restart: unless-stopped
+
+  # File Service
+  file-service:
+    build:
+      context: ./file-service
+      dockerfile: Dockerfile
+    container_name: ijaa-file-service
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SERVER_PORT=8083
+      - SPRING_DATASOURCE_URL=${FILE_DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${FILE_DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${FILE_DB_PASSWORD}
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://localhost:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=localhost
+      - JWT_SECRET=${JWT_SECRET}
+      - PRODUCTION_SERVER_URL=${EC2_PUBLIC_IP}
+      - GATEWAY_SERVER_URL=${EC2_PUBLIC_IP}
+      - FILE_STORAGE_PATH=/tmp/uploaded-files
+    depends_on:
+      - discovery-service
+    networks:
+      - ijaa-network
+    restart: unless-stopped
+
+  # Gateway Service - Must start last
+  gateway-service:
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    container_name: ijaa-gateway-service
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SERVER_PORT=8080
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://localhost:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=localhost
+      - JWT_SECRET=${JWT_SECRET}
+      - PRODUCTION_SERVER_URL=${EC2_PUBLIC_IP}
+    depends_on:
+      - discovery-service
+      - user-service
+      - event-service
+      - file-service
+    networks:
+      - ijaa-network
+    restart: unless-stopped
+
+networks:
+  ijaa-network:
+    driver: bridge

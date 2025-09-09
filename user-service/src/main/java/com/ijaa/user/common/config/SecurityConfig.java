@@ -39,7 +39,9 @@ public class SecurityConfig {
 
         return http.csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/api/v1/user/health/**", "/actuator/**", "/swagger-ui/**", "/api-docs/**", "/test/**").permitAll()
+                        .requestMatchers("/api/v1/user/admin/feature-flags/*/enabled").permitAll()
+                        .requestMatchers("/api/v1/user/signin", "/api/v1/user/signup", "/api/v1/user/refresh", "/api/v1/user/logout").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
@@ -49,7 +51,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider userAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
+        provider.setPasswordEncoder(passwordEncoder());
         provider.setUserDetailsService(userDetailsService);
         return provider;
     }
@@ -57,7 +59,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider adminAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
+        provider.setPasswordEncoder(passwordEncoder());
         provider.setUserDetailsService(adminUserDetailsService);
         return provider;
     }

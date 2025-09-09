@@ -9,13 +9,7 @@ public interface LocationService {
     
     // Country methods
     List<CountryDto> getAllCountries();
-    CountryDto getCountryById(Long id);
-    CountryDto getCountryByIso2(String iso2);
-    List<CountryDto> searchCountries(String searchTerm);
     
     // City methods
     List<CityDto> getCitiesByCountryId(Long countryId);
-    List<CityDto> searchCitiesByCountry(Long countryId, String searchTerm);
-    List<CityDto> searchCities(String searchTerm);
-    CityDto getCityById(Long id);
 }

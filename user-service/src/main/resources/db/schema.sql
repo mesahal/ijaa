@@ -1,6 +1,10 @@
 -- User Service Database Schema
 -- This file creates all necessary tables for the IJAA user service
 
+-- Include simplified location tables
+\i countries-simplified.sql
+\i cities-simplified.sql
+
 -- Users table
 CREATE TABLE IF NOT EXISTS users (
     id BIGSERIAL PRIMARY KEY,
@@ -61,6 +65,22 @@ CREATE TABLE IF NOT EXISTS interests (
     skill_level VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Refresh tokens table
+CREATE TABLE IF NOT EXISTS refresh_tokens (
+    id BIGSERIAL PRIMARY KEY,
+    token VARCHAR(500) UNIQUE NOT NULL,
+    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+    expiry_date TIMESTAMP NOT NULL,
+    revoked BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create index for better performance
+CREATE INDEX IF NOT EXISTS idx_refresh_tokens_token ON refresh_tokens(token);
+CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user_id ON refresh_tokens(user_id);
+CREATE INDEX IF NOT EXISTS idx_refresh_tokens_expiry ON refresh_tokens(expiry_date);
 
 -- Connections table
 CREATE TABLE IF NOT EXISTS connections (

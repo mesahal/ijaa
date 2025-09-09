@@ -26,7 +26,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping(AppUtils.BASE_URL + "/alumni")
 @RequiredArgsConstructor
-@Tag(name = "Alumni Search", description = "Alumni search and discovery APIs for finding and connecting with other alumni")
+@Tag(name = "Alumni Search")
 public class AlumniSearchResource {
 
     private final AlumniSearchService alumniSearchService;

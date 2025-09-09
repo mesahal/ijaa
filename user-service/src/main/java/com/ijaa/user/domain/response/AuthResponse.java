@@ -8,6 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthResponse {
-    private String token;
+    private String accessToken;
+    private String tokenType = "Bearer";
     private String userId;
+    
+    // Constructor for backward compatibility
+    public AuthResponse(String accessToken, String userId) {
+        this.accessToken = accessToken;
+        this.userId = userId;
+        this.tokenType = "Bearer";
+    }
 }

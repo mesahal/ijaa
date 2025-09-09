@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import com.ijaa.user.domain.request.InterestRequest;
 import java.util.List;
-import java.util.Map;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -29,16 +28,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping(AppUtils.BASE_URL)
 @RequiredArgsConstructor
-@Tag(name = "User Profile Management", description = "APIs for user profile management")
+@Tag(name = "User Profile Management")
 public class ProfileResource {
 
     private final ProfileService profileService;
     private final FeatureFlagUtils featureFlagUtils;
 
-    // Get user's profile by userId - Public endpoint
+    // Get user's profile by userId - Requires USER role
     @GetMapping("/profile/{userId}")
+    @PreAuthorize("hasRole('USER')")
     @RequiresFeature("user.profile")
-    @Operation(summary = "Get User Profile", description = "Get user profile by userId")
+    @Operation(summary = "Get User Profile", description = "Get user profile by userId (USER role required)")
     public ResponseEntity<ApiResponse<ProfileDto>> getProfileByUserId(
             @PathVariable String userId) {
         ProfileDto profileDto = profileService.getProfileByUserId(userId);
@@ -111,6 +111,7 @@ public class ProfileResource {
 
     @PutMapping("/visibility")
     @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("user.profile")
     @Operation(
         summary = "Update Profile Visibility",
         description = "Update profile visibility settings (USER role required)",

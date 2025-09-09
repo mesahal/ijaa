@@ -255,24 +255,8 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
         dto.setBatch(entity.getBatch());
         dto.setConnections(entity.getConnections());
         
-        // Populate location names if IDs are present
-        if (entity.getCityId() != null) {
-            try {
-                CityDto cityDto = locationService.getCityById(entity.getCityId());
-                dto.setCityName(cityDto.getName());
-            } catch (Exception e) {
-                // If city not found, keep the ID but don't set the name
-            }
-        }
-        
-        if (entity.getCountryId() != null) {
-            try {
-                CountryDto countryDto = locationService.getCountryById(entity.getCountryId());
-                dto.setCountryName(countryDto.getName());
-            } catch (Exception e) {
-                // If country not found, keep the ID but don't set the name
-            }
-        }
+        // Note: Location names are no longer populated automatically
+        // Clients can use the location APIs to get names by IDs if needed
 
         // Always include visibility flags
         dto.setShowPhone(entity.getShowPhone());

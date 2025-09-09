@@ -357,7 +357,7 @@ public class AdminServiceImpl implements AdminService {
 
     private AdminAuthResponse createAuthResponse(Admin admin, String token) {
         AdminAuthResponse response = new AdminAuthResponse();
-        response.setToken(token);
+        response.setAccessToken(token);
         response.setAdminId(admin.getId());
         response.setName(admin.getName());
         response.setEmail(admin.getEmail());

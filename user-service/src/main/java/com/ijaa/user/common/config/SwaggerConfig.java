@@ -21,7 +21,7 @@ public class SwaggerConfig {
     @Value("${spring.profiles.active:dev}")
     private String activeProfile;
 
-    @Value("${production.server.url:https://ijaa-user-service.onrender.com}")
+    @Value("${production.server.url:http://localhost:8000}")
     private String productionServerUrl;
 
     @Value("${service.hostname:localhost}")
@@ -38,11 +38,11 @@ public class SwaggerConfig {
         if ("prod".equals(activeProfile)) {
             // Production environment - add production servers
             servers.add(new Server()
-                    .url(productionServerUrl != null && !productionServerUrl.isEmpty() ? productionServerUrl : "https://ijaa-user-service.onrender.com")
+                    .url(productionServerUrl != null && !productionServerUrl.isEmpty() ? productionServerUrl : "http://localhost:8000")
                     .description("Production Server"));
             
             servers.add(new Server()
-                    .url("https://ijaa-gateway-service.onrender.com/ijaa")
+                    .url("${GATEWAY_SERVER_URL:http://localhost:8000}/ijaa")
                     .description("Production Gateway Server"));
         } else {
             // Local development environment - add local servers
@@ -57,19 +57,8 @@ public class SwaggerConfig {
 
         return new OpenAPI()
                 .info(new Info()
-                        .title("IJAA Alumni Association API")
-                        .description("Complete backend API documentation for IJAA (IIT Jahangirnagar Alumni Association) application. " +
-                                "This API provides authentication, user management, admin management, and various administrative functions.\n\n" +
-                                "## 🔐 Authentication Guide\n\n" +
-                                "### Step 1: Get JWT Token\n" +
-                                "1. Use the **Admin Authentication** → **POST /api/v1/admin/login** endpoint\n" +
-                                "2. Enter credentials: `{\"email\": \"admin@ijaa.com\", \"password\": \"admin123\"}`\n" +
-                                "3. Copy the `token` from the response\n\n" +
-                                "### Step 2: Authorize in Swagger UI\n" +
-                                "1. Click the **🔒 Authorize** button at the top\n" +
-                                "2. Enter your token: `Bearer <your-token-here>`\n" +
-                                "3. Click **Authorize** and close the popup\n\n" +
-                                "```")
+                        .title("IJAA User Service API")
+                        .description("User management and authentication API for IJAA platform")
                         .version("1.0.0")
                         .contact(new Contact()
                                 .name("Md Sahal")
@@ -84,12 +73,7 @@ public class SwaggerConfig {
                                 .type(SecurityScheme.Type.HTTP)
                                 .scheme("bearer")
                                 .bearerFormat("JWT")
-                                .description("JWT token for authentication. Include 'Bearer ' prefix.\n\n" +
-                                        "**How to get token:**\n" +
-                                        "1. Use the login endpoint: POST /api/v1/admin/login\n" +
-                                        "2. Copy the 'token' field from response\n" +
-                                        "3. Add 'Bearer ' prefix when authorizing\n\n" +
-                                        "**Example:** `Bearer eyJhbGciOiJIUzUxMiJ9...`")))
+                                .description("JWT token for authentication")))
                 .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"));
     }
 } 

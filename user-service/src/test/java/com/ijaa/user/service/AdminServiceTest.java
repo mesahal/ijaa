@@ -121,7 +121,7 @@ class AdminServiceTest {
 
         // Then
         assertNotNull(result);
-        assertEquals("test-jwt-token", result.getToken());
+        assertEquals("test-jwt-token", result.getAccessToken());
         verify(adminRepository).existsByEmail("admin@test.com");
         verify(passwordEncoder).encode("password123");
         verify(adminRepository).save(any(Admin.class));
@@ -151,7 +151,7 @@ class AdminServiceTest {
 
         // Then
         assertNotNull(result);
-        assertEquals("test-jwt-token", result.getToken());
+        assertEquals("test-jwt-token", result.getAccessToken());
         verify(adminRepository).findByEmailAndActiveTrue("admin@test.com");
         verify(passwordEncoder).matches("password123", "encodedPassword");
         verify(jwtService).generateAdminToken("admin@test.com", "ADMIN", 1L);

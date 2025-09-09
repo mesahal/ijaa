@@ -11,7 +11,6 @@ import com.ijaa.user.domain.response.AdminProfileResponse;
 import com.ijaa.user.domain.response.DashboardStatsResponse;
 import com.ijaa.user.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,14 +23,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(AppUtils.ADMIN_BASE_URL)
+@RequestMapping(AppUtils.BASE_URL + "/admin")
 @RequiredArgsConstructor
-@Tag(name = "Admin Authentication", description = "APIs for admin authentication and profile management")
+@Tag(name = "Admin Authentication")
 public class AdminAuthResource {
 
     private final AdminService adminService;
@@ -140,6 +137,7 @@ public class AdminAuthResource {
     }
 
     @PostMapping("/login")
+    @RequiresFeature("admin.auth")
     @Operation(
         summary = "Admin Login",
         description = "Authenticate admin and return JWT token",

@@ -6,6 +6,7 @@ import com.ijaa.user.domain.request.SignUpRequest;
 import com.ijaa.user.domain.request.UserPasswordChangeRequest;
 import com.ijaa.user.domain.response.AuthResponse;
 import com.ijaa.user.repository.UserRepository;
+import com.ijaa.user.repository.RefreshTokenRepository;
 import com.ijaa.user.common.utils.UniqueIdGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,6 +45,9 @@ class AuthServiceTest {
 
     @Mock
     private UniqueIdGenerator idGenerator;
+
+    @Mock
+    private RefreshTokenRepository refreshTokenRepository;
 
     @InjectMocks
     private AuthService authService;
@@ -84,19 +88,22 @@ class AuthServiceTest {
         when(userRepository.existsByUserId("USER_123456")).thenReturn(false);
         when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(testUser);
-        when(jwtService.generateUserToken("testuser", "USER_123456")).thenReturn("test-jwt-token");
+        when(jwtService.generateAccessToken("testuser", "USER_123456")).thenReturn("test-jwt-token");
+        when(jwtService.generateRandomRefreshToken()).thenReturn("test-refresh-token");
+        when(refreshTokenRepository.save(any())).thenReturn(null);
 
         // When
         AuthResponse result = authService.registerUser(signUpRequest);
 
         // Then
         assertNotNull(result);
-        assertEquals("test-jwt-token", result.getToken());
+        assertEquals("test-jwt-token", result.getAccessToken());
         assertEquals("USER_123456", result.getUserId());
         verify(userRepository).existsByUsername("testuser");
         verify(passwordEncoder).encode("password123");
         verify(userRepository).save(any(User.class));
-        verify(jwtService).generateUserToken("testuser", "USER_123456");
+        verify(jwtService).generateAccessToken("testuser", "USER_123456");
+        verify(jwtService).generateRandomRefreshToken();
     }
 
     @Test
@@ -114,19 +121,20 @@ class AuthServiceTest {
     void testVerify() {
         // Given
         when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(testUser));
+        when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");
         when(passwordEncoder.matches("password123", "encodedPassword")).thenReturn(true);
-        when(jwtService.generateUserToken("testuser", "USER_123456")).thenReturn("test-jwt-token");
+        when(jwtService.generateAccessToken("testuser", "USER_123456")).thenReturn("test-jwt-token");
 
         // When
         AuthResponse result = authService.verify(signInRequest);
 
         // Then
         assertNotNull(result);
-        assertEquals("test-jwt-token", result.getToken());
+        assertEquals("test-jwt-token", result.getAccessToken());
         assertEquals("USER_123456", result.getUserId());
         verify(userRepository).findByUsername("testuser");
-        verify(passwordEncoder).matches("password123", "encodedPassword");
-        verify(jwtService).generateUserToken("testuser", "USER_123456");
+        verify(passwordEncoder, atLeastOnce()).matches("password123", "encodedPassword");
+        verify(jwtService).generateAccessToken("testuser", "USER_123456");
     }
 
     @Test
@@ -144,13 +152,14 @@ class AuthServiceTest {
     void testVerifyInvalidPassword() {
         // Given
         when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(testUser));
+        when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");
         when(passwordEncoder.matches("password123", "encodedPassword")).thenReturn(false);
 
         // When & Then
         assertThrows(RuntimeException.class, () -> authService.verify(signInRequest));
         verify(userRepository).findByUsername("testuser");
-        verify(passwordEncoder).matches("password123", "encodedPassword");
-        verify(jwtService, never()).generateUserToken(anyString(), anyString());
+        verify(passwordEncoder, atLeastOnce()).matches("password123", "encodedPassword");
+        verify(jwtService, never()).generateAccessToken(anyString(), anyString());
     }
 
     // Password Change Tests

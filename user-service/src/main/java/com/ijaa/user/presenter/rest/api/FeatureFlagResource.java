@@ -2,6 +2,7 @@ package com.ijaa.user.presenter.rest.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ijaa.user.common.annotation.RequiresFeature;
+import com.ijaa.user.common.utils.AppUtils;
 import com.ijaa.user.domain.common.ApiResponse;
 import com.ijaa.user.domain.entity.FeatureFlag;
 import com.ijaa.user.domain.dto.FeatureFlagDto;
@@ -26,10 +27,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/admin/feature-flags")
+@RequestMapping(AppUtils.BASE_URL + "/admin/feature-flags")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "Feature Flag Management", description = "APIs for managing feature flags")
+@Tag(name = "Feature Flag Management")
 public class FeatureFlagResource {
 
     private final FeatureFlagService featureFlagService;

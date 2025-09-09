@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class AdminAuthResponse {
-    private String token;
+    private String accessToken;
     private Long adminId;
     private String name;
     private String email;

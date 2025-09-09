@@ -70,8 +70,10 @@ logging:
 springdoc:
   api-docs:
     path: /api-docs
+    enabled: true
   swagger-ui:
     path: /swagger-ui.html
+    enabled: true
     tags-sorter: alpha
     operations-sorter: alpha
     # These help with file upload in Swagger UI
@@ -80,4 +82,5 @@ springdoc:
     # Add these for better file upload support in Swagger UI
     disable-swagger-default-url: true
     display-request-duration: true
-  packages-to-scan: com.ijaa.file_service.controller
+  packages-to-scan: com.ijaa.file.controller
+  show-actuator: true

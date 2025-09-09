@@ -36,9 +36,9 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(AppUtils.ADMIN_BASE_URL)
+@RequestMapping(AppUtils.BASE_URL + "/admin")
 @RequiredArgsConstructor
-@Tag(name = "Admin Management", description = "APIs for admin management operations")
+@Tag(name = "Admin Management")
 public class AdminManagementResource {
 
     private final AdminService adminService;

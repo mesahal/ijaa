@@ -64,13 +64,13 @@ springdoc:
     urls:
       - url: /v3/api-docs
         name: Gateway API
-    # Set the correct base URL for Render deployment
+    # Set the correct base URL for production deployment
     servers:
-      - url: https://ijaa-gateway-service.onrender.com
+      - url: ${PRODUCTION_SERVER_URL:http://localhost:8000}
         description: Production Server
   # Set the default server URL for API documentation
   servers:
-    - url: https://ijaa-gateway-service.onrender.com
+    - url: ${PRODUCTION_SERVER_URL:http://localhost:8000}
       description: Production Server
   # Force the server URL in OpenAPI spec
   default-produces-media-type: application/json

@@ -14,113 +14,75 @@ public class GatewayConfig {
     @Bean
     public RouteLocator ijaaRouteConfig(RouteLocatorBuilder builder, AuthenticationFilter filter) {
         return builder.routes()
-                // Feature flag status check - public endpoint (no authentication required)
-                .route(p-> p
-                        .path("/ijaa/api/v1/admin/feature-flags/*/enabled")
-                        .filters(f-> f
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
+                // Public endpoints (no authentication required)
+                .route(p -> p
+                        .path("/ijaa/api/v1/user/admin/feature-flags/*/enabled")
+                        .filters(f -> f
+                                .rewritePath("/ijaa/(?<segment>.*)", "/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://user-service"))
-                // Admin routes - apply authentication filter for protected endpoints (excluding feature flag status)
-                .route(p-> p
-                        .path("/ijaa/api/v1/admin/**")
-                        .and()
-                        .not(route -> route.path("/ijaa/api/v1/admin/feature-flags/*/enabled"))
-                        .filters(f-> f
-                                .filter(filter.apply(new AuthenticationFilter.Config()))
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
+                .route(p -> p
+                        .path("/ijaa/api/v1/user/signin", "/ijaa/api/v1/user/signup", "/ijaa/api/v1/user/refresh", "/ijaa/api/v1/user/logout")
+                        .filters(f -> f
+                                .rewritePath("/ijaa/(?<segment>.*)", "/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://user-service"))
-                // User events routes (for user-specific event operations) - MUST come before general user routes
-                .route(p-> p
-                        .path("/ijaa/api/v1/user/events/**")
-                        .filters(f-> f
-                                .filter(filter.apply(new AuthenticationFilter.Config()))
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
+                .route(p -> p
+                        .path("/ijaa/api/v1/file/users/*/profile-photo/file/**", 
+                              "/ijaa/api/v1/file/users/*/cover-photo/file/**",
+                              "/ijaa/api/v1/file/events/*/banner/file/**")
+                        .filters(f -> f
+                                .rewritePath("/ijaa/(?<segment>.*)", "/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://event"))
-                // User service routes (excluding events which are handled by event service)
-                .route(p-> p
+                        .uri("lb://file-service"))
+                .route(p -> p
+                        .path("/ijaa/api/v1/user/health/**",
+                              "/ijaa/api/v1/event/health/**", 
+                              "/ijaa/api/v1/file/health/**",
+                              "/ijaa/api/v1/config/health/**",
+                              "/ijaa/api/v1/discovery/health/**",
+                              "/ijaa/test/**")
+                        .filters(f -> f
+                                .rewritePath("/ijaa/(?<segment>.*)", "/${segment}")
+                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
+                        .uri("lb://user-service")) // Health and test endpoints can be routed to any service
+                
+                // Protected endpoints (authentication required) - One route per service
+                .route(p -> p
                         .path("/ijaa/api/v1/user/**")
-                        .filters(f-> f
+                        .filters(f -> f
                                 .filter(filter.apply(new AuthenticationFilter.Config()))
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
+                                .rewritePath("/ijaa/(?<segment>.*)", "/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://user-service"))
-                // Event service routes
-                .route(p-> p
-                        .path("/ijaa/api/v1/events/**")
-                        .filters(f-> f
+                .route(p -> p
+                        .path("/ijaa/api/v1/event/**")
+                        .filters(f -> f
                                 .filter(filter.apply(new AuthenticationFilter.Config()))
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
+                                .rewritePath("/ijaa/(?<segment>.*)", "/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://event"))
-                .route(p-> p
-                        .path("/ijaa/api/v1/event-participations/**")
-                        .filters(f-> f
+                .route(p -> p
+                        .path("/ijaa/api/v1/file/**")
+                        .filters(f -> f
                                 .filter(filter.apply(new AuthenticationFilter.Config()))
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
-                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://event"))
-                .route(p-> p
-                        .path("/ijaa/api/v1/event-invitations/**")
-                        .filters(f-> f
-                                .filter(filter.apply(new AuthenticationFilter.Config()))
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
-                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://event"))
-                .route(p-> p
-                        .path("/ijaa/api/v1/event-comments/**")
-                        .filters(f-> f
-                                .filter(filter.apply(new AuthenticationFilter.Config()))
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
-                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://event"))
-                .route(p-> p
-                        .path("/ijaa/api/v1/events/*/banner/**")
-                        .filters(f-> f
-                                .filter(filter.apply(new AuthenticationFilter.Config()))
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
+                                .rewritePath("/ijaa/(?<segment>.*)", "/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://file-service"))
-                // File service routes - for user profile and cover photo management
-                .route(p-> p
-                        .path("/ijaa/api/v1/users/**")
-                        .and()
-                        .not(route -> route.path("/ijaa/api/v1/users/*/profile-photo/file/**", "/ijaa/api/v1/users/*/cover-photo/file/**"))
-                        .filters(f-> f
+                .route(p -> p
+                        .path("/ijaa/api/v1/config/**")
+                        .filters(f -> f
                                 .filter(filter.apply(new AuthenticationFilter.Config()))
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
+                                .rewritePath("/ijaa/(?<segment>.*)", "/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://file-service"))
-                // File serving routes - public endpoints for serving image files
-                .route(p-> p
-                        .path("/ijaa/api/v1/users/*/profile-photo/file/**", "/ijaa/api/v1/users/*/cover-photo/file/**")
-                        .filters(f-> f
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
+                        .uri("lb://config-service"))
+                .route(p -> p
+                        .path("/ijaa/api/v1/discovery/**")
+                        .filters(f -> f
+                                .filter(filter.apply(new AuthenticationFilter.Config()))
+                                .rewritePath("/ijaa/(?<segment>.*)", "/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://file-service"))
-                // Health endpoints - public endpoints for service health checks
-                .route(p-> p
-                        .path("/ijaa/api/v1/health/**")
-                        .filters(f-> f
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
-                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://file-service"))
-                // Test endpoints - public endpoints for service testing
-                .route(p-> p
-                        .path("/ijaa/test/**")
-                        .filters(f-> f
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
-                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://event"))
-                // Catch-all route for any other API patterns - route to user service as default
-                .route(p-> p
-                        .path("/ijaa/api/v1/**")
-                        .filters(f-> f
-                                .rewritePath("/ijaa/(?<segment>.*)","/${segment}")
-                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://user-service"))
+                        .uri("lb://discovery-service"))
                 .build();
     }
 }

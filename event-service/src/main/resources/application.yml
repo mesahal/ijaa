@@ -40,11 +40,16 @@ jwt:
 springdoc:
   api-docs:
     path: /api-docs
+    enabled: true
   swagger-ui:
     path: /swagger-ui.html
+    enabled: true
     tags-sorter: alpha
     operations-sorter: alpha
-  packages-to-scan: com.ijaa.event_service.presenter.rest.api
+    display-request-duration: true
+    try-it-out-enabled: true
+  packages-to-scan: com.ijaa.event.presenter.rest.api
+  show-actuator: true
 
 # Feign Client Configuration
 feign:

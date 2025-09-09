@@ -91,7 +91,7 @@ corsConfigurations:
 # ❌ REMOVE FROM PRODUCTION
 logging:
   level:
-    com.ijaa.file_service: DEBUG
+    com.ijaa.file: DEBUG
     org.springframework.web: DEBUG
 ```
 

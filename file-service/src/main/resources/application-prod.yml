@@ -55,18 +55,24 @@ management:
 springdoc:
   api-docs:
     path: /api-docs
+    enabled: true
   swagger-ui:
     path: /swagger-ui.html
+    enabled: true
     tags-sorter: alpha
     operations-sorter: alpha
+    display-request-duration: true
+    try-it-out-enabled: true
     # Set the correct base URL for Render deployment
     config-url: /api-docs/swagger-config
     url: /api-docs
     # Override the default server URL
     servers:
-      - url: https://ijaa-file-service.onrender.com
+      - url: ${PRODUCTION_SERVER_URL:http://localhost:8000}
         description: Production Server
   # Set the default server URL for API documentation
   servers:
-    - url: https://ijaa-file-service.onrender.com
+    - url: ${PRODUCTION_SERVER_URL:http://localhost:8000}
       description: Production Server
+  packages-to-scan: com.ijaa.file.controller
+  show-actuator: true

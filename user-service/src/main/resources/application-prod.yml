@@ -32,7 +32,6 @@ eureka:
     serviceUrl:
       defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE:http://localhost:8761/eureka/}
 
-
 jwt:
   secret: ${JWT_SECRET:16f7e412ee66030c3bf769281a076955f595be7479189c4e5ab1f90d2ae3c82e0c5170afcceba1e0f638648c01a468ff82b0723a970011f7fc0dd1a4ba70b0e1}
 
@@ -47,10 +46,10 @@ springdoc:
     config-url: /api-docs/swagger-config
     url: /api-docs
     servers:
-      - url: https://ijaa-user-service.onrender.com
+      - url: ${PRODUCTION_SERVER_URL:http://localhost:8000}
         description: Production Server
   servers:
-    - url: https://ijaa-user-service.onrender.com
+    - url: ${PRODUCTION_SERVER_URL:http://localhost:8000}
       description: Production Server
   packages-to-scan: com.ijaa.user.presenter.rest.api
 

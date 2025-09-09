@@ -1,5 +1,7 @@
 package com.ijaa.user.presenter.rest.api;
 
+import com.ijaa.user.common.annotation.RequiresFeature;
+import com.ijaa.user.common.utils.AppUtils;
 import com.ijaa.user.domain.common.ApiResponse;
 import com.ijaa.user.domain.dto.UserSettingsDto;
 import com.ijaa.user.domain.enums.Theme;
@@ -12,21 +14,24 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/user/settings")
+@RequestMapping(AppUtils.BASE_URL + "/settings")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "User Settings", description = "User settings management APIs")
+@Tag(name = "User Settings")
 public class UserSettingsResource {
 
     private final UserSettingsService userSettingsService;
     private final UserContextService userContextService;
 
     @GetMapping
+    @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("user.settings")
     @Operation(summary = "Get user settings", description = "Retrieve current user settings including theme preference")
     public ResponseEntity<ApiResponse<UserSettingsDto>> getUserSettings() {
         try {
@@ -42,6 +47,8 @@ public class UserSettingsResource {
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("user.settings")
     @Operation(summary = "Update user settings", description = "Update user settings including theme preference")
     public ResponseEntity<ApiResponse<UserSettingsDto>> updateUserSettings(@RequestBody UserSettingsRequest request) {
         try {
@@ -57,6 +64,8 @@ public class UserSettingsResource {
     }
 
     @GetMapping("/theme")
+    @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("user.settings")
     @Operation(summary = "Get user theme", description = "Retrieve current user theme preference")
     public ResponseEntity<ApiResponse<Theme>> getUserTheme() {
         try {
@@ -72,6 +81,8 @@ public class UserSettingsResource {
     }
 
     @GetMapping("/themes")
+    @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("user.settings")
     @Operation(summary = "Get available themes", description = "Get list of available theme options")
     public ResponseEntity<ApiResponse<List<Theme>>> getAvailableThemes() {
         try {
