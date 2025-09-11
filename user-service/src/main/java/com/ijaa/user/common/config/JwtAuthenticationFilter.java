@@ -40,7 +40,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
-        final String userType;
         
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
@@ -50,13 +49,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         jwt = authHeader.substring(7);
         
         try {
-            // Extract user type from JWT
-            userType = jwtService.extractUserType(jwt);
+            // Extract role from JWT to determine user type
+            String role = jwtService.extractRole(jwt);
             
-            if (userType != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (role != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = null;
                 
-                if ("ADMIN".equals(userType)) {
+                if ("ADMIN".equals(role)) {
                     // Handle admin authentication
                     String email = jwtService.extractEmail(jwt);
                     if (email != null) {

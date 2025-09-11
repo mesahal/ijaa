@@ -35,7 +35,7 @@ eureka:
 
 jwt:
   secret: ${JWT_SECRET:16f7e412ee66030c3bf769281a076955f595be7479189c4e5ab1f90d2ae3c82e0c5170afcceba1e0f638648c01a468ff82b0723a970011f7fc0dd1a4ba70b0e1}
-  access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:900}  # 15 minutes
+  access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:300}  # 5 minutes
   refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION:604800}  # 7 days
 
 # Swagger/OpenAPI Configuration

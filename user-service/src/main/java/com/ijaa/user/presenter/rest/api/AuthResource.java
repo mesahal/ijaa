@@ -2,7 +2,6 @@ package com.ijaa.user.presenter.rest.api;
 
 import com.ijaa.user.common.annotation.RequiresFeature;
 import com.ijaa.user.common.utils.AppUtils;
-import com.ijaa.user.common.utils.FeatureFlagUtils;
 import com.ijaa.user.domain.common.ApiResponse;
 import com.ijaa.user.domain.request.SignInRequest;
 import com.ijaa.user.domain.request.SignUpRequest;
@@ -26,9 +25,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import com.ijaa.user.common.exceptions.AuthenticationFailedException;
+
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -37,7 +38,6 @@ import jakarta.servlet.http.HttpServletResponse;
 public class AuthResource {
 
     private final AuthService authService;
-    private final FeatureFlagUtils featureFlagUtils;
 
     @PostMapping("/signin")
     @RequiresFeature("user.login")
@@ -130,13 +130,7 @@ public class AuthResource {
     })
     public ResponseEntity<ApiResponse<AuthResponse>> signIn(
             @Valid @RequestBody SignInRequest request, HttpServletResponse response) {
-        AuthResponse authResponse = authService.verify(request);
-        
-        // Get refresh token for user and set it in cookie
-        String refreshToken = authService.getRefreshTokenForUser(request.getUsername());
-        if (refreshToken != null) {
-            setRefreshTokenCookie(response, refreshToken);
-        }
+        AuthResponse authResponse = authService.signInWithCookieManagement(request, response);
         
         return ResponseEntity.ok(
                 new ApiResponse<>("Login successful", "200", authResponse)
@@ -235,7 +229,6 @@ public class AuthResource {
     public ResponseEntity<ApiResponse<AuthResponse>> signUp(
             @Valid @RequestBody SignUpRequest request) {
         AuthResponse authResponse = authService.registerUser(request);
-        featureFlagUtils.logFeatureUsage(FeatureFlagUtils.USER_REGISTRATION, authResponse.getUserId());
         return ResponseEntity.ok(
                 new ApiResponse<>("Registration successful", "201", authResponse)
         );
@@ -377,7 +370,7 @@ public class AuthResource {
     @PostMapping("/refresh")
     @Operation(
         summary = "Refresh Access Token",
-        description = "Generate a new access token using a valid refresh token from cookie"
+        description = "Generate a new access token using a valid refresh token from cookie or request body"
     )
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
@@ -423,22 +416,30 @@ public class AuthResource {
             )
         )
     })
-    public ResponseEntity<ApiResponse<AuthResponse>> refreshToken(HttpServletRequest request) {
-        String refreshToken = getRefreshTokenFromCookie(request);
+    public ResponseEntity<ApiResponse<AuthResponse>> refreshToken(
+            @RequestBody(required = false) Map<String, String> requestBody,
+            HttpServletRequest request) {
         
-        if (refreshToken == null) {
+        String refreshToken = authService.extractRefreshToken(requestBody, request);
+        
+        if (refreshToken == null || refreshToken.trim().isEmpty()) {
             return ResponseEntity.status(401)
                 .body(new ApiResponse<>("Refresh token not found", "401", null));
         }
         
-        AuthResponse authResponse = authService.refreshToken(refreshToken);
-        return ResponseEntity.ok(new ApiResponse<>("Token refreshed successfully", "200", authResponse));
+        try {
+            AuthResponse authResponse = authService.refreshToken(refreshToken);
+            return ResponseEntity.ok(new ApiResponse<>("Token refreshed successfully", "200", authResponse));
+        } catch (AuthenticationFailedException e) {
+            return ResponseEntity.status(401)
+                .body(new ApiResponse<>("Invalid or expired refresh token", "401", null));
+        }
     }
 
     @PostMapping("/logout")
     @Operation(
         summary = "User Logout",
-        description = "Logout user by invalidating refresh token and clearing cookie"
+        description = "Logout user by invalidating refresh token and clearing cookie. Requires authentication."
     )
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
@@ -459,56 +460,39 @@ public class AuthResource {
                     )
                 }
             )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "401",
+            description = "Unauthorized - Authentication required",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Unauthorized",
+                        value = """
+                            {
+                                "message": "Authentication required",
+                                "code": "401",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
         )
     })
-    public ResponseEntity<ApiResponse<Void>> logout(HttpServletRequest request, HttpServletResponse response) {
-        String refreshToken = getRefreshTokenFromCookie(request);
+    public ResponseEntity<ApiResponse<Void>> logout(
+            @RequestBody(required = false) Map<String, String> requestBody,
+            HttpServletRequest request, 
+            HttpServletResponse response) {
         
-        if (refreshToken != null) {
-            authService.logout(refreshToken);
+        try {
+            authService.logoutWithCookieManagement(requestBody, request, response);
+            return ResponseEntity.ok(new ApiResponse<>("Logout successful", "200", null));
+        } catch (AuthenticationFailedException e) {
+            return ResponseEntity.status(401)
+                .body(new ApiResponse<>("Authentication required", "401", null));
         }
-        
-        // Clear refresh token cookie
-        clearRefreshTokenCookie(response);
-        
-        return ResponseEntity.ok(new ApiResponse<>("Logout successful", "200", null));
     }
 
-    /**
-     * Extract refresh token from cookie
-     */
-    private String getRefreshTokenFromCookie(HttpServletRequest request) {
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("refreshToken".equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Set refresh token cookie
-     */
-    private void setRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
-        Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setPath("/api/v1/user");
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setMaxAge(7 * 24 * 60 * 60); // 7 days in seconds
-        response.addCookie(cookie);
-    }
-
-    /**
-     * Clear refresh token cookie
-     */
-    private void clearRefreshTokenCookie(HttpServletResponse response) {
-        Cookie cookie = new Cookie("refreshToken", null);
-        cookie.setPath("/api/v1/user");
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
-    }
 }

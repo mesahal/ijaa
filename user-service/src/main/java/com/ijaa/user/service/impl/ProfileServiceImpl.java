@@ -17,6 +17,7 @@ import com.ijaa.user.repository.UserRepository;
 import com.ijaa.user.service.BaseService;
 import com.ijaa.user.service.LocationService;
 import com.ijaa.user.service.ProfileService;
+import com.ijaa.user.common.utils.UniqueIdGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,19 +33,22 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
     private final InterestRepository interestRepository;
     private final UserRepository userRepository;
     private final LocationService locationService;
+    private final UniqueIdGenerator uniqueIdGenerator;
 
     public ProfileServiceImpl(ProfileRepository profileRepository,
                               ObjectMapper objectMapper,
                               ExperienceRepository experienceRepository,
                               InterestRepository interestRepository,
                               UserRepository userRepository,
-                              LocationService locationService) {
+                              LocationService locationService,
+                              UniqueIdGenerator uniqueIdGenerator) {
         super(objectMapper);
         this.profileRepository = profileRepository;
         this.experienceRepository = experienceRepository;
         this.interestRepository = interestRepository;
         this.userRepository = userRepository;
         this.locationService = locationService;
+        this.uniqueIdGenerator = uniqueIdGenerator;
     }
 
     @Override
@@ -306,7 +310,7 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
     }
 
     private String generateUserId() {
-        // Implement your user ID generation logic here
-        return java.util.UUID.randomUUID().toString();
+        // Use the centralized UniqueIdGenerator for consistent ID generation
+        return uniqueIdGenerator.generateUUID();
     }
 }

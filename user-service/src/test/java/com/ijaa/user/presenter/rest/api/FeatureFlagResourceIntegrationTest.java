@@ -104,7 +104,7 @@ class FeatureFlagResourceIntegrationTest {
     @Test
     @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
     void testGetAllFeatureFlags_Success() throws Exception {
-        mockMvc.perform(get("/api/v1/admin/feature-flags")
+        mockMvc.perform(get("/api/v1/user/admin/feature-flags")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Feature flags retrieved successfully"))
@@ -117,7 +117,7 @@ class FeatureFlagResourceIntegrationTest {
     @Test
     @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
     void testGetFeatureFlagByName_Success() throws Exception {
-        mockMvc.perform(get("/api/v1/admin/feature-flags/chat")
+        mockMvc.perform(get("/api/v1/user/admin/feature-flags/chat")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Feature flag retrieved successfully"))
@@ -130,7 +130,7 @@ class FeatureFlagResourceIntegrationTest {
     @Test
     @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
     void testGetFeatureFlagByName_NotFound() throws Exception {
-        mockMvc.perform(get("/api/v1/admin/feature-flags/nonexistent")
+        mockMvc.perform(get("/api/v1/user/admin/feature-flags/nonexistent")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Feature flag not found: nonexistent"))
@@ -147,7 +147,7 @@ class FeatureFlagResourceIntegrationTest {
         request.setDescription("A new feature for testing");
         request.setEnabled(true);
 
-        mockMvc.perform(post("/api/v1/admin/feature-flags")
+        mockMvc.perform(post("/api/v1/user/admin/feature-flags")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -167,7 +167,7 @@ class FeatureFlagResourceIntegrationTest {
         request.setDescription("Real-time chat functionality");
         request.setEnabled(true);
 
-        mockMvc.perform(post("/api/v1/admin/feature-flags")
+        mockMvc.perform(post("/api/v1/user/admin/feature-flags")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
@@ -180,7 +180,7 @@ class FeatureFlagResourceIntegrationTest {
         FeatureFlagUpdateRequest request = new FeatureFlagUpdateRequest();
         request.setEnabled(false);
 
-        mockMvc.perform(put("/api/v1/admin/feature-flags/chat")
+        mockMvc.perform(put("/api/v1/user/admin/feature-flags/chat")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -196,7 +196,7 @@ class FeatureFlagResourceIntegrationTest {
         FeatureFlagUpdateRequest request = new FeatureFlagUpdateRequest();
         request.setEnabled(true);
 
-        mockMvc.perform(put("/api/v1/admin/feature-flags/nonexistent")
+        mockMvc.perform(put("/api/v1/user/admin/feature-flags/nonexistent")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isNotFound())
@@ -218,7 +218,7 @@ class FeatureFlagResourceIntegrationTest {
         flagToDelete.setUpdatedAt(LocalDateTime.now());
         featureFlagRepository.save(flagToDelete);
 
-        mockMvc.perform(delete("/api/v1/admin/feature-flags/flag-to-delete")
+        mockMvc.perform(delete("/api/v1/user/admin/feature-flags/flag-to-delete")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Feature flag deleted successfully"))
@@ -229,7 +229,7 @@ class FeatureFlagResourceIntegrationTest {
     @Test
     @WithMockUser(username = "admin@test.com", roles = {"ADMIN"})
     void testDeleteFeatureFlag_NotFound() throws Exception {
-        mockMvc.perform(delete("/api/v1/admin/feature-flags/nonexistent")
+        mockMvc.perform(delete("/api/v1/user/admin/feature-flags/nonexistent")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Feature flag not found: nonexistent"))
@@ -251,7 +251,7 @@ class FeatureFlagResourceIntegrationTest {
         enabledFlag.setUpdatedAt(LocalDateTime.now());
         featureFlagRepository.save(enabledFlag);
 
-        mockMvc.perform(get("/api/v1/admin/feature-flags/enabled-test-flag/enabled")
+        mockMvc.perform(get("/api/v1/user/admin/feature-flags/enabled-test-flag/enabled")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Feature flag status retrieved successfully"))
@@ -272,7 +272,7 @@ class FeatureFlagResourceIntegrationTest {
         disabledFlag.setUpdatedAt(LocalDateTime.now());
         featureFlagRepository.save(disabledFlag);
 
-        mockMvc.perform(get("/api/v1/admin/feature-flags/disabled-check/enabled")
+        mockMvc.perform(get("/api/v1/user/admin/feature-flags/disabled-check/enabled")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Feature flag status retrieved successfully"))
@@ -286,14 +286,14 @@ class FeatureFlagResourceIntegrationTest {
     @Test
     @WithMockUser(username = "user@test.com", roles = {"USER"})
     void testGetAllFeatureFlags_Unauthorized() throws Exception {
-        mockMvc.perform(get("/api/v1/admin/feature-flags")
+        mockMvc.perform(get("/api/v1/user/admin/feature-flags")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound()); // The system returns 404 for unauthorized access
     }
 
     @Test
     void testGetAllFeatureFlags_Unauthenticated() throws Exception {
-        mockMvc.perform(get("/api/v1/admin/feature-flags")
+        mockMvc.perform(get("/api/v1/user/admin/feature-flags")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound()); // The system returns 404 for unauthenticated access
     }

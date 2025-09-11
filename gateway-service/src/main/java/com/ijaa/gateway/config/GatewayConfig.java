@@ -28,6 +28,12 @@ public class GatewayConfig {
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://user-service"))
                 .route(p -> p
+                        .path("/ijaa/api/v1/user/admin/login", "/ijaa/api/v1/user/admin/signup")
+                        .filters(f -> f
+                                .rewritePath("/ijaa/(?<segment>.*)", "/${segment}")
+                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
+                        .uri("lb://user-service"))
+                .route(p -> p
                         .path("/ijaa/api/v1/file/users/*/profile-photo/file/**", 
                               "/ijaa/api/v1/file/users/*/cover-photo/file/**",
                               "/ijaa/api/v1/file/events/*/banner/file/**")
@@ -46,7 +52,6 @@ public class GatewayConfig {
                                 .rewritePath("/ijaa/(?<segment>.*)", "/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://user-service")) // Health and test endpoints can be routed to any service
-                
                 // Protected endpoints (authentication required) - One route per service
                 .route(p -> p
                         .path("/ijaa/api/v1/user/**")

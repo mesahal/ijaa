@@ -35,6 +35,7 @@ INSERT INTO feature_flags (name, description, is_enabled) VALUES
 ('FEATURE_FLAG_MANAGEMENT', 'Allow admins to manage feature flags', true),
 ('ANNOUNCEMENT_SYSTEM', 'Enable system announcements', true),
 ('REPORTING_SYSTEM', 'Enable user reporting system', true),
+('admin.auth', 'Enable admin authentication and login', true),
 
 -- Advanced Features
 ('USER_SETTINGS', 'Enable user settings and preferences', true),

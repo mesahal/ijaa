@@ -41,7 +41,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/v1/user/health/**", "/actuator/**", "/swagger-ui/**", "/api-docs/**", "/test/**").permitAll()
                         .requestMatchers("/api/v1/user/admin/feature-flags/*/enabled").permitAll()
-                        .requestMatchers("/api/v1/user/signin", "/api/v1/user/signup", "/api/v1/user/refresh", "/api/v1/user/logout").permitAll()
+                        .requestMatchers("/api/v1/user/signin", "/api/v1/user/signup", "/api/v1/user/refresh").permitAll()
+                        .requestMatchers("/api/v1/user/admin/login", "/api/v1/user/admin/signup").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

@@ -75,7 +75,7 @@ class AuthResourceIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Registration successful"))
                 .andExpect(jsonPath("$.code").value("201"))
-                .andExpect(jsonPath("$.data.token").value("test-jwt-token"))
+                .andExpect(jsonPath("$.data.accessToken").value("test-jwt-token"))
                 .andExpect(jsonPath("$.data.userId").value("USER_123456"));
     }
 
@@ -104,7 +104,7 @@ class AuthResourceIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(signInRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.token").value("test-jwt-token"))
+                .andExpect(jsonPath("$.data.accessToken").value("test-jwt-token"))
                 .andExpect(jsonPath("$.data.userId").value("USER_123456"));
     }
 
