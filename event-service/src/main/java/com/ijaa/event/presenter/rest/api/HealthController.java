@@ -1,5 +1,6 @@
 package com.ijaa.event.presenter.rest.api;
 
+import com.ijaa.event.common.annotation.RequiresFeature;
 import com.ijaa.event.common.utils.AppUtils;
 import com.ijaa.event.repository.EventRepository;
 import com.ijaa.event.repository.EventCommentRepository;
@@ -31,6 +32,7 @@ public class HealthController {
     private final EventInvitationRepository eventInvitationRepository;
 
     @GetMapping("/status")
+    @RequiresFeature("system.health")
     @Operation(summary = "Basic Health Check", description = "Check if the Event Service is running")
     public ResponseEntity<Map<String, Object>> basicHealth() {
         Map<String, Object> response = new HashMap<>();
@@ -56,6 +58,7 @@ public class HealthController {
     }
 
     @GetMapping("/database")
+    @RequiresFeature("system.health")
     @Operation(summary = "Database Health Check", description = "Check database connectivity and basic operations")
     public ResponseEntity<Map<String, Object>> databaseHealth() {
         Map<String, Object> response = new HashMap<>();

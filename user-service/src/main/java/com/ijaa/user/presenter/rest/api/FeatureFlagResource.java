@@ -6,10 +6,10 @@ import com.ijaa.user.common.utils.AppUtils;
 import com.ijaa.user.domain.common.ApiResponse;
 import com.ijaa.user.domain.entity.FeatureFlag;
 import com.ijaa.user.domain.dto.FeatureFlagDto;
-import com.ijaa.user.domain.converter.FeatureFlagConverter;
-import com.ijaa.user.presenter.rest.api.dto.FeatureFlagRequest;
-import com.ijaa.user.presenter.rest.api.dto.FeatureFlagUpdateRequest;
-import com.ijaa.user.presenter.rest.api.dto.FeatureFlagStatus;
+import com.ijaa.user.domain.mapper.FeatureFlagMapper;
+import com.ijaa.user.domain.request.FeatureFlagRequest;
+import com.ijaa.user.domain.request.FeatureFlagUpdateRequest;
+import com.ijaa.user.domain.response.FeatureFlagStatus;
 import com.ijaa.user.service.FeatureFlagService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -27,15 +27,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(AppUtils.BASE_URL + "/admin/feature-flags")
+@RequestMapping(AppUtils.ADMIN_BASE_URL + "/feature-flags")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "Feature Flag Management")
+@Tag(name = "Admin Management")
 public class FeatureFlagResource {
 
     private final FeatureFlagService featureFlagService;
     private final ObjectMapper objectMapper;
-    private final FeatureFlagConverter featureFlagConverter;
+    private final FeatureFlagMapper featureFlagMapper;
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -137,7 +137,7 @@ public class FeatureFlagResource {
                 .body(new ApiResponse<>("Feature flag not found: " + name, "404", null));
         }
         
-        FeatureFlagDto dto = featureFlagConverter.toDto(featureFlag);
+        FeatureFlagDto dto = featureFlagMapper.toDto(featureFlag);
         return ResponseEntity.ok(new ApiResponse<>("Feature flag retrieved successfully", "200", dto));
     }
 
@@ -197,7 +197,7 @@ public class FeatureFlagResource {
             dto.setEnabled(request.getEnabled());
             
             FeatureFlag featureFlag = featureFlagService.createFlag(dto);
-            FeatureFlagDto responseDto = featureFlagConverter.toDto(featureFlag);
+            FeatureFlagDto responseDto = featureFlagMapper.toDto(featureFlag);
             return ResponseEntity.status(201)
                 .body(new ApiResponse<>("Feature flag created successfully", "201", responseDto));
         } catch (RuntimeException e) {
@@ -269,7 +269,7 @@ public class FeatureFlagResource {
         
         try {
             FeatureFlag featureFlag = featureFlagService.updateFlag(name, request.isEnabled());
-            FeatureFlagDto dto = featureFlagConverter.toDto(featureFlag);
+            FeatureFlagDto dto = featureFlagMapper.toDto(featureFlag);
             return ResponseEntity.ok(new ApiResponse<>("Feature flag updated successfully", "200", dto));
         } catch (RuntimeException e) {
             return ResponseEntity.status(404)
@@ -330,6 +330,7 @@ public class FeatureFlagResource {
 
 
     @GetMapping("/{name}/enabled")
+    @RequiresFeature("system.health")
     @Operation(
         summary = "Check Feature Flag Status",
         description = "Check if a specific feature flag is enabled (Public endpoint - No authentication required)"

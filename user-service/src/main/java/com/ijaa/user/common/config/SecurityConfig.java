@@ -39,10 +39,11 @@ public class SecurityConfig {
 
         return http.csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/api/v1/user/health/**", "/actuator/**", "/swagger-ui/**", "/api-docs/**", "/test/**").permitAll()
-                        .requestMatchers("/api/v1/user/admin/feature-flags/*/enabled").permitAll()
-                        .requestMatchers("/api/v1/user/signin", "/api/v1/user/signup", "/api/v1/user/refresh").permitAll()
-                        .requestMatchers("/api/v1/user/admin/login", "/api/v1/user/admin/signup").permitAll()
+                        .requestMatchers("/api/v1/health/**", "/actuator/**", "/swagger-ui/**", "/api-docs/**", "/test/**").permitAll()
+                        .requestMatchers("/api/v1/admin/feature-flags/*/enabled").permitAll()
+                        .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register", "/api/v1/auth/refresh", "/api/v1/auth/logout").permitAll()
+                        .requestMatchers("/api/v1/admin/login", "/api/v1/admin/admins").permitAll()
+                        .requestMatchers("/api/v1/locations/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

@@ -26,16 +26,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping(AppUtils.BASE_URL)
+@RequestMapping(AppUtils.USERS_BASE_URL)
 @RequiredArgsConstructor
-@Tag(name = "User Profile Management")
+@Tag(name = "User Management")
 public class ProfileResource {
 
     private final ProfileService profileService;
     private final FeatureFlagUtils featureFlagUtils;
 
     // Get user's profile by userId - Requires USER role
-    @GetMapping("/profile/{userId}")
+    @GetMapping("/{userId}")
     @PreAuthorize("hasRole('USER')")
     @RequiresFeature("user.profile")
     @Operation(summary = "Get User Profile", description = "Get user profile by userId (USER role required)")
@@ -48,12 +48,12 @@ public class ProfileResource {
         );
     }
 
-    @PutMapping("/profile")
+    @PutMapping("/{userId}")
     @PreAuthorize("hasRole('USER')")
     @RequiresFeature("user.profile")
     @Operation(
-        summary = "Update Basic Profile Info",
-        description = "Update basic profile information (USER role required)",
+        summary = "Update User Profile",
+        description = "Update user profile information (USER role required)",
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Profile update details",
             required = true,
@@ -109,7 +109,7 @@ public class ProfileResource {
         );
     }
 
-    @PutMapping("/visibility")
+    @PutMapping("/{userId}/profile")
     @PreAuthorize("hasRole('USER')")
     @RequiresFeature("user.profile")
     @Operation(
@@ -162,7 +162,8 @@ public class ProfileResource {
     }
 
     // Experience endpoints
-    @GetMapping("/experiences/{userId}")
+    @GetMapping("/{userId}/experiences")
+    @RequiresFeature("user.experiences")
     @Operation(summary = "Get User Experiences", description = "Get user experiences by userId")
     public ResponseEntity<ApiResponse<List<ExperienceDto>>> getExperiencesByUserId(@PathVariable String userId) {
         List<ExperienceDto> experiences = profileService.getExperiencesByUserId(userId);
@@ -171,7 +172,7 @@ public class ProfileResource {
         );
     }
 
-    @PostMapping("/experiences")
+    @PostMapping("/{userId}/experiences")
     @PreAuthorize("hasRole('USER')")
     @RequiresFeature("user.experiences")
     @Operation(
@@ -225,7 +226,7 @@ public class ProfileResource {
         );
     }
 
-    @DeleteMapping("/experiences/{experienceId}")
+    @DeleteMapping("/{userId}/experiences/{experienceId}")
     @PreAuthorize("hasRole('USER')")
     @RequiresFeature("user.experiences")
     @Operation(
@@ -283,7 +284,7 @@ public class ProfileResource {
         );
     }
 
-    @PutMapping("/experiences/{experienceId}")
+    @PutMapping("/{userId}/experiences/{experienceId}")
     @PreAuthorize("hasRole('USER')")
     @RequiresFeature("user.experiences")
     @Operation(
@@ -383,7 +384,8 @@ public class ProfileResource {
     }
 
     // Interest endpoints
-    @GetMapping("/interests/{userId}")
+    @GetMapping("/{userId}/interests")
+    @RequiresFeature("user.interests")
     @Operation(summary = "Get User Interests", description = "Get user interests by userId")
     public ResponseEntity<ApiResponse<List<InterestDto>>> getInterestsByUserId(@PathVariable String userId) {
         List<InterestDto> interests = profileService.getInterestsByUserId(userId);
@@ -392,7 +394,7 @@ public class ProfileResource {
         );
     }
 
-    @PostMapping("/interests")
+    @PostMapping("/{userId}/interests")
     @PreAuthorize("hasRole('USER')")
     @RequiresFeature("user.interests")
     @Operation(
@@ -435,7 +437,7 @@ public class ProfileResource {
         );
     }
 
-    @DeleteMapping("/interests/{interestId}")
+    @DeleteMapping("/{userId}/interests/{interestId}")
     @PreAuthorize("hasRole('USER')")
     @RequiresFeature("user.interests")
     @Operation(
@@ -493,7 +495,7 @@ public class ProfileResource {
         );
     }
 
-    @PutMapping("/interests/{interestId}")
+    @PutMapping("/{userId}/interests/{interestId}")
     @PreAuthorize("hasRole('USER')")
     @RequiresFeature("user.interests")
     @Operation(

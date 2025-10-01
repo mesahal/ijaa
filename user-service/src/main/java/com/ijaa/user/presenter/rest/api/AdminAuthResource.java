@@ -2,6 +2,7 @@ package com.ijaa.user.presenter.rest.api;
 
 import com.ijaa.user.common.annotation.RequiresFeature;
 import com.ijaa.user.common.utils.AppUtils;
+import com.ijaa.user.common.utils.CookieUtils;
 import com.ijaa.user.domain.common.ApiResponse;
 import com.ijaa.user.domain.request.AdminLoginRequest;
 import com.ijaa.user.domain.request.AdminPasswordChangeRequest;
@@ -10,6 +11,8 @@ import com.ijaa.user.domain.response.AdminAuthResponse;
 import com.ijaa.user.domain.response.AdminProfileResponse;
 import com.ijaa.user.domain.response.DashboardStatsResponse;
 import com.ijaa.user.service.AdminService;
+import com.ijaa.user.service.AuthService;
+import com.ijaa.user.common.exceptions.AuthenticationFailedException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -20,20 +23,30 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.util.Map;
+
 @RestController
-@RequestMapping(AppUtils.BASE_URL + "/admin")
+@RequestMapping(AppUtils.ADMIN_BASE_URL)
 @RequiredArgsConstructor
-@Tag(name = "Admin Authentication")
+@Tag(name = "Admin Management")
 public class AdminAuthResource {
 
-    private final AdminService adminService;
+    @Value("${spring.profiles.active:dev}")
+    private String activeProfile;
 
-    @PostMapping("/signup")
+    private final AdminService adminService;
+    private final CookieUtils cookieUtils;
+    private final AuthService authService;
+
+    @PostMapping("/admins")
     @PreAuthorize("hasRole('ADMIN') or @securityUtils.isFirstAdmin()")
     @RequiresFeature("admin.auth")
     @Operation(
@@ -234,14 +247,98 @@ public class AdminAuthResource {
             )
         }
     )
-    public ResponseEntity<ApiResponse<AdminAuthResponse>> login(@Valid @RequestBody AdminLoginRequest request) {
+    public ResponseEntity<ApiResponse<AdminAuthResponse>> login(@Valid @RequestBody AdminLoginRequest request, HttpServletResponse response) {
         // log.info("Admin login attempt for email: {}", request.getEmail()); // Original code had this line commented out
         
-        AdminAuthResponse response = adminService.login(request);
-        
-        // log.info("Admin login successful for email: {}", request.getEmail()); // Original code had this line commented out
-        return ResponseEntity.ok(new ApiResponse<>("Admin login successful", "200", response));
+        AdminAuthResponse authResponse = adminService.login(request);
+
+        // Set refresh token as HttpOnly cookie using CookieUtils for consistency
+        cookieUtils.setRefreshTokenCookie(response, authResponse.getRefreshToken(), "prod".equals(activeProfile));
+
+        return ResponseEntity.ok()
+            .body(new ApiResponse<>("Admin login successful", "200", authResponse));
     }
+
+    @PostMapping("/logout")
+    @PreAuthorize("hasRole('ADMIN')")
+    @RequiresFeature("admin.logout")
+    @Operation(
+        summary = "Admin Logout",
+        description = "Logout admin by invalidating refresh token and clearing cookie. Requires authentication."
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Admin logout successful",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Logout Success",
+                        value = """
+                            {
+                                "message": "Admin logout successful",
+                                "code": "200",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "401",
+            description = "Unauthorized - Authentication required",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Unauthorized",
+                        value = """
+                            {
+                                "message": "Authentication required",
+                                "code": "401",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "403",
+            description = "Feature disabled",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Feature Disabled",
+                        value = """
+                            {
+                                "message": "Feature 'admin.logout' is disabled",
+                                "code": "403",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
+        )
+    })
+    public ResponseEntity<ApiResponse<Void>> logout(
+            @RequestBody(required = false) Map<String, String> requestBody,
+            HttpServletRequest request, 
+            HttpServletResponse response) {
+        
+        try {
+            authService.logoutWithCookieManagement(requestBody, request, response);
+            return ResponseEntity.ok(new ApiResponse<>("Admin logout successful", "200", null));
+        } catch (AuthenticationFailedException e) {
+            return ResponseEntity.status(401)
+                .body(new ApiResponse<>("Authentication required", "401", null));
+        }
+    }
+
 
     @GetMapping("/profile")
     @PreAuthorize("hasRole('ADMIN')")
@@ -550,4 +647,4 @@ public class AdminAuthResource {
         AdminProfileResponse response = adminService.changePassword(request);
         return ResponseEntity.ok(new ApiResponse<>("Password changed successfully", "200", response));
     }
-} 
+}

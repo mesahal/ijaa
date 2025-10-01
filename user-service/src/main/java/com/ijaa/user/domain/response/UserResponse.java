@@ -17,7 +17,10 @@ public class UserResponse {
     private String name;
     private String email;
     private String profession;
-    private String location;
+    private Long cityId;
+    private Long countryId;
+    private String cityName;
+    private String countryName;
     private String batch;
     private String phone;
     private String linkedIn;

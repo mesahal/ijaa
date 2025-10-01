@@ -21,8 +21,11 @@ public class AlumniSearchRequest {
     @Schema(description = "Filter by profession or industry", example = "Technology")
     private String profession;
     
-    @Schema(description = "Filter by location", example = "Bangalore")
-    private String location;
+    @Schema(description = "Filter by city ID", example = "163")
+    private Long cityId;
+    
+    @Schema(description = "Filter by country ID", example = "101")
+    private Long countryId;
     
     @Schema(description = "Sort order for results", example = "relevance", allowableValues = {"relevance", "name", "batch", "connections"})
     @Pattern(regexp = "^(relevance|name|batch|connections)$", message = "SortBy must be one of: relevance, name, batch, connections")

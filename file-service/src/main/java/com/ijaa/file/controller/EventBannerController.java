@@ -1,5 +1,6 @@
 package com.ijaa.file.controller;
 
+import com.ijaa.file.common.annotation.RequiresFeature;
 import com.ijaa.file.common.utils.AppUtils;
 import com.ijaa.file.config.FeatureFlagUtils;
 import com.ijaa.file.domain.common.ApiResponse;
@@ -33,6 +34,7 @@ public class EventBannerController {
     private final FeatureFlagUtils featureFlagUtils;
 
     @PostMapping(value = "/{eventId}/banner", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequiresFeature("events.banner")
     @Operation(
             summary = "Upload Event Banner",
             description = "Upload or update an event banner image. Supports JPG, JPEG, PNG, WEBP formats up to 5MB."
@@ -53,7 +55,7 @@ public class EventBannerController {
                                 "message": "Event banner uploaded successfully",
                                 "data": {
                                     "message": "Event banner uploaded successfully",
-                                    "fileUrl": "/ijaa/api/v1/file/events/1/banner/file/abc123.jpg",
+                                    "fileUrl": "/ijaa/api/v1/files/events/1/banner/file/abc123.jpg",
                                     "fileName": "abc123.jpg",
                                     "fileSize": 12345
                                 },
@@ -115,6 +117,7 @@ public class EventBannerController {
     }
 
     @GetMapping("/{eventId}/banner")
+    @RequiresFeature("file-download")
     @Operation(
             summary = "Get Event Banner URL",
             description = "Retrieve the URL of an event banner. Returns null if no banner exists."
@@ -178,6 +181,7 @@ public class EventBannerController {
     }
 
     @DeleteMapping("/{eventId}/banner")
+    @RequiresFeature("file-delete")
     @Operation(
             summary = "Delete Event Banner",
             description = "Delete an event banner image."
@@ -209,6 +213,7 @@ public class EventBannerController {
     }
 
     @GetMapping("/{eventId}/banner/file/{fileName}")
+    @RequiresFeature("file-download")
     @Operation(
             summary = "Get Event Banner File",
             description = "Serve the actual event banner file. This endpoint returns the image file directly. **Public endpoint - no authentication required.**"

@@ -2,6 +2,7 @@ package com.ijaa.user.common.config;
 
 import com.ijaa.user.service.AdminUserDetailsService;
 import com.ijaa.user.service.JWTService;
+// TokenBlacklistService import removed - now handled by gateway
 import com.ijaa.user.service.impl.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,6 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JWTService jwtService;
     private final UserDetailsServiceImpl userDetailsService;
     private final AdminUserDetailsService adminUserDetailsService;
+    // TokenBlacklistService removed - blacklist check now handled by gateway
 
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -47,6 +49,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         
         jwt = authHeader.substring(7);
+        
+        // Token blacklist check is now handled by the gateway
+        // No need to check here as requests come through gateway
         
         try {
             // Extract role from JWT to determine user type
@@ -69,7 +74,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     }
                 }
                 
-                if (userDetails != null && jwtService.validateToken(jwt, jwtSecret)) {
+                if (userDetails != null && jwtService.validateToken(jwt)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,

@@ -2,7 +2,7 @@ package com.ijaa.user.service;
 
 import com.ijaa.user.domain.dto.FeatureFlagDto;
 import com.ijaa.user.domain.entity.FeatureFlag;
-import com.ijaa.user.domain.converter.FeatureFlagConverter;
+import com.ijaa.user.domain.mapper.FeatureFlagMapper;
 import com.ijaa.user.repository.FeatureFlagRepository;
 import com.ijaa.user.service.impl.FeatureFlagServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +28,7 @@ class FeatureFlagServiceTest {
     private FeatureFlagRepository featureFlagRepository;
 
     @Mock
-    private FeatureFlagConverter featureFlagConverter;
+    private FeatureFlagMapper featureFlagMapper;
 
     @InjectMocks
     private FeatureFlagServiceImpl featureFlagService;
@@ -256,7 +256,7 @@ class FeatureFlagServiceTest {
         // Given
         List<FeatureFlag> topLevelFlags = Arrays.asList(parentFlag);
         when(featureFlagRepository.findAllTopLevelFlags()).thenReturn(topLevelFlags);
-        when(featureFlagConverter.toDtoWithChildren(parentFlag)).thenReturn(parentDto);
+        when(featureFlagMapper.toDtoWithChildren(parentFlag)).thenReturn(parentDto);
 
         // When
         List<FeatureFlagDto> result = featureFlagService.getAllFlags();
@@ -266,7 +266,7 @@ class FeatureFlagServiceTest {
         assertEquals(1, result.size());
         assertEquals("chat", result.get(0).getName());
         verify(featureFlagRepository).findAllTopLevelFlags();
-        verify(featureFlagConverter).toDtoWithChildren(parentFlag);
+        verify(featureFlagMapper).toDtoWithChildren(parentFlag);
     }
 
 

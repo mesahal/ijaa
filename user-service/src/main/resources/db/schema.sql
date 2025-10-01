@@ -1,25 +1,32 @@
 -- User Service Database Schema
 -- This file creates all necessary tables for the IJAA user service
 
--- Include simplified location tables
-\i countries-simplified.sql
-\i cities-simplified.sql
+-- Location tables are now included in data.sql
+
+-- Countries table (simplified - only id and name)
+CREATE TABLE IF NOT EXISTS countries (
+    id BIGINT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+-- Cities table (simplified - only id, name, country_id)
+CREATE TABLE IF NOT EXISTS cities (
+    id BIGINT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    country_id BIGINT NOT NULL,
+    FOREIGN KEY (country_id) REFERENCES countries(id)
+);
+
+-- Create indexes for better performance
+CREATE INDEX IF NOT EXISTS idx_cities_country_id ON cities(country_id);
 
 -- Users table
 CREATE TABLE IF NOT EXISTS users (
     id BIGSERIAL PRIMARY KEY,
-    username VARCHAR(255) UNIQUE NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
+    user_id VARCHAR(50) UNIQUE NOT NULL,
+    username VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    first_name VARCHAR(255),
-    last_name VARCHAR(255),
-    phone VARCHAR(20),
-    date_of_birth DATE,
-    graduation_year INTEGER,
-    department VARCHAR(255),
-    is_active BOOLEAN DEFAULT true,
-    is_blocked BOOLEAN DEFAULT false,
-    role VARCHAR(20) DEFAULT 'USER',
+    active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -27,30 +34,41 @@ CREATE TABLE IF NOT EXISTS users (
 -- Profiles table
 CREATE TABLE IF NOT EXISTS profiles (
     id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+    username VARCHAR(100) UNIQUE NOT NULL,
+    user_id VARCHAR(50) UNIQUE NOT NULL,
+    name VARCHAR(255),
+    profession VARCHAR(255),
+    city_id BIGINT,
+    country_id BIGINT,
     bio TEXT,
-    current_position VARCHAR(255),
-    company VARCHAR(255),
-    location VARCHAR(255),
+    phone VARCHAR(20),
+    linked_in VARCHAR(255),
     website VARCHAR(255),
-    linkedin_url VARCHAR(255),
-    github_url VARCHAR(255),
-    profile_photo_url VARCHAR(500),
-    cover_photo_url VARCHAR(500),
+    batch VARCHAR(10),
+    email VARCHAR(255),
+    facebook VARCHAR(255),
+    profile_photo_path VARCHAR(255),
+    cover_photo_path VARCHAR(255),
+    show_phone BOOLEAN DEFAULT TRUE,
+    show_linked_in BOOLEAN DEFAULT TRUE,
+    show_website BOOLEAN DEFAULT TRUE,
+    show_email BOOLEAN DEFAULT TRUE,
+    show_facebook BOOLEAN DEFAULT TRUE,
+    connections INTEGER DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (city_id) REFERENCES cities(id),
+    FOREIGN KEY (country_id) REFERENCES countries(id)
 );
 
 -- Experiences table
 CREATE TABLE IF NOT EXISTS experiences (
     id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
-    title VARCHAR(255) NOT NULL,
-    company VARCHAR(255) NOT NULL,
-    location VARCHAR(255),
-    start_date DATE NOT NULL,
-    end_date DATE,
-    is_current BOOLEAN DEFAULT false,
+    username VARCHAR(255) NOT NULL,
+    user_id VARCHAR(50) NOT NULL,
+    title VARCHAR(255),
+    company VARCHAR(255),
+    period VARCHAR(255),
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -59,11 +77,11 @@ CREATE TABLE IF NOT EXISTS experiences (
 -- Interests table
 CREATE TABLE IF NOT EXISTS interests (
     id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
-    interest_name VARCHAR(255) NOT NULL,
-    category VARCHAR(100),
-    skill_level VARCHAR(50),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    username VARCHAR(255) NOT NULL,
+    user_id VARCHAR(50) NOT NULL,
+    interest VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Refresh tokens table
@@ -85,21 +103,20 @@ CREATE INDEX IF NOT EXISTS idx_refresh_tokens_expiry ON refresh_tokens(expiry_da
 -- Connections table
 CREATE TABLE IF NOT EXISTS connections (
     id BIGSERIAL PRIMARY KEY,
-    requester_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
-    recipient_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+    requester_username VARCHAR(255) NOT NULL,
+    receiver_username VARCHAR(255) NOT NULL,
     status VARCHAR(20) DEFAULT 'PENDING',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(requester_id, recipient_id)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Feature flags table
 CREATE TABLE IF NOT EXISTS feature_flags (
     id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(255) UNIQUE NOT NULL,
+    feature_name VARCHAR(100) UNIQUE NOT NULL,
+    display_name VARCHAR(255),
+    parent_id BIGINT REFERENCES feature_flags(id),
+    enabled BOOLEAN DEFAULT FALSE,
     description TEXT,
-    is_enabled BOOLEAN DEFAULT false,
-    parent_flag_id BIGINT REFERENCES feature_flags(id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -107,60 +124,41 @@ CREATE TABLE IF NOT EXISTS feature_flags (
 -- Admins table
 CREATE TABLE IF NOT EXISTS admins (
     id BIGSERIAL PRIMARY KEY,
-    username VARCHAR(255) UNIQUE NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    first_name VARCHAR(255),
-    last_name VARCHAR(255),
-    is_active BOOLEAN DEFAULT true,
-    role VARCHAR(20) DEFAULT 'ADMIN',
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(20) NOT NULL,
+    active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Announcements table
-CREATE TABLE IF NOT EXISTS announcements (
-    id BIGSERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    content TEXT NOT NULL,
-    admin_id BIGINT REFERENCES admins(id),
-    is_active BOOLEAN DEFAULT true,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Reports table
-CREATE TABLE IF NOT EXISTS reports (
-    id BIGSERIAL PRIMARY KEY,
-    reporter_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
-    reported_user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
-    reason TEXT NOT NULL,
-    status VARCHAR(20) DEFAULT 'PENDING',
-    admin_notes TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
 
 -- User settings table
 CREATE TABLE IF NOT EXISTS user_settings (
     id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
-    theme_preference VARCHAR(20) DEFAULT 'DEVICE',
-    email_notifications BOOLEAN DEFAULT true,
-    push_notifications BOOLEAN DEFAULT true,
+    user_id VARCHAR(50) UNIQUE NOT NULL,
+    theme VARCHAR(10) DEFAULT 'DEVICE',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(user_id)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Blacklisted tokens table moved to gateway service
+-- This table is no longer needed in user service as token blacklisting
+-- is now handled centrally by the gateway service
+
 -- Create indexes for better performance
-CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_users_user_id ON users(user_id);
 CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+CREATE INDEX IF NOT EXISTS idx_profiles_username ON profiles(username);
 CREATE INDEX IF NOT EXISTS idx_profiles_user_id ON profiles(user_id);
+CREATE INDEX IF NOT EXISTS idx_experiences_username ON experiences(username);
 CREATE INDEX IF NOT EXISTS idx_experiences_user_id ON experiences(user_id);
+CREATE INDEX IF NOT EXISTS idx_interests_username ON interests(username);
 CREATE INDEX IF NOT EXISTS idx_interests_user_id ON interests(user_id);
-CREATE INDEX IF NOT EXISTS idx_connections_requester_id ON connections(requester_id);
-CREATE INDEX IF NOT EXISTS idx_connections_recipient_id ON connections(recipient_id);
-CREATE INDEX IF NOT EXISTS idx_feature_flags_name ON feature_flags(name);
+CREATE INDEX IF NOT EXISTS idx_connections_requester ON connections(requester_username);
+CREATE INDEX IF NOT EXISTS idx_connections_receiver ON connections(receiver_username);
+CREATE INDEX IF NOT EXISTS idx_feature_flags_name ON feature_flags(feature_name);
 CREATE INDEX IF NOT EXISTS idx_admins_email ON admins(email);
 CREATE INDEX IF NOT EXISTS idx_user_settings_user_id ON user_settings(user_id);
+-- Blacklisted tokens indexes moved to gateway service

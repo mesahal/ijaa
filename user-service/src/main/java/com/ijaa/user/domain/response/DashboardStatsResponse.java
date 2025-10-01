@@ -16,16 +16,6 @@ public class DashboardStatsResponse {
     private Long totalAdmins;
     private Long activeAdmins;
     
-
-    
-    // Announcement statistics
-    private Long totalAnnouncements;
-    private Long activeAnnouncements;
-    
-    // Report statistics
-    private Long totalReports;
-    private Long pendingReports;
-    
     // Additional data (placeholder)
     private List<Map<String, Object>> topBatches;
     private List<Map<String, Object>> recentActivities;

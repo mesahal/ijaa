@@ -73,7 +73,7 @@ class FileServiceTest {
         assertNotNull(response);
         assertEquals("Profile photo uploaded successfully", response.getMessage());
         assertNotNull(response.getFileUrl());
-        assertTrue(response.getFileUrl().contains("/ijaa/api/v1/file/users/" + TEST_USER_ID + "/profile-photo/file/"));
+        assertTrue(response.getFileUrl().contains("/ijaa/api/v1/files/users/" + TEST_USER_ID + "/profile-photo/file/"));
         assertTrue(response.getFileName().endsWith(".jpg"));
         assertEquals(file.getSize(), response.getFileSize());
 
@@ -103,7 +103,7 @@ class FileServiceTest {
         assertNotNull(response);
         assertEquals("Cover photo uploaded successfully", response.getMessage());
         assertNotNull(response.getFileUrl());
-        assertTrue(response.getFileUrl().contains("/ijaa/api/v1/file/users/" + TEST_USER_ID + "/cover-photo/file/"));
+        assertTrue(response.getFileUrl().contains("/ijaa/api/v1/files/users/" + TEST_USER_ID + "/cover-photo/file/"));
         assertTrue(response.getFileName().endsWith(".jpg"));
         assertEquals(file.getSize(), response.getFileSize());
 

@@ -20,8 +20,17 @@ public class AlumniSearchDto {
     @Schema(description = "Current profession or job title", example = "Software Engineer")
     private String profession;
     
-    @Schema(description = "Current location", example = "Bangalore, India")
-    private String location;
+    @Schema(description = "City ID", example = "163")
+    private Long cityId;
+    
+    @Schema(description = "Country ID", example = "101")
+    private Long countryId;
+    
+    @Schema(description = "City name", example = "Bangalore")
+    private String cityName;
+    
+    @Schema(description = "Country name", example = "India")
+    private String countryName;
     
     @Schema(description = "Profile avatar URL", example = "https://example.com/avatar.jpg")
     private String avatar;

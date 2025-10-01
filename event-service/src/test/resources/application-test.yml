@@ -26,9 +26,6 @@ logging:
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
 
-jwt:
-  secret: ${JWT_SECRET:test-secret-key-for-testing-purposes-only}
-  expiration: 3600
 
 # Disable Eureka for testing
 eureka:

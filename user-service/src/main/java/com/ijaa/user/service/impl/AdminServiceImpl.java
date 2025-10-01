@@ -25,9 +25,6 @@ import com.ijaa.user.repository.AdminRepository;
 import com.ijaa.user.repository.UserRepository;
 import com.ijaa.user.repository.ProfileRepository;
 import com.ijaa.user.service.AdminService;
-import com.ijaa.user.service.AnnouncementService;
-
-import com.ijaa.user.service.ReportService;
 import com.ijaa.user.service.JWTService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -46,8 +43,6 @@ public class AdminServiceImpl implements AdminService {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
 
-    private final AnnouncementService announcementService;
-    private final ReportService reportService;
     private final JWTService jwtService;
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -96,8 +91,9 @@ public class AdminServiceImpl implements AdminService {
 
         // Generate JWT token with admin role and ID
         String token = jwtService.generateAdminToken(savedAdmin.getEmail(), savedAdmin.getRole().getRole(), savedAdmin.getId());
+        String refreshToken = jwtService.generateRandomRefreshToken();
 
-        return createAuthResponse(savedAdmin, token);
+        return createAuthResponse(savedAdmin, token, refreshToken);
     }
 
     @Override
@@ -111,8 +107,9 @@ public class AdminServiceImpl implements AdminService {
 
         // Generate JWT token with admin role and ID
         String token = jwtService.generateAdminToken(admin.getEmail(), admin.getRole().getRole(), admin.getId());
+        String refreshToken = jwtService.generateRandomRefreshToken();
 
-        return createAuthResponse(admin, token);
+        return createAuthResponse(admin, token, refreshToken);
     }
 
     @Override
@@ -240,19 +237,6 @@ public class AdminServiceImpl implements AdminService {
         
 
         
-        // Announcement statistics - now with real data
-        long totalAnnouncements = announcementService.getTotalAnnouncements();
-        long activeAnnouncements = announcementService.getActiveAnnouncementsCount();
-        
-        stats.setTotalAnnouncements(totalAnnouncements);
-        stats.setActiveAnnouncements(activeAnnouncements);
-        
-        // Report statistics - now with real data
-        long totalReports = reportService.getTotalReports();
-        long pendingReports = reportService.getPendingReportsCount();
-        
-        stats.setTotalReports(totalReports);
-        stats.setPendingReports(pendingReports);
         
         // Top batches (placeholder)
         stats.setTopBatches(List.of());
@@ -355,9 +339,10 @@ public class AdminServiceImpl implements AdminService {
         userRepository.delete(user);
     }
 
-    private AdminAuthResponse createAuthResponse(Admin admin, String token) {
+    private AdminAuthResponse createAuthResponse(Admin admin, String token, String refreshToken) {
         AdminAuthResponse response = new AdminAuthResponse();
         response.setAccessToken(token);
+        response.setRefreshToken(refreshToken);
         response.setAdminId(admin.getId());
         response.setName(admin.getName());
         response.setEmail(admin.getEmail());
@@ -392,7 +377,9 @@ public class AdminServiceImpl implements AdminService {
             response.setName(profile.getName() != null ? profile.getName() : user.getUsername());
             response.setEmail(profile.getEmail());
             response.setProfession(profile.getProfession());
-            response.setLocation(profile.getLocation());
+            response.setCityId(profile.getCityId());
+            response.setCountryId(profile.getCountryId());
+            // Note: cityName and countryName would need to be populated from the related entities
             response.setBatch(profile.getBatch());
             response.setPhone(profile.getPhone());
             response.setLinkedIn(profile.getLinkedIn());
@@ -407,7 +394,10 @@ public class AdminServiceImpl implements AdminService {
             response.setName(user.getUsername());
             response.setEmail(null);
             response.setProfession(null);
-            response.setLocation(null);
+            response.setCityId(null);
+            response.setCountryId(null);
+            response.setCityName(null);
+            response.setCountryName(null);
             response.setBatch(null);
             response.setPhone(null);
             response.setLinkedIn(null);
@@ -421,4 +411,4 @@ public class AdminServiceImpl implements AdminService {
         
         return response;
     }
-} 
+}

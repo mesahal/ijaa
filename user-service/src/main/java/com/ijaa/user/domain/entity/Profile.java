@@ -30,16 +30,21 @@ public class Profile {
     @Column(length = 255)
     private String profession;
 
-    // Location fields - replaced single location with city and country
+    // Location fields - city and country with proper relationships
     @Column(name = "city_id")
     private Long cityId;
 
     @Column(name = "country_id")
     private Long countryId;
 
-    // Keep location for backward compatibility during migration
-    @Column(length = 255)
-    private String location;
+    // Relationships to location entities
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id", insertable = false, updatable = false)
+    private City city;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id", insertable = false, updatable = false)
+    private Country country;
 
     @Column(columnDefinition = "TEXT")
     private String bio;

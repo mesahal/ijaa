@@ -2,7 +2,7 @@ package com.ijaa.user.service;
 
 import com.ijaa.user.domain.entity.FeatureFlag;
 import com.ijaa.user.domain.dto.FeatureFlagDto;
-import com.ijaa.user.domain.converter.FeatureFlagConverter;
+import com.ijaa.user.domain.mapper.FeatureFlagMapper;
 import com.ijaa.user.repository.FeatureFlagRepository;
 import com.ijaa.user.service.impl.FeatureFlagServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class FeatureFlagServiceInfiniteRecursionTest {
     private FeatureFlagRepository featureFlagRepository;
 
     @Mock
-    private FeatureFlagConverter featureFlagConverter;
+    private FeatureFlagMapper featureFlagMapper;
 
     @InjectMocks
     private FeatureFlagServiceImpl featureFlagService;
@@ -49,7 +49,7 @@ class FeatureFlagServiceInfiniteRecursionTest {
         FeatureFlagDto mockDto = new FeatureFlagDto();
         mockDto.setName("self");
         mockDto.setChildren(null); // Prevent infinite recursion
-        when(featureFlagConverter.toDtoWithChildren(selfReferencingFlag)).thenReturn(mockDto);
+        when(featureFlagMapper.toDtoWithChildren(selfReferencingFlag)).thenReturn(mockDto);
 
         // When & Then - This should not throw StackOverflowError
         assertDoesNotThrow(() -> {
@@ -97,7 +97,7 @@ class FeatureFlagServiceInfiniteRecursionTest {
         FeatureFlagDto mockDtoA = new FeatureFlagDto();
         mockDtoA.setName("flagA");
         mockDtoA.setChildren(null); // Prevent infinite recursion
-        when(featureFlagConverter.toDtoWithChildren(flagA)).thenReturn(mockDtoA);
+        when(featureFlagMapper.toDtoWithChildren(flagA)).thenReturn(mockDtoA);
 
         // When & Then - This should not throw StackOverflowError
         assertDoesNotThrow(() -> {

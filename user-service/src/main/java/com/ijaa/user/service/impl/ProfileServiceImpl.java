@@ -227,7 +227,7 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
     private void updateProfileFields(Profile entity, ProfileDto dto) {
         if (dto.getName() != null) entity.setName(dto.getName());
         if (dto.getProfession() != null) entity.setProfession(dto.getProfession());
-        if (dto.getLocation() != null) entity.setLocation(dto.getLocation());
+        // Location is now handled via cityId and countryId
         if (dto.getCityId() != null) entity.setCityId(dto.getCityId());
         if (dto.getCountryId() != null) entity.setCountryId(dto.getCountryId());
         if (dto.getBio() != null) entity.setBio(dto.getBio());
@@ -252,7 +252,6 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
         dto.setUserId(entity.getUserId());
         dto.setName(entity.getName());
         dto.setProfession(entity.getProfession());
-        dto.setLocation(entity.getLocation());
         dto.setCityId(entity.getCityId());
         dto.setCountryId(entity.getCountryId());
         dto.setBio(entity.getBio());

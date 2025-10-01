@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(AppUtils.BASE_URL + "/alumni")
+@RequestMapping(AppUtils.USERS_BASE_URL)
 @RequiredArgsConstructor
-@Tag(name = "Alumni Search")
+@Tag(name = "User Management")
 public class AlumniSearchResource {
 
     private final AlumniSearchService alumniSearchService;

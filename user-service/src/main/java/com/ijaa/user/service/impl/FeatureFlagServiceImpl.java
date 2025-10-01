@@ -2,7 +2,7 @@ package com.ijaa.user.service.impl;
 
 import com.ijaa.user.domain.entity.FeatureFlag;
 import com.ijaa.user.domain.dto.FeatureFlagDto;
-import com.ijaa.user.domain.converter.FeatureFlagConverter;
+import com.ijaa.user.domain.mapper.FeatureFlagMapper;
 import com.ijaa.user.repository.FeatureFlagRepository;
 import com.ijaa.user.service.FeatureFlagService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 public class FeatureFlagServiceImpl implements FeatureFlagService {
 
     private final FeatureFlagRepository featureFlagRepository;
-    private final FeatureFlagConverter featureFlagConverter;
+    private final FeatureFlagMapper featureFlagMapper;
     
     // In-memory cache for fast lookups
     private final Map<String, Boolean> flagCache = new ConcurrentHashMap<>();
@@ -33,7 +32,7 @@ public class FeatureFlagServiceImpl implements FeatureFlagService {
     public List<FeatureFlagDto> getAllFlags() {
         List<FeatureFlag> topLevelFlags = featureFlagRepository.findAllTopLevelFlags();
         return topLevelFlags.stream()
-                .map(featureFlagConverter::toDtoWithChildren)
+                .map(featureFlagMapper::toDtoWithChildren)
                 .collect(Collectors.toList());
     }
 

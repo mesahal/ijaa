@@ -64,7 +64,7 @@ public class FileServiceImpl implements FileService {
             user.setProfilePhotoPath(fileName);
             userRepository.save(user);
 
-            String fileUrl = "/ijaa/api/v1/file/users/" + userId + "/profile-photo/file/" + fileName;
+            String fileUrl = "/ijaa/api/v1/files/users/" + userId + "/profile-photo/file/" + fileName;
 
             log.info("Profile photo uploaded successfully for user: {}, file: {}", userId, fileName);
 
@@ -111,7 +111,7 @@ public class FileServiceImpl implements FileService {
             user.setCoverPhotoPath(fileName);
             userRepository.save(user);
 
-            String fileUrl = "/ijaa/api/v1/file/users/" + userId + "/cover-photo/file/" + fileName;
+            String fileUrl = "/ijaa/api/v1/files/users/" + userId + "/cover-photo/file/" + fileName;
 
             log.info("Cover photo uploaded successfully for user: {}, file: {}", userId, fileName);
 
@@ -143,7 +143,7 @@ public class FileServiceImpl implements FileService {
         String fileName = extractFileName(user.getProfilePhotoPath());
         
         // Generate the URL that points to the file endpoint
-        String photoUrl = "/ijaa/api/v1/file/users/" + userId + "/profile-photo/file/" + fileName;
+        String photoUrl = "/ijaa/api/v1/files/users/" + userId + "/profile-photo/file/" + fileName;
 
         return new PhotoUrlResponse(photoUrl, "Profile photo found", true);
     }
@@ -163,7 +163,7 @@ public class FileServiceImpl implements FileService {
         String fileName = extractFileName(user.getCoverPhotoPath());
         
         // Generate the URL that points to the file endpoint
-        String photoUrl = "/ijaa/api/v1/file/users/" + userId + "/cover-photo/file/" + fileName;
+        String photoUrl = "/ijaa/api/v1/files/users/" + userId + "/cover-photo/file/" + fileName;
 
         return new PhotoUrlResponse(photoUrl, "Cover photo found", true);
     }
@@ -410,7 +410,7 @@ public class FileServiceImpl implements FileService {
             EventBanner savedBanner = eventBannerRepository.save(banner);
             log.debug("Banner saved to database with ID: {}", savedBanner.getId());
 
-            String fileUrl = "/ijaa/api/v1/file/events/" + eventId + "/banner/file/" + fileName;
+            String fileUrl = "/ijaa/api/v1/files/events/" + eventId + "/banner/file/" + fileName;
 
             log.info("Event banner uploaded successfully for event: {}, file: {}", eventId, fileName);
 
@@ -446,7 +446,7 @@ public class FileServiceImpl implements FileService {
             }
 
             log.debug("Found banner for event: {}, fileName: {}", eventId, banner.getFileName());
-            String fileUrl = "/ijaa/api/v1/file/events/" + eventId + "/banner/file/" + banner.getFileName();
+            String fileUrl = "/ijaa/api/v1/files/events/" + eventId + "/banner/file/" + banner.getFileName();
 
             return new PhotoUrlResponse(fileUrl, "Event banner found", true);
         } catch (Exception e) {

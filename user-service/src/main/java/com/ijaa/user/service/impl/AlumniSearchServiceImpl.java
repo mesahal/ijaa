@@ -59,7 +59,8 @@ public class AlumniSearchServiceImpl extends BaseService implements AlumniSearch
                 request.getSearchQuery(),
                 request.getBatch(),
                 request.getProfession(),
-                request.getLocation(),
+                request.getCityId(),
+                request.getCountryId(),
                 currentUsername, // Exclude current user
                 pageable
         );
@@ -111,8 +112,9 @@ public class AlumniSearchServiceImpl extends BaseService implements AlumniSearch
         // Get available professions
         List<String> availableProfessions = profileRepository.findDistinctProfessionsByUsernameNot(currentUsername);
         
-        // Get available locations
-        List<String> availableLocations = profileRepository.findDistinctLocationsByUsernameNot(currentUsername);
+        // Get available cities and countries
+        // Note: This would need to be implemented based on the new structure
+        List<String> availableLocations = List.of(); // Placeholder for now
         
         return new AlumniSearchMetadata(
                 totalAlumni,
@@ -145,11 +147,12 @@ public class AlumniSearchServiceImpl extends BaseService implements AlumniSearch
                 request.setProfession(request.getProfession().substring(0, 50));
             }
         }
-        if (request.getLocation() != null) {
-            request.setLocation(request.getLocation().trim());
-            if (request.getLocation().length() > 100) {
-                request.setLocation(request.getLocation().substring(0, 100));
-            }
+        // Validate city and country IDs
+        if (request.getCityId() != null && request.getCityId() <= 0) {
+            request.setCityId(null);
+        }
+        if (request.getCountryId() != null && request.getCountryId() <= 0) {
+            request.setCountryId(null);
         }
 
         // Ensure sortBy is valid
@@ -186,7 +189,9 @@ public class AlumniSearchServiceImpl extends BaseService implements AlumniSearch
         dto.setName(profile.getName());
         dto.setBatch(profile.getBatch());
         dto.setProfession(profile.getProfession());
-        dto.setLocation(profile.getLocation());
+        dto.setCityId(profile.getCityId());
+        dto.setCountryId(profile.getCountryId());
+        // Note: cityName and countryName would need to be populated from related entities
         dto.setBio(profile.getBio());
         dto.setConnections(profile.getConnections());
         dto.setIsConnected(isConnected);

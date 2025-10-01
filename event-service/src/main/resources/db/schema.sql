@@ -4,19 +4,22 @@
 -- Events table
 CREATE TABLE IF NOT EXISTS events (
     id BIGSERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
+    title VARCHAR(200) NOT NULL,
     description TEXT,
-    event_date TIMESTAMP NOT NULL,
-    end_date TIMESTAMP,
-    location VARCHAR(255),
-    organizer_id BIGINT NOT NULL,
-    organizer_name VARCHAR(255) NOT NULL,
-    max_participants INTEGER,
+    start_date TIMESTAMP NOT NULL,
+    end_date TIMESTAMP NOT NULL,
+    location VARCHAR(100),
+    event_type VARCHAR(50),
+    active BOOLEAN DEFAULT TRUE,
+    privacy VARCHAR(20) DEFAULT 'PUBLIC',
+    invite_message VARCHAR(500),
+    is_online BOOLEAN DEFAULT FALSE,
+    meeting_link VARCHAR(500),
+    max_participants INTEGER NOT NULL,
     current_participants INTEGER DEFAULT 0,
-    event_type VARCHAR(100),
-    is_active BOOLEAN DEFAULT true,
-    is_public BOOLEAN DEFAULT true,
-    banner_url VARCHAR(500),
+    organizer_name VARCHAR(100),
+    organizer_email VARCHAR(100),
+    created_by_username VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -25,12 +28,13 @@ CREATE TABLE IF NOT EXISTS events (
 CREATE TABLE IF NOT EXISTS event_comments (
     id BIGSERIAL PRIMARY KEY,
     event_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL,
-    username VARCHAR(255) NOT NULL,
-    author_name VARCHAR(255) NOT NULL,
+    username VARCHAR(50) NOT NULL,
     content TEXT NOT NULL,
-    parent_comment_id BIGINT REFERENCES event_comments(id),
-    likes_count INTEGER DEFAULT 0,
+    is_edited BOOLEAN DEFAULT FALSE,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    parent_comment_id BIGINT,
+    likes INTEGER DEFAULT 0,
+    replies INTEGER DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -39,35 +43,37 @@ CREATE TABLE IF NOT EXISTS event_comments (
 CREATE TABLE IF NOT EXISTS event_participations (
     id BIGSERIAL PRIMARY KEY,
     event_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL,
-    username VARCHAR(255) NOT NULL,
-    status VARCHAR(50) DEFAULT 'PENDING',
-    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    participant_username VARCHAR(50) NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    message VARCHAR(500),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(event_id, user_id)
+    UNIQUE(event_id, participant_username)
 );
 
 -- Event invitations table
 CREATE TABLE IF NOT EXISTS event_invitations (
     id BIGSERIAL PRIMARY KEY,
     event_id BIGINT NOT NULL,
-    inviter_id BIGINT NOT NULL,
-    invitee_id BIGINT NOT NULL,
-    status VARCHAR(50) DEFAULT 'PENDING',
-    message TEXT,
+    invited_username VARCHAR(50) NOT NULL,
+    invited_by_username VARCHAR(50) NOT NULL,
+    personal_message VARCHAR(500),
+    is_read BOOLEAN DEFAULT FALSE,
+    is_responded BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(event_id, invited_username)
 );
 
 -- Create indexes for better performance
-CREATE INDEX IF NOT EXISTS idx_events_organizer_id ON events(organizer_id);
-CREATE INDEX IF NOT EXISTS idx_events_event_date ON events(event_date);
+CREATE INDEX IF NOT EXISTS idx_events_start_date ON events(start_date);
 CREATE INDEX IF NOT EXISTS idx_events_location ON events(location);
-CREATE INDEX IF NOT EXISTS idx_events_is_active ON events(is_active);
+CREATE INDEX IF NOT EXISTS idx_events_active ON events(active);
+CREATE INDEX IF NOT EXISTS idx_events_created_by ON events(created_by_username);
 CREATE INDEX IF NOT EXISTS idx_event_comments_event_id ON event_comments(event_id);
-CREATE INDEX IF NOT EXISTS idx_event_comments_user_id ON event_comments(user_id);
-CREATE INDEX IF NOT EXISTS idx_event_comments_parent_comment_id ON event_comments(parent_comment_id);
+CREATE INDEX IF NOT EXISTS idx_event_comments_username ON event_comments(username);
+CREATE INDEX IF NOT EXISTS idx_event_comments_parent ON event_comments(parent_comment_id);
 CREATE INDEX IF NOT EXISTS idx_event_participations_event_id ON event_participations(event_id);
-CREATE INDEX IF NOT EXISTS idx_event_participations_user_id ON event_participations(user_id);
+CREATE INDEX IF NOT EXISTS idx_event_participations_username ON event_participations(participant_username);
 CREATE INDEX IF NOT EXISTS idx_event_invitations_event_id ON event_invitations(event_id);
-CREATE INDEX IF NOT EXISTS idx_event_invitations_invitee_id ON event_invitations(invitee_id);
+CREATE INDEX IF NOT EXISTS idx_event_invitations_invited ON event_invitations(invited_username);

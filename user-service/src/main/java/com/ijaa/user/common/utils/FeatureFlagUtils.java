@@ -65,15 +65,11 @@ public class FeatureFlagUtils {
     public static final String ADMIN_FEATURES = "admin.features";
     public static final String ADMIN_USER_MANAGEMENT = "admin.user-management";
     public static final String ADMIN_EVENT_MANAGEMENT = "admin.event-management";
-    public static final String ADMIN_ANNOUNCEMENTS = "admin.announcements";
-    public static final String ADMIN_REPORTS = "admin.reports";
     public static final String ADMIN_AUTH = "admin.auth";
 
     // Business Features
     public static final String PAYMENT_INTEGRATION = "PAYMENT_INTEGRATION";
     public static final String MENTORSHIP_PROGRAM = "MENTORSHIP_PROGRAM";
-    public static final String ANNOUNCEMENT_SYSTEM = "announcements";
-    public static final String REPORT_SYSTEM = "reports";
 
     /**
      * Check if a feature flag is enabled
@@ -236,13 +232,6 @@ public class FeatureFlagUtils {
         return isFeatureEnabled(ADMIN_EVENT_MANAGEMENT);
     }
 
-    public boolean isAdminAnnouncementsEnabled() {
-        return isFeatureEnabled(ADMIN_ANNOUNCEMENTS);
-    }
-
-    public boolean isAdminReportsEnabled() {
-        return isFeatureEnabled(ADMIN_REPORTS);
-    }
 
     public boolean isAdminAuthEnabled() {
         return isFeatureEnabled(ADMIN_AUTH);
@@ -257,13 +246,6 @@ public class FeatureFlagUtils {
         return isFeatureEnabled(MENTORSHIP_PROGRAM);
     }
 
-    public boolean isAnnouncementSystemEnabled() {
-        return isFeatureEnabled(ANNOUNCEMENT_SYSTEM);
-    }
-
-    public boolean isReportSystemEnabled() {
-        return isFeatureEnabled(REPORT_SYSTEM);
-    }
 
     /**
      * Execute a function only if a feature flag is enabled

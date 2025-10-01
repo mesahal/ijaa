@@ -1,5 +1,6 @@
 package com.ijaa.user.presenter.rest.api;
 
+import com.ijaa.user.common.annotation.RequiresFeature;
 import com.ijaa.user.common.utils.AppUtils;
 import com.ijaa.user.repository.UserRepository;
 import com.ijaa.user.repository.ProfileRepository;
@@ -8,8 +9,6 @@ import com.ijaa.user.repository.InterestRepository;
 import com.ijaa.user.repository.ConnectionRepository;
 import com.ijaa.user.repository.FeatureFlagRepository;
 import com.ijaa.user.repository.AdminRepository;
-import com.ijaa.user.repository.AnnouncementRepository;
-import com.ijaa.user.repository.ReportRepository;
 import com.ijaa.user.repository.UserSettingsRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,7 +25,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(AppUtils.BASE_URL + "/health")
-@Tag(name = "Health Controllers")
+@Tag(name = "Health Check")
 @RequiredArgsConstructor
 @Slf4j
 public class HealthController {
@@ -38,11 +37,10 @@ public class HealthController {
     private final ConnectionRepository connectionRepository;
     private final FeatureFlagRepository featureFlagRepository;
     private final AdminRepository adminRepository;
-    private final AnnouncementRepository announcementRepository;
-    private final ReportRepository reportRepository;
     private final UserSettingsRepository userSettingsRepository;
 
     @GetMapping("/status")
+    @RequiresFeature("system.health")
     @Operation(summary = "Basic Health Check", description = "Check if the User Service is running")
     public ResponseEntity<Map<String, Object>> basicHealth() {
         Map<String, Object> response = new HashMap<>();
@@ -68,6 +66,7 @@ public class HealthController {
     }
 
     @GetMapping("/database")
+    @RequiresFeature("system.health")
     @Operation(summary = "Database Health Check", description = "Check database connectivity and basic operations")
     public ResponseEntity<Map<String, Object>> databaseHealth() {
         Map<String, Object> response = new HashMap<>();
@@ -81,8 +80,6 @@ public class HealthController {
             long connectionCount = connectionRepository.count();
             long featureFlagCount = featureFlagRepository.count();
             long adminCount = adminRepository.count();
-            long announcementCount = announcementRepository.count();
-            long reportCount = reportRepository.count();
             long userSettingsCount = userSettingsRepository.count();
             
             response.put("status", "healthy");
@@ -96,14 +93,12 @@ public class HealthController {
                 "connections", connectionCount,
                 "featureFlags", featureFlagCount,
                 "admins", adminCount,
-                "announcements", announcementCount,
-                "reports", reportCount,
                 "userSettings", userSettingsCount
             ));
             response.put("timestamp", LocalDateTime.now());
             
-            log.info("Database health check successful. Users: {}, Profiles: {}, Experiences: {}, Interests: {}, Connections: {}, FeatureFlags: {}, Admins: {}, Announcements: {}, Reports: {}, UserSettings: {}", 
-                    userCount, profileCount, experienceCount, interestCount, connectionCount, featureFlagCount, adminCount, announcementCount, reportCount, userSettingsCount);
+            log.info("Database health check successful. Users: {}, Profiles: {}, Experiences: {}, Interests: {}, Connections: {}, FeatureFlags: {}, Admins: {}, UserSettings: {}", 
+                    userCount, profileCount, experienceCount, interestCount, connectionCount, featureFlagCount, adminCount, userSettingsCount);
             return ResponseEntity.ok(response);
             
         } catch (Exception e) {

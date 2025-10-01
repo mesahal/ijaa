@@ -1,5 +1,6 @@
 package com.ijaa.file.controller;
 
+import com.ijaa.file.common.annotation.RequiresFeature;
 import com.ijaa.file.common.utils.AppUtils;
 import com.ijaa.file.repository.EventBannerRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +26,7 @@ public class HealthController {
     private final EventBannerRepository eventBannerRepository;
 
     @GetMapping("/status")
+    @RequiresFeature("system.health")
     @Operation(summary = "Basic Health Check", description = "Check if the File Service is running")
     public ResponseEntity<Map<String, Object>> basicHealth() {
         Map<String, Object> response = new HashMap<>();
@@ -50,6 +52,7 @@ public class HealthController {
     }
 
     @GetMapping("/database")
+    @RequiresFeature("system.health")
     @Operation(summary = "Database Health Check", description = "Check database connectivity and basic operations")
     public ResponseEntity<Map<String, Object>> databaseHealth() {
         Map<String, Object> response = new HashMap<>();

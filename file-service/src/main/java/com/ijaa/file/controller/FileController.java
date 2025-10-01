@@ -55,7 +55,7 @@ public class FileController {
                                 "message": "Profile photo uploaded successfully",
                                 "data": {
                                     "message": "Profile photo uploaded successfully",
-                                    "fileUrl": "/ijaa/api/v1/file/users/e76dbb07-7790-4862-95b0-e0aa96f7b2a3/profile-photo/file/abc123.jpg",
+                                    "fileUrl": "/ijaa/api/v1/files/users/e76dbb07-7790-4862-95b0-e0aa96f7b2a3/profile-photo/file/abc123.jpg",
                                     "fileName": "abc123.jpg",
                                     "fileSize": 12345
                                 },
@@ -135,7 +135,7 @@ public class FileController {
                                 "message": "Cover photo uploaded successfully",
                                 "data": {
                                     "message": "Cover photo uploaded successfully",
-                                    "fileUrl": "/ijaa/api/v1/file/users/e76dbb07-7790-4862-95b0-e0aa96f7b2a3/cover-photo/file/abc123.jpg",
+                                    "fileUrl": "/ijaa/api/v1/files/users/e76dbb07-7790-4862-95b0-e0aa96f7b2a3/cover-photo/file/abc123.jpg",
                                     "fileName": "abc123.jpg",
                                     "fileSize": 12345
                                 },
@@ -229,7 +229,7 @@ public class FileController {
                                 "success": true,
                                 "message": "Profile photo URL retrieved successfully",
                                 "data": {
-                                    "photoUrl": "/ijaa/api/v1/users/e76dbb07-7790-4862-95b0-e0aa96f7b2a3/profile-photo/file/abc123.jpg",
+                                    "photoUrl": "/ijaa/api/v1/files/users/e76dbb07-7790-4862-95b0-e0aa96f7b2a3/profile-photo/file/abc123.jpg",
                                     "message": "Profile photo found",
                                     "exists": true
                                 },
@@ -407,6 +407,7 @@ public class FileController {
     }
 
     @GetMapping("/{userId}/profile-photo/file/{fileName}")
+    @RequiresFeature("file-download")
     @Operation(
             summary = "Get Profile Photo File",
             description = "Serve the actual profile photo file. This endpoint returns the image file directly. **Public endpoint - no authentication required.**"
@@ -444,6 +445,7 @@ public class FileController {
     }
 
         @GetMapping("/{userId}/cover-photo/file/{fileName}")
+    @RequiresFeature("file-download")
     @Operation(
         summary = "Get Cover Photo File",
         description = "Serve the actual cover photo file. This endpoint returns the image file directly. **Public endpoint - no authentication required.**"

@@ -33,13 +33,13 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(AppUtils.BASE_URL)
-@Tag(name = "User Authentication")
+@RequestMapping(AppUtils.AUTH_BASE_URL)
+@Tag(name = "Authentication")
 public class AuthResource {
 
     private final AuthService authService;
 
-    @PostMapping("/signin")
+    @PostMapping("/login")
     @RequiresFeature("user.login")
     @Operation(
         summary = "User Login",
@@ -137,7 +137,7 @@ public class AuthResource {
         );
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
     @RequiresFeature("user.registration")
     @Operation(
         summary = "User Registration",
@@ -227,8 +227,8 @@ public class AuthResource {
         )
     })
     public ResponseEntity<ApiResponse<AuthResponse>> signUp(
-            @Valid @RequestBody SignUpRequest request) {
-        AuthResponse authResponse = authService.registerUser(request);
+            @Valid @RequestBody SignUpRequest request, HttpServletResponse response) {
+        AuthResponse authResponse = authService.registerUserWithCookieManagement(request, response);
         return ResponseEntity.ok(
                 new ApiResponse<>("Registration successful", "201", authResponse)
         );
@@ -368,6 +368,7 @@ public class AuthResource {
     }
 
     @PostMapping("/refresh")
+    @RequiresFeature("user.refresh")
     @Operation(
         summary = "Refresh Access Token",
         description = "Generate a new access token using a valid refresh token from cookie or request body"
@@ -437,6 +438,7 @@ public class AuthResource {
     }
 
     @PostMapping("/logout")
+    @RequiresFeature("user.logout")
     @Operation(
         summary = "User Logout",
         description = "Logout user by invalidating refresh token and clearing cookie. Requires authentication."
@@ -479,6 +481,25 @@ public class AuthResource {
                     )
                 }
             )
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "403",
+            description = "Feature disabled",
+            content = @Content(
+                mediaType = "application/json",
+                examples = {
+                    @ExampleObject(
+                        name = "Feature Disabled",
+                        value = """
+                            {
+                                "message": "Feature 'user.logout' is disabled",
+                                "code": "403",
+                                "data": null
+                            }
+                            """
+                    )
+                }
+            )
         )
     })
     public ResponseEntity<ApiResponse<Void>> logout(
@@ -494,5 +515,6 @@ public class AuthResource {
                 .body(new ApiResponse<>("Authentication required", "401", null));
         }
     }
+
 
 }

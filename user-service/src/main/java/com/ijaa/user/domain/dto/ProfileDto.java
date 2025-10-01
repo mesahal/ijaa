@@ -12,7 +12,6 @@ public class ProfileDto {
     @NotBlank(message = "Profession must not be blank")
     private String profession;
     // Location fields
-    private String location; // Keep for backward compatibility
     private Long cityId;
     private Long countryId;
     private String cityName; // For display purposes

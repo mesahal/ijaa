@@ -20,16 +20,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(AppUtils.BASE_URL + "/settings")
+@RequestMapping(AppUtils.USERS_BASE_URL)
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "User Settings")
+@Tag(name = "User Management")
 public class UserSettingsResource {
 
     private final UserSettingsService userSettingsService;
     private final UserContextService userContextService;
 
-    @GetMapping
+    @GetMapping("/{userId}/settings")
     @PreAuthorize("hasRole('USER')")
     @RequiresFeature("user.settings")
     @Operation(summary = "Get user settings", description = "Retrieve current user settings including theme preference")
@@ -46,7 +46,7 @@ public class UserSettingsResource {
         }
     }
 
-    @PutMapping
+    @PutMapping("/{userId}/settings")
     @PreAuthorize("hasRole('USER')")
     @RequiresFeature("user.settings")
     @Operation(summary = "Update user settings", description = "Update user settings including theme preference")
@@ -63,7 +63,7 @@ public class UserSettingsResource {
         }
     }
 
-    @GetMapping("/theme")
+    @GetMapping("/{userId}/settings/theme")
     @PreAuthorize("hasRole('USER')")
     @RequiresFeature("user.settings")
     @Operation(summary = "Get user theme", description = "Retrieve current user theme preference")
@@ -80,7 +80,7 @@ public class UserSettingsResource {
         }
     }
 
-    @GetMapping("/themes")
+    @GetMapping("/{userId}/settings/themes")
     @PreAuthorize("hasRole('USER')")
     @RequiresFeature("user.settings")
     @Operation(summary = "Get available themes", description = "Get list of available theme options")

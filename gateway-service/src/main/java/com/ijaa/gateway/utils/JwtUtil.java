@@ -1,10 +1,13 @@
 package com.ijaa.gateway.utils;
 
+import com.ijaa.gateway.service.TokenBlacklistService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -12,11 +15,21 @@ import java.util.Date;
 import java.util.function.Function;
 
 @Component
+@RequiredArgsConstructor
+@Slf4j
 public class JwtUtil {
+
+    private final TokenBlacklistService tokenBlacklistService;
 
     public void validateToken(String token, String jwtSecret) {
         if(isTokenExpired(token,jwtSecret)) {
             throw new ExpiredJwtException(null,null,"Token is expired");
+        }
+        
+        // Check if token is blacklisted
+        if (tokenBlacklistService.isTokenBlacklisted(token)) {
+            log.warn("Blacklisted token attempted to be used");
+            throw new RuntimeException("Token is blacklisted");
         }
     }
 

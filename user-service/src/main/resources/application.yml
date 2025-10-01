@@ -15,10 +15,16 @@ spring:
   h2:
     console:
       enabled: true
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/schema.sql
+      data-locations: classpath:db/data.sql
+      continue-on-error: false
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
 
 server:
@@ -35,8 +41,13 @@ eureka:
 
 jwt:
   secret: ${JWT_SECRET:16f7e412ee66030c3bf769281a076955f595be7479189c4e5ab1f90d2ae3c82e0c5170afcceba1e0f638648c01a468ff82b0723a970011f7fc0dd1a4ba70b0e1}
-  access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:300}  # 5 minutes
+  access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:3600}  # 60 minutes
   refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION:604800}  # 7 days
+
+gateway:
+  url: ${GATEWAY_URL:http://localhost:8000}
+  refresh-token-cookie-name: ${JWT_REFRESH_TOKEN_COOKIE_NAME:refreshToken}
+  refresh-token-cookie-path: ${JWT_REFRESH_TOKEN_COOKIE_PATH:/}
 
 # Swagger/OpenAPI Configuration
 springdoc:

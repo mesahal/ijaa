@@ -52,8 +52,8 @@ public class EventBannerResourceIntegrationTest {
         testEvent.setLocation("Test Location");
         testEvent.setStartDate(LocalDateTime.now().plusDays(1));
         testEvent.setEndDate(LocalDateTime.now().plusDays(2));
-        testEvent.setOrganizerUsername("testuser");
-        testEvent.setIsActive(true);
+        testEvent.setCreatedByUsername("testuser");
+        testEvent.setActive(true);
         testEvent = eventRepository.save(testEvent);
     }
 

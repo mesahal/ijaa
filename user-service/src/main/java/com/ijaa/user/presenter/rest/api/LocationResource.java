@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(AppUtils.BASE_URL + "/location")
+@RequestMapping(AppUtils.LOCATIONS_BASE_URL)
 @RequiredArgsConstructor
 @Tag(name = "Location Management")
 public class LocationResource {
@@ -76,6 +76,8 @@ public class LocationResource {
 
 
     @GetMapping("/countries/{countryId}/cities")
+    @PreAuthorize("hasRole('USER')")
+    @RequiresFeature("user.location")
     @Operation(
         summary = "Get Cities by Country", 
         description = "Get list of cities for a specific country, sorted alphabetically"

@@ -25,13 +25,14 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
             "(:batch IS NULL OR :batch = '' OR p.batch = :batch) " +
             "AND (:profession IS NULL OR :profession = '' OR " +
             "LOWER(p.profession) LIKE LOWER(CONCAT('%', :profession, '%'))) " +
-            "AND (:location IS NULL OR :location = '' OR " +
-            "LOWER(p.location) LIKE LOWER(CONCAT('%', :location, '%')))")
+            "AND (:cityId IS NULL OR p.cityId = :cityId) " +
+            "AND (:countryId IS NULL OR p.countryId = :countryId)")
     Page<Profile> findProfilesWithFilters(
             @Param("searchQuery") String searchQuery,
             @Param("batch") String batch,
             @Param("profession") String profession,
-            @Param("location") String location,
+            @Param("cityId") Long cityId,
+            @Param("countryId") Long countryId,
             @Param("currentUsername") String currentUsername,
             Pageable pageable
     );
@@ -46,6 +47,6 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
     @Query("SELECT DISTINCT p.profession FROM Profile p WHERE p.username != :username AND p.profession IS NOT NULL ORDER BY p.profession ASC")
     List<String> findDistinctProfessionsByUsernameNot(@Param("username") String username);
 
-    @Query("SELECT DISTINCT p.location FROM Profile p WHERE p.username != :username AND p.location IS NOT NULL ORDER BY p.location ASC")
-    List<String> findDistinctLocationsByUsernameNot(@Param("username") String username);
+    // Note: Location-based queries removed as we now use cityId and countryId
+    // These would need to be replaced with city/country specific queries if needed
 }
