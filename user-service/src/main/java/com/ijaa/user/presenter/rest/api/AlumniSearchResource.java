@@ -2,7 +2,6 @@ package com.ijaa.user.presenter.rest.api;
 
 import com.ijaa.user.common.annotation.RequiresFeature;
 import com.ijaa.user.common.utils.AppUtils;
-import com.ijaa.user.common.utils.FeatureFlagUtils;
 import com.ijaa.user.domain.common.ApiResponse;
 import com.ijaa.user.domain.common.PagedResponse;
 import com.ijaa.user.domain.dto.AlumniSearchDto;
@@ -10,7 +9,6 @@ import com.ijaa.user.domain.dto.AlumniSearchMetadata;
 import com.ijaa.user.domain.request.AlumniSearchRequest;
 import com.ijaa.user.service.AlumniSearchService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,7 +28,6 @@ import jakarta.validation.Valid;
 public class AlumniSearchResource {
 
     private final AlumniSearchService alumniSearchService;
-    private final FeatureFlagUtils featureFlagUtils;
 
     @PostMapping("/search")
     @PreAuthorize("hasRole('USER')")
@@ -53,7 +50,8 @@ public class AlumniSearchResource {
                                 "searchQuery": "software engineer",
                                 "batch": "2020",
                                 "profession": "Technology",
-                                "location": "Bangalore",
+                                "cityId": 163,
+                                "countryId": 101,
                                 "sortBy": "relevance",
                                 "page": 0,
                                 "size": 12
@@ -64,7 +62,8 @@ public class AlumniSearchResource {
                         name = "Location-based Search",
                         value = """
                             {
-                                "location": "Mumbai",
+                                "cityId": 164,
+                                "countryId": 101,
                                 "profession": "Finance",
                                 "sortBy": "batch",
                                 "page": 0,

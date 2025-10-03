@@ -2,6 +2,7 @@ package com.ijaa.event.presenter.rest.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ijaa.event.common.annotation.RequiresFeature;
+import com.ijaa.event.common.annotation.RequiresRole;
 import com.ijaa.event.common.utils.AppUtils;
 import com.ijaa.event.domain.common.ApiResponse;
 import com.ijaa.event.domain.request.EventInvitationRequest;
@@ -16,7 +17,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public class EventInvitationResource extends BaseService {
     }
 
     @PostMapping("/send")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.invitations")
     @Operation(
         summary = "Send Event Invitation",
@@ -108,7 +108,7 @@ public class EventInvitationResource extends BaseService {
     }
 
     @PostMapping("/{eventId}/accept")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.invitations")
     @Operation(
         summary = "Accept Event Invitation",
@@ -122,7 +122,7 @@ public class EventInvitationResource extends BaseService {
     }
 
     @PostMapping("/{eventId}/decline")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.invitations")
     @Operation(
         summary = "Decline Event Invitation",
@@ -136,7 +136,7 @@ public class EventInvitationResource extends BaseService {
     }
 
     @PostMapping("/{eventId}/mark-read")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.invitations")
     @Operation(
         summary = "Mark Invitation as Read",
@@ -150,7 +150,7 @@ public class EventInvitationResource extends BaseService {
     }
 
     @GetMapping("/my-invitations")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.invitations")
     @Operation(
         summary = "Get My Invitations",
@@ -164,7 +164,7 @@ public class EventInvitationResource extends BaseService {
     }
 
     @GetMapping("/my-invitations/unread")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.invitations")
     @Operation(
         summary = "Get My Unread Invitations",
@@ -178,7 +178,7 @@ public class EventInvitationResource extends BaseService {
     }
 
     @GetMapping("/my-invitations/unresponded")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.invitations")
     @Operation(
         summary = "Get My Unresponded Invitations",
@@ -192,7 +192,7 @@ public class EventInvitationResource extends BaseService {
     }
 
     @GetMapping("/{eventId}/invitations")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.invitations")
     @Operation(
         summary = "Get Event Invitations",
@@ -205,7 +205,7 @@ public class EventInvitationResource extends BaseService {
     }
 
     @GetMapping("/sent-by-me")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.invitations")
     @Operation(
         summary = "Get Invitations Sent by Me",
@@ -219,7 +219,7 @@ public class EventInvitationResource extends BaseService {
     }
 
     @GetMapping("/counts")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.invitations")
     @Operation(
         summary = "Get Invitation Counts",

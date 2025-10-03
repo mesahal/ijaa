@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: "configserver"
+    name: "config-service"
   profiles:
     active: native
   cloud:

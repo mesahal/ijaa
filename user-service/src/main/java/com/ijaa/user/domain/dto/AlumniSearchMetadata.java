@@ -22,8 +22,11 @@ public class AlumniSearchMetadata {
     @Schema(description = "Available professions/industries", example = "[\"Technology\", \"Finance\", \"Healthcare\", \"Education\"]")
     private List<String> availableProfessions;
     
-    @Schema(description = "Available locations", example = "[\"Bangalore\", \"Mumbai\", \"Delhi\", \"Chennai\", \"Hyderabad\"]")
-    private List<String> availableLocations;
+    @Schema(description = "Available cities", example = "[\"Bangalore\", \"Mumbai\", \"Delhi\", \"Chennai\", \"Hyderabad\"]")
+    private List<String> availableCities;
+    
+    @Schema(description = "Available countries", example = "[\"India\", \"United States\", \"United Kingdom\", \"Canada\"]")
+    private List<String> availableCountries;
     
     @Schema(description = "Default page size for search results", example = "12")
     private int defaultPageSize;

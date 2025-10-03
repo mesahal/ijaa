@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ijaa.user.domain.common.PagedResponse;
 import com.ijaa.user.domain.dto.AlumniSearchDto;
 import com.ijaa.user.domain.dto.AlumniSearchMetadata;
-import com.ijaa.user.domain.dto.InterestDto;
 import com.ijaa.user.domain.request.AlumniSearchRequest;
 import com.ijaa.user.domain.entity.Profile;
 import com.ijaa.user.repository.ConnectionRepository;
@@ -112,15 +111,16 @@ public class AlumniSearchServiceImpl extends BaseService implements AlumniSearch
         // Get available professions
         List<String> availableProfessions = profileRepository.findDistinctProfessionsByUsernameNot(currentUsername);
         
-        // Get available cities and countries
-        // Note: This would need to be implemented based on the new structure
-        List<String> availableLocations = List.of(); // Placeholder for now
+        // Get available cities and countries from profiles
+        List<String> availableCities = profileRepository.findDistinctCityNamesByUsernameNot(currentUsername);
+        List<String> availableCountries = profileRepository.findDistinctCountryNamesByUsernameNot(currentUsername);
         
         return new AlumniSearchMetadata(
                 totalAlumni,
                 availableBatches,
                 availableProfessions,
-                availableLocations,
+                availableCities,
+                availableCountries,
                 12, // defaultPageSize
                 100, // maxPageSize
                 1000, // maxPageNumber

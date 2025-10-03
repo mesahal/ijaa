@@ -69,7 +69,10 @@ public class ProfileResource {
                                    "userId": "user123",
                                    "name": "John Doe",
                                    "profession": "Software Engineer",
-                                   "location": "New York, NY",
+                                   "cityId": 1,
+                                   "countryId": 1,
+                                   "cityName": "New York",
+                                   "countryName": "United States",
                                    "bio": "A passionate software developer with expertise in Java and Spring Boot.",
                                    "phone": "+1-555-123-4567",
                                    "linkedIn": "https://www.linkedin.com/in/johndoe/",
@@ -94,7 +97,8 @@ public class ProfileResource {
                                 "userId": "user123",
                                 "name": "John Doe",
                                 "profession": "Software Engineer",
-                                "location": "New York, NY"
+                                "cityId": 1,
+                                "countryId": 1
                             }
                             """
                     )

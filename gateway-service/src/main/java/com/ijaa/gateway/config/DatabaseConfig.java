@@ -9,3 +9,4 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan(basePackages = "com.ijaa.gateway.domain.entity")
 public class DatabaseConfig {
 }
+

@@ -2,6 +2,7 @@ package com.ijaa.event.presenter.rest.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ijaa.event.common.annotation.RequiresFeature;
+import com.ijaa.event.common.annotation.RequiresRole;
 import com.ijaa.event.common.utils.AppUtils;
 import com.ijaa.event.common.utils.FeatureFlagUtils;
 import com.ijaa.event.domain.common.ApiResponse;
@@ -19,7 +20,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class UserEventResource extends BaseService {
     }
 
     @GetMapping("/my-events")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events")
     @Operation(
         summary = "Get User's Events",
@@ -107,15 +107,12 @@ public class UserEventResource extends BaseService {
     })
     public ResponseEntity<ApiResponse<List<EventResponse>>> getMyEvents() {
         String username = getCurrentUsername();
-        if (username == null) {
-            return ResponseEntity.status(401).body(new ApiResponse<>("Authentication required", "401", null));
-        }
         List<EventResponse> events = eventService.getEventsByUser(username);
         return ResponseEntity.ok(new ApiResponse<>("User events retrieved successfully", "200", events));
     }
 
     @GetMapping("/my-events/active")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events")
     @Operation(
         summary = "Get User's Active Events",
@@ -171,7 +168,7 @@ public class UserEventResource extends BaseService {
     }
 
     @GetMapping("/all-events")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events")
     @Operation(
         summary = "Get All Events",
@@ -223,7 +220,7 @@ public class UserEventResource extends BaseService {
     }
 
     @GetMapping("/all-events/{eventId}")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events")
     @Operation(
         summary = "Get Event by ID",
@@ -292,7 +289,7 @@ public class UserEventResource extends BaseService {
     }
 
     @GetMapping("/my-events/{eventId}")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events")
     @Operation(
         summary = "Get My Event by ID",
@@ -365,7 +362,7 @@ public class UserEventResource extends BaseService {
     }
 
     @PostMapping("/create")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.creation")
     @Operation(
         summary = "Create Event",
@@ -505,7 +502,7 @@ public class UserEventResource extends BaseService {
     }
 
     @PutMapping("/my-events/{eventId}")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.update")
     @Operation(
         summary = "Update User's Event",
@@ -632,7 +629,7 @@ public class UserEventResource extends BaseService {
     }
 
     @DeleteMapping("/my-events/{eventId}")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.delete")
     @Operation(
         summary = "Delete User's Event",
@@ -689,7 +686,7 @@ public class UserEventResource extends BaseService {
     }
 
     @PostMapping("/search")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("search")
     @Operation(
         summary = "Search Events",

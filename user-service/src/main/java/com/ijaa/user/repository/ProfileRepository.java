@@ -13,10 +13,13 @@ import java.util.Optional;
 
 @Repository
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
-    Optional<Profile> findByUsername(String username);
-    Optional<Profile> findByUserId(String userId);
+    @Query("SELECT p FROM Profile p LEFT JOIN FETCH p.city LEFT JOIN FETCH p.country WHERE p.username = :username")
+    Optional<Profile> findByUsername(@Param("username") String username);
+    
+    @Query("SELECT p FROM Profile p LEFT JOIN FETCH p.city LEFT JOIN FETCH p.country WHERE p.userId = :userId")
+    Optional<Profile> findByUserId(@Param("userId") String userId);
 
-    @Query("SELECT p FROM Profile p WHERE " +
+    @Query("SELECT p FROM Profile p LEFT JOIN FETCH p.city LEFT JOIN FETCH p.country WHERE " +
             "(:currentUsername IS NULL OR p.username != :currentUsername) AND " +
             "(:searchQuery IS NULL OR :searchQuery = '' OR " +
             "LOWER(p.name) LIKE LOWER(CONCAT('%', :searchQuery, '%')) OR " +
@@ -47,6 +50,9 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
     @Query("SELECT DISTINCT p.profession FROM Profile p WHERE p.username != :username AND p.profession IS NOT NULL ORDER BY p.profession ASC")
     List<String> findDistinctProfessionsByUsernameNot(@Param("username") String username);
 
-    // Note: Location-based queries removed as we now use cityId and countryId
-    // These would need to be replaced with city/country specific queries if needed
+    @Query("SELECT DISTINCT c.name FROM Profile p JOIN City c ON p.cityId = c.id WHERE p.username != :username AND p.cityId IS NOT NULL ORDER BY c.name ASC")
+    List<String> findDistinctCityNamesByUsernameNot(@Param("username") String username);
+
+    @Query("SELECT DISTINCT co.name FROM Profile p JOIN Country co ON p.countryId = co.id WHERE p.username != :username AND p.countryId IS NOT NULL ORDER BY co.name ASC")
+    List<String> findDistinctCountryNamesByUsernameNot(@Param("username") String username);
 }

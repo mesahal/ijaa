@@ -1,23 +1,17 @@
 package com.ijaa.user.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ijaa.user.domain.dto.CityDto;
-import com.ijaa.user.domain.dto.CountryDto;
 import com.ijaa.user.domain.dto.ExperienceDto;
 import com.ijaa.user.domain.dto.InterestDto;
 import com.ijaa.user.domain.dto.ProfileDto;
 import com.ijaa.user.domain.entity.Experience;
 import com.ijaa.user.domain.entity.Interest;
 import com.ijaa.user.domain.entity.Profile;
-import com.ijaa.user.domain.entity.User;
 import com.ijaa.user.repository.ExperienceRepository;
 import com.ijaa.user.repository.InterestRepository;
 import com.ijaa.user.repository.ProfileRepository;
-import com.ijaa.user.repository.UserRepository;
 import com.ijaa.user.service.BaseService;
-import com.ijaa.user.service.LocationService;
 import com.ijaa.user.service.ProfileService;
-import com.ijaa.user.common.utils.UniqueIdGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,24 +25,15 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
     private final ProfileRepository profileRepository;
     private final ExperienceRepository experienceRepository;
     private final InterestRepository interestRepository;
-    private final UserRepository userRepository;
-    private final LocationService locationService;
-    private final UniqueIdGenerator uniqueIdGenerator;
 
     public ProfileServiceImpl(ProfileRepository profileRepository,
                               ObjectMapper objectMapper,
                               ExperienceRepository experienceRepository,
-                              InterestRepository interestRepository,
-                              UserRepository userRepository,
-                              LocationService locationService,
-                              UniqueIdGenerator uniqueIdGenerator) {
+                              InterestRepository interestRepository) {
         super(objectMapper);
         this.profileRepository = profileRepository;
         this.experienceRepository = experienceRepository;
         this.interestRepository = interestRepository;
-        this.userRepository = userRepository;
-        this.locationService = locationService;
-        this.uniqueIdGenerator = uniqueIdGenerator;
     }
 
     @Override
@@ -258,8 +243,13 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
         dto.setBatch(entity.getBatch());
         dto.setConnections(entity.getConnections());
         
-        // Note: Location names are no longer populated automatically
-        // Clients can use the location APIs to get names by IDs if needed
+        // Populate city and country names from relationships
+        if (entity.getCity() != null) {
+            dto.setCityName(entity.getCity().getName());
+        }
+        if (entity.getCountry() != null) {
+            dto.setCountryName(entity.getCountry().getName());
+        }
 
         // Always include visibility flags
         dto.setShowPhone(entity.getShowPhone());
@@ -308,8 +298,4 @@ public class ProfileServiceImpl extends BaseService implements ProfileService {
         return dto;
     }
 
-    private String generateUserId() {
-        // Use the centralized UniqueIdGenerator for consistent ID generation
-        return uniqueIdGenerator.generateUUID();
-    }
 }

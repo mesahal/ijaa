@@ -2,6 +2,7 @@ package com.ijaa.event.presenter.rest.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ijaa.event.common.annotation.RequiresFeature;
+import com.ijaa.event.common.annotation.RequiresRole;
 import com.ijaa.event.common.utils.AppUtils;
 import com.ijaa.event.common.service.BaseService;
 import com.ijaa.event.domain.common.ApiResponse;
@@ -18,7 +19,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class EventCommentResource extends BaseService {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.comments")
     @Operation(
         summary = "Add Event Comment",
@@ -125,7 +125,7 @@ public class EventCommentResource extends BaseService {
     }
 
     @GetMapping("/event/{eventId}")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.comments")
     @Operation(
         summary = "Get Event Comments",
@@ -151,7 +151,7 @@ public class EventCommentResource extends BaseService {
 
 
     @GetMapping("/{commentId}")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.comments")
     @Operation(
         summary = "Get Comment by ID",
@@ -193,7 +193,7 @@ public class EventCommentResource extends BaseService {
     }
 
     @PutMapping("/{commentId}")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.comments")
     @Operation(
         summary = "Update Comment",
@@ -267,7 +267,7 @@ public class EventCommentResource extends BaseService {
     }
 
     @DeleteMapping("/{commentId}")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.comments")
     @Operation(
         summary = "Delete Comment",
@@ -331,7 +331,7 @@ public class EventCommentResource extends BaseService {
     }
 
     @PostMapping("/{commentId}/like")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.comments")
     @Operation(
         summary = "Like/Unlike Comment",
@@ -378,7 +378,7 @@ public class EventCommentResource extends BaseService {
 
 
     @GetMapping("/recent")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.comments")
     @Operation(
         summary = "Get Recent Comments",
@@ -404,7 +404,7 @@ public class EventCommentResource extends BaseService {
     }
 
     @GetMapping("/popular")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.comments")
     @Operation(
         summary = "Get Popular Comments",

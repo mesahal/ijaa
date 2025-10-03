@@ -1,6 +1,7 @@
 package com.ijaa.event.presenter.rest.api;
 
 import com.ijaa.event.common.annotation.RequiresFeature;
+import com.ijaa.event.common.annotation.RequiresRole;
 import com.ijaa.event.common.utils.AppUtils;
 import com.ijaa.event.common.utils.FeatureFlagUtils;
 import com.ijaa.event.domain.common.ApiResponse;
@@ -18,7 +19,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public class AdvancedEventSearchResource {
     private final FeatureFlagUtils featureFlagUtils;
 
     @PostMapping("/advanced")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("search.advanced-filters")
     @Operation(
         summary = "Advanced Event Search",
@@ -181,7 +181,7 @@ public class AdvancedEventSearchResource {
     }
 
     @GetMapping("/recommendations")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("search.advanced-filters")
     @Operation(
         summary = "Get Event Recommendations",
@@ -240,7 +240,7 @@ public class AdvancedEventSearchResource {
     }
 
     @GetMapping("/trending")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("search.advanced-filters")
     @Operation(
         summary = "Get Trending Events",
@@ -299,7 +299,7 @@ public class AdvancedEventSearchResource {
     }
 
     @GetMapping("/location/{location}")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("search.advanced-filters")
     @Operation(summary = "Get events by location", description = "Get events in a specific location")
     public ResponseEntity<ApiResponse<List<EventResponse>>> getEventsByLocation(
@@ -312,7 +312,7 @@ public class AdvancedEventSearchResource {
     }
 
     @GetMapping("/organizer/{organizerName}")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("search.advanced-filters")
     @Operation(summary = "Get events by organizer", description = "Get events organized by a specific person")
     public ResponseEntity<ApiResponse<List<EventResponse>>> getEventsByOrganizer(
@@ -325,7 +325,7 @@ public class AdvancedEventSearchResource {
     }
 
     @GetMapping("/high-engagement")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("search.advanced-filters")
     @Operation(summary = "Get high engagement events", description = "Get events with high engagement (comments, media, participants)")
     public ResponseEntity<ApiResponse<List<EventResponse>>> getHighEngagementEvents(
@@ -337,7 +337,7 @@ public class AdvancedEventSearchResource {
     }
 
     @GetMapping("/upcoming")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("search.advanced-filters")
     @Operation(summary = "Get upcoming events", description = "Get upcoming events with optional filters")
     public ResponseEntity<ApiResponse<List<EventResponse>>> getUpcomingEvents(
@@ -351,7 +351,7 @@ public class AdvancedEventSearchResource {
     }
 
     @GetMapping("/similar/{eventId}")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("search.advanced-filters")
     @Operation(summary = "Get similar events", description = "Get events similar to the specified event")
     public ResponseEntity<ApiResponse<List<EventResponse>>> getSimilarEvents(

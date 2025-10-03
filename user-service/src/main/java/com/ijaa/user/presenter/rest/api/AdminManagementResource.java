@@ -281,7 +281,7 @@ public class AdminManagementResource {
     @RequiresFeature("admin.user-management")
     @Operation(
         summary = "Get All Users",
-        description = "Retrieve all users with enhanced profile information including profession, location, batch, social links, and connections (ADMIN only)",
+        description = "Retrieve all users with enhanced profile information including profession, city, country, batch, social links, and connections (ADMIN only)",
         security = @SecurityRequirement(name = "Bearer Authentication")
     )
     @ApiResponses(value = {
@@ -305,7 +305,10 @@ public class AdminManagementResource {
                                         "name": "John Doe",
                                         "email": "john.doe@example.com",
                                         "profession": "Software Engineer",
-                                        "location": "Dhaka, Bangladesh",
+                                        "cityId": 1,
+                                        "countryId": 1,
+                                        "cityName": "Dhaka",
+                                        "countryName": "Bangladesh",
                                         "batch": "2018",
                                         "phone": "+8801234567890",
                                         "linkedIn": "https://linkedin.com/in/johndoe",
@@ -396,7 +399,10 @@ public class AdminManagementResource {
                                     "name": "John Doe",
                                     "email": "john.doe@example.com",
                                     "profession": "Software Engineer",
-                                    "location": "Dhaka, Bangladesh",
+                                    "cityId": 1,
+                                    "countryId": 1,
+                                    "cityName": "Dhaka",
+                                    "countryName": "Bangladesh",
                                     "batch": "2018",
                                     "phone": "+8801234567890",
                                     "linkedIn": "https://linkedin.com/in/johndoe",
@@ -487,7 +493,10 @@ public class AdminManagementResource {
                                     "name": "John Doe",
                                     "email": "john.doe@example.com",
                                     "profession": "Software Engineer",
-                                    "location": "Dhaka, Bangladesh",
+                                    "cityId": 1,
+                                    "countryId": 1,
+                                    "cityName": "Dhaka",
+                                    "countryName": "Bangladesh",
                                     "batch": "2018",
                                     "phone": "+8801234567890",
                                     "linkedIn": "https://linkedin.com/in/johndoe",

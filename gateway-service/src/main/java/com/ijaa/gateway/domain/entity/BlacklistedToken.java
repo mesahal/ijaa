@@ -41,3 +41,4 @@ public class BlacklistedToken {
         createdAt = LocalDateTime.now();
     }
 }
+

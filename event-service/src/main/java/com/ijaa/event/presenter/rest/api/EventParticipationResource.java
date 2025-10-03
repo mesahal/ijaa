@@ -2,6 +2,7 @@ package com.ijaa.event.presenter.rest.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ijaa.event.common.annotation.RequiresFeature;
+import com.ijaa.event.common.annotation.RequiresRole;
 import com.ijaa.event.common.utils.AppUtils;
 import com.ijaa.event.common.utils.FeatureFlagUtils;
 import com.ijaa.event.domain.common.ApiResponse;
@@ -19,7 +20,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public class EventParticipationResource extends BaseService {
 
 
     @PostMapping("/rsvp")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.participation")
     @Operation(
         summary = "RSVP to Event",
@@ -180,7 +180,7 @@ public class EventParticipationResource extends BaseService {
     }
 
     @PutMapping("/{eventId}/rsvp")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.participation")
     @Operation(
         summary = "Update RSVP Status",
@@ -267,7 +267,7 @@ public class EventParticipationResource extends BaseService {
     }
 
     @DeleteMapping("/{eventId}/rsvp")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.participation")
     @Operation(
         summary = "Cancel RSVP",
@@ -325,7 +325,7 @@ public class EventParticipationResource extends BaseService {
     }
 
     @GetMapping("/{eventId}/my-participation")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.participation")
     @Operation(
         summary = "Get My Participation",
@@ -395,7 +395,7 @@ public class EventParticipationResource extends BaseService {
     }
 
     @GetMapping("/{eventId}/participants")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.participation")
     @Operation(
         summary = "Get Event Participants",
@@ -470,7 +470,7 @@ public class EventParticipationResource extends BaseService {
     }
 
     @GetMapping("/{eventId}/participants/{status}")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.participation")
     @Operation(
         summary = "Get Participants by Status",
@@ -565,7 +565,7 @@ public class EventParticipationResource extends BaseService {
     }
 
     @GetMapping("/my-participations")
-    @PreAuthorize("hasRole('USER')")
+    @RequiresRole("USER")
     @RequiresFeature("events.participation")
     @Operation(
         summary = "Get My Participations",
