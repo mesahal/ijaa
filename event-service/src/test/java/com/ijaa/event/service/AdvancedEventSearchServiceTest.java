@@ -297,9 +297,10 @@ class AdvancedEventSearchServiceTest {
         // Given
         Page<Event> eventPage = new PageImpl<>(Arrays.asList(testEvent2, testEvent1, testEvent3));
         when(eventRepository.findActiveEventsOrderByCurrentParticipantsDesc(any(Pageable.class))).thenReturn(eventPage);
-        when(eventCommentRepository.countByEventId(2L)).thenReturn(5L);
-        when(eventCommentRepository.countByEventId(1L)).thenReturn(3L);
-        when(eventCommentRepository.countByEventId(3L)).thenReturn(1L);
+        // Note: Comment counting removed as comments are now post-based
+        // when(eventCommentRepository.countByEventId(2L)).thenReturn(5L);
+        // when(eventCommentRepository.countByEventId(1L)).thenReturn(3L);
+        // when(eventCommentRepository.countByEventId(3L)).thenReturn(1L);
 
         // When
         List<EventResponse> result = advancedEventSearchService.getHighEngagementEvents(10);
@@ -308,7 +309,8 @@ class AdvancedEventSearchServiceTest {
         assertNotNull(result);
         assertTrue(result.size() > 0);
         verify(eventRepository).findActiveEventsOrderByCurrentParticipantsDesc(any(Pageable.class));
-        verify(eventCommentRepository, atLeastOnce()).countByEventId(anyLong());
+        // Note: Comment verification removed as comments are now post-based
+        // verify(eventCommentRepository, atLeastOnce()).countByEventId(anyLong());
     }
 
     @Test
@@ -422,7 +424,8 @@ class AdvancedEventSearchServiceTest {
 
         Page<Event> eventPage = new PageImpl<>(Arrays.asList(testEvent1, testEvent2, testEvent3));
         when(eventRepository.findActiveEvents(any(Pageable.class))).thenReturn(eventPage);
-        when(eventCommentRepository.countByEventId(anyLong())).thenReturn(5L);
+        // Note: Comment counting removed as comments are now post-based
+        // when(eventCommentRepository.countByEventId(anyLong())).thenReturn(5L);
 
         // When
         PagedResponse<EventResponse> result = advancedEventSearchService.searchEvents(request);
@@ -431,6 +434,7 @@ class AdvancedEventSearchServiceTest {
         assertNotNull(result);
         assertTrue(result.getContent().size() > 0);
         verify(eventRepository).findActiveEvents(any(Pageable.class));
-        verify(eventCommentRepository, atLeastOnce()).countByEventId(anyLong());
+        // Note: Comment verification removed as comments are now post-based
+        // verify(eventCommentRepository, atLeastOnce()).countByEventId(anyLong());
     }
 }

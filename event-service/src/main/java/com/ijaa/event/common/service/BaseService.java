@@ -92,9 +92,33 @@ public class BaseService {
         }
     }
 
+    protected String getCurrentUserId() {
+        try {
+            HttpServletRequest request = getCurrentHttpRequest();
+            String base64UserContext = request.getHeader("X-USER_ID");
+            
+            log.info("X-USER_ID header value: {}", base64UserContext);
+
+            if (base64UserContext == null || base64UserContext.trim().isEmpty()) {
+                log.warn("User context not found in request headers");
+                return null;
+            }
+
+            CurrentUserContext userContext = decodeUserContext(base64UserContext);
+            log.info("Decoded user context: username={}, userId={}, role={}", 
+                    userContext.getUsername(), userContext.getUserId(), userContext.getRole());
+            return userContext.getUserId();
+
+        } catch (Exception e) {
+            log.error("Failed to extract current user ID: {}", e.getMessage(), e);
+            return null;
+        }
+    }
+
     // Inner class for user context
     public static class CurrentUserContext {
         private String username;
+        private String userId;
         private String userType;
         private String role;
 
@@ -104,6 +128,14 @@ public class BaseService {
 
         public void setUsername(String username) {
             this.username = username;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
         }
 
         public String getUserType() {

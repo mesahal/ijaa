@@ -13,9 +13,10 @@ import java.util.List;
 public class EventCommentResponse {
 
     private Long id;
-    private Long eventId;
+    private Long postId;
     private String username;
     private String authorName; // Full name of the commenter
+    private String userId; // User ID for profile photo
     private String content;
     private Boolean isEdited;
     private Boolean isDeleted;

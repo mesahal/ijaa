@@ -67,11 +67,13 @@ public class AdvancedEventSearchServiceImpl implements AdvancedEventSearchServic
                 .collect(Collectors.toList());
 
         // Apply engagement filters
-        if (hasComments != null && hasComments) {
-            filteredEvents = filteredEvents.stream()
-                    .filter(event -> eventCommentRepository.countByEventId(event.getId()) > 0)
-                    .collect(Collectors.toList());
-        }
+        // Note: Comment filtering removed as comments are now post-based
+        // Comments are now associated with posts, not directly with events
+        // if (hasComments != null && hasComments) {
+        //     filteredEvents = filteredEvents.stream()
+        //             .filter(event -> eventCommentRepository.countByEventId(event.getId()) > 0)
+        //             .collect(Collectors.toList());
+        // }
 
         // Note: Media filtering removed as we simplified to banner-only system
         // if (hasMedia != null && hasMedia) {
@@ -154,9 +156,10 @@ public class AdvancedEventSearchServiceImpl implements AdvancedEventSearchServic
         // Filter for events with engagement
         List<Event> highEngagementEvents = events.stream()
                 .filter(event -> {
-                    long commentCount = eventCommentRepository.countByEventId(event.getId());
-                    // Note: Media filtering removed as we simplified to banner-only system
-                    return event.getCurrentParticipants() > 5 || commentCount > 2;
+                    // Note: Comment counting removed as comments are now post-based
+                    // Comments are now associated with posts, not directly with events
+                    // long commentCount = eventCommentRepository.countByEventId(event.getId());
+                    return event.getCurrentParticipants() > 5; // Only use participation for engagement
                 })
                 .limit(limit)
                 .collect(Collectors.toList());

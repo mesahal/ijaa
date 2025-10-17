@@ -24,11 +24,30 @@ CREATE TABLE IF NOT EXISTS events (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Event comments table
-CREATE TABLE IF NOT EXISTS event_comments (
+-- Event posts table
+CREATE TABLE IF NOT EXISTS event_posts (
     id BIGSERIAL PRIMARY KEY,
     event_id BIGINT NOT NULL,
     username VARCHAR(50) NOT NULL,
+    user_id VARCHAR(50),
+    content TEXT,
+    post_type VARCHAR(20) DEFAULT 'TEXT', -- TEXT, IMAGE, VIDEO, MIXED
+    is_edited BOOLEAN DEFAULT FALSE,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    likes INTEGER DEFAULT 0,
+    comments_count INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Event comments table (now related to posts)
+-- Note: If you have existing data, you need to run the migration script first
+CREATE TABLE IF NOT EXISTS event_comments (
+    id BIGSERIAL PRIMARY KEY,
+    post_id BIGINT NOT NULL,
+    username VARCHAR(50) NOT NULL,
+    author_name VARCHAR(100) NOT NULL,
+    user_id VARCHAR(50) NOT NULL,
     content TEXT NOT NULL,
     is_edited BOOLEAN DEFAULT FALSE,
     is_deleted BOOLEAN DEFAULT FALSE,
@@ -70,7 +89,11 @@ CREATE INDEX IF NOT EXISTS idx_events_start_date ON events(start_date);
 CREATE INDEX IF NOT EXISTS idx_events_location ON events(location);
 CREATE INDEX IF NOT EXISTS idx_events_active ON events(active);
 CREATE INDEX IF NOT EXISTS idx_events_created_by ON events(created_by_username);
-CREATE INDEX IF NOT EXISTS idx_event_comments_event_id ON event_comments(event_id);
+CREATE INDEX IF NOT EXISTS idx_event_posts_event_id ON event_posts(event_id);
+CREATE INDEX IF NOT EXISTS idx_event_posts_username ON event_posts(username);
+CREATE INDEX IF NOT EXISTS idx_event_posts_type ON event_posts(post_type);
+CREATE INDEX IF NOT EXISTS idx_event_posts_created_at ON event_posts(created_at);
+CREATE INDEX IF NOT EXISTS idx_event_comments_post_id ON event_comments(post_id);
 CREATE INDEX IF NOT EXISTS idx_event_comments_username ON event_comments(username);
 CREATE INDEX IF NOT EXISTS idx_event_comments_parent ON event_comments(parent_comment_id);
 CREATE INDEX IF NOT EXISTS idx_event_participations_event_id ON event_participations(event_id);

@@ -18,6 +18,14 @@ spring:
     init:
       mode: always
       schema-locations: classpath:db/schema.sql
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB  # Allow large files to pass through gateway
+      max-request-size: 100MB  # Allow multiple files in one request
+      file-size-threshold: 1KB
+      location: ${java.io.tmpdir}
+      resolve-lazily: false
   cloud:
     gateway:
       discovery:
@@ -47,6 +55,10 @@ spring:
 
 server:
   port: ${SERVER_PORT:8000}
+  tomcat:
+    max-swallow-size: 100MB
+    max-http-form-post-size: 100MB
+
 
 eureka:
   instance:

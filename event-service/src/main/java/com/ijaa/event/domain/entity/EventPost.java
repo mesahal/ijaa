@@ -14,28 +14,29 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "event_comments")
+@Table(name = "event_posts")
 @EntityListeners(AuditingEntityListener.class)
-public class EventComment {
+public class EventPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private Long postId;
+    private Long eventId;
 
     @Column(nullable = false, length = 50)
-    private String username; // Username of the commenter
+    private String username; // Username of the post author
 
-    @Column(nullable = false, length = 100)
-    private String authorName; // Full name of the commenter
+    @Column(length = 50)
+    private String userId; // User ID of the post author
 
-    @Column(nullable = false, length = 50)
-    private String userId; // User ID of the commenter for profile photo
-
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String content;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private PostType postType = PostType.TEXT;
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean isEdited = false;
@@ -43,15 +44,11 @@ public class EventComment {
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean isDeleted = false;
 
-    // For threaded comments (replies)
-    @Column
-    private Long parentCommentId; // Null for top-level comments
-
     @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 0")
     private Integer likes = 0;
 
     @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 0")
-    private Integer replies = 0;
+    private Integer commentsCount = 0;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -60,4 +57,8 @@ public class EventComment {
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updatedAt;
-} 
+
+    public enum PostType {
+        TEXT, IMAGE, VIDEO, MIXED
+    }
+}

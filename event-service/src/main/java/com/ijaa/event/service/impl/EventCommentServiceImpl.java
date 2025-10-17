@@ -3,16 +3,13 @@ package com.ijaa.event.service.impl;
 import com.ijaa.event.domain.common.PagedResponse;
 import com.ijaa.event.domain.entity.EventComment;
 import com.ijaa.event.domain.entity.EventCommentLike;
+import com.ijaa.event.domain.entity.EventPost;
 import com.ijaa.event.domain.request.EventCommentRequest;
 import com.ijaa.event.domain.response.EventCommentResponse;
 import com.ijaa.event.repository.EventCommentRepository;
 import com.ijaa.event.repository.EventCommentLikeRepository;
 import com.ijaa.event.repository.EventRepository;
-import com.ijaa.event.presenter.rest.client.UserServiceClient;
-import com.ijaa.event.domain.dto.ProfileDto;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+import com.ijaa.event.repository.EventPostRepository;
 import com.ijaa.event.service.EventCommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,35 +30,40 @@ public class EventCommentServiceImpl implements EventCommentService {
     private final EventCommentRepository eventCommentRepository;
     private final EventCommentLikeRepository eventCommentLikeRepository;
     private final EventRepository eventRepository;
-    private final UserServiceClient userServiceClient;
+    private final EventPostRepository eventPostRepository;
 
     @Override
     @Transactional
     public EventCommentResponse createComment(EventCommentRequest request, String username) {
-        log.info("Creating comment for event: {} by user: {}", request.getEventId(), username);
+        log.info("Creating comment for post: {} by user: {}", request.getPostId(), username);
 
-        // Verify event exists
-        if (!eventRepository.existsById(request.getEventId())) {
-            throw new RuntimeException("Event not found");
-        }
+        // Verify post exists
+        EventPost post = eventPostRepository.findById(request.getPostId())
+                .orElseThrow(() -> new RuntimeException("Post not found"));
 
         EventComment comment = new EventComment();
-        comment.setEventId(request.getEventId());
+        comment.setPostId(request.getPostId());
         comment.setUsername(username);
+        comment.setAuthorName(request.getAuthorName());
+        comment.setUserId(request.getUserId());
         comment.setContent(request.getContent());
         comment.setParentCommentId(request.getParentCommentId());
 
         EventComment savedComment = eventCommentRepository.save(comment);
+        
+        // Update comment count for the post
+        updatePostCommentCount(request.getPostId());
+        
         return mapToResponse(savedComment, username);
     }
 
     @Override
-    public PagedResponse<EventCommentResponse> getEventComments(Long eventId, int page, int size, String currentUsername) {
-        log.info("Getting comments for event: {}, page: {}, size: {}", eventId, page, size);
+    public PagedResponse<EventCommentResponse> getPostComments(Long postId, int page, int size, String currentUsername) {
+        log.info("Getting comments for post: {}, page: {}, size: {}", postId, page, size);
 
         Pageable pageable = PageRequest.of(page, size);
         Page<EventComment> comments = eventCommentRepository
-                .findByEventIdAndParentCommentIdIsNullAndIsDeletedFalseOrderByCreatedAtDesc(eventId, pageable);
+                .findByPostIdAndParentCommentIdIsNullAndIsDeletedFalseOrderByCreatedAtDesc(postId, pageable);
 
         List<EventCommentResponse> responses = comments.getContent().stream()
                 .map(comment -> mapToResponse(comment, currentUsername))
@@ -79,10 +81,10 @@ public class EventCommentServiceImpl implements EventCommentService {
     }
 
     @Override
-    public List<EventCommentResponse> getEventCommentsWithReplies(Long eventId, String currentUsername) {
-        log.info("Getting all comments with replies for event: {}", eventId);
+    public List<EventCommentResponse> getPostCommentsWithReplies(Long postId, String currentUsername) {
+        log.info("Getting all comments with replies for post: {}", postId);
 
-        List<EventComment> comments = eventCommentRepository.findByEventIdAndIsDeletedFalseOrderByCreatedAtAsc(eventId);
+        List<EventComment> comments = eventCommentRepository.findByPostIdAndIsDeletedFalseOrderByCreatedAtAsc(postId);
         return comments.stream()
                 .map(comment -> mapToResponseWithReplies(comment, currentUsername))
                 .collect(Collectors.toList());
@@ -139,6 +141,9 @@ public class EventCommentServiceImpl implements EventCommentService {
 
         comment.setIsDeleted(true);
         eventCommentRepository.save(comment);
+        
+        // Update comment count for the post
+        updatePostCommentCount(comment.getPostId());
     }
 
     @Override
@@ -245,11 +250,11 @@ public class EventCommentServiceImpl implements EventCommentService {
     }
 
     @Override
-    public PagedResponse<EventCommentResponse> getRecentCommentsByEventId(Long eventId, int page, int size, String currentUsername) {
-        log.info("Getting recent comments for event: {}, page: {}, size: {}", eventId, page, size);
+    public PagedResponse<EventCommentResponse> getRecentCommentsByPostId(Long postId, int page, int size, String currentUsername) {
+        log.info("Getting recent comments for post: {}, page: {}, size: {}", postId, page, size);
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<EventComment> comments = eventCommentRepository.findRecentCommentsByEventId(eventId, pageable);
+        Page<EventComment> comments = eventCommentRepository.findRecentCommentsByPostId(postId, pageable);
 
         List<EventCommentResponse> responses = comments.getContent().stream()
                 .map(comment -> mapToResponse(comment, currentUsername))
@@ -267,11 +272,11 @@ public class EventCommentServiceImpl implements EventCommentService {
     }
 
     @Override
-    public PagedResponse<EventCommentResponse> getPopularCommentsByEventId(Long eventId, int page, int size, String currentUsername) {
-        log.info("Getting popular comments for event: {}, page: {}, size: {}", eventId, page, size);
+    public PagedResponse<EventCommentResponse> getPopularCommentsByPostId(Long postId, int page, int size, String currentUsername) {
+        log.info("Getting popular comments for post: {}, page: {}, size: {}", postId, page, size);
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<EventComment> comments = eventCommentRepository.findPopularCommentsByEventId(eventId, pageable);
+        Page<EventComment> comments = eventCommentRepository.findPopularCommentsByPostId(postId, pageable);
 
         List<EventCommentResponse> responses = comments.getContent().stream()
                 .map(comment -> mapToResponse(comment, currentUsername))
@@ -295,14 +300,12 @@ public class EventCommentServiceImpl implements EventCommentService {
             isLikedByCurrentUser = eventCommentLikeRepository.existsByCommentIdAndUsername(comment.getId(), currentUsername);
         }
         
-        // Get the author's actual name from user service
-        String authorName = getAuthorName(comment.getUsername());
-        
         return new EventCommentResponse(
                 comment.getId(),
-                comment.getEventId(),
+                comment.getPostId(),
                 comment.getUsername(),
-                authorName, // Now using actual user name from user service
+                comment.getAuthorName(), // Using stored author name from database
+                comment.getUserId(), // User ID for profile photo
                 comment.getContent(),
                 comment.getIsEdited(),
                 comment.getIsDeleted(),
@@ -332,14 +335,12 @@ public class EventCommentServiceImpl implements EventCommentService {
             isLikedByCurrentUser = eventCommentLikeRepository.existsByCommentIdAndUsername(comment.getId(), currentUsername);
         }
 
-        // Get the author's actual name from user service
-        String authorName = getAuthorName(comment.getUsername());
-
         return new EventCommentResponse(
                 comment.getId(),
-                comment.getEventId(),
+                comment.getPostId(),
                 comment.getUsername(),
-                authorName, // Now using actual user name from user service
+                comment.getAuthorName(), // Using stored author name from database
+                comment.getUserId(), // User ID for profile photo
                 comment.getContent(),
                 comment.getIsEdited(),
                 comment.getIsDeleted(),
@@ -354,37 +355,40 @@ public class EventCommentServiceImpl implements EventCommentService {
     }
 
     /**
-     * Get the author's actual name from user service
-     * Falls back to username if user service is unavailable or user not found
+     * Updates the comment count for a post by counting all non-deleted comments
      */
-    private String getAuthorName(String username) {
+    private void updatePostCommentCount(Long postId) {
         try {
-            // Get the Authorization header from the current request
-            String authToken = getAuthorizationToken();
-            if (authToken != null) {
-                ProfileDto profile = userServiceClient.getProfileByUsername(username, authToken);
-                return profile.getName();
-            } else {
-                log.warn("No authorization token available for user profile lookup");
-                return username; // Fallback to username
+            Long commentCount = eventCommentRepository.countByPostId(postId);
+            EventPost post = eventPostRepository.findById(postId).orElse(null);
+            if (post != null) {
+                post.setCommentsCount(commentCount.intValue());
+                eventPostRepository.save(post);
+                log.debug("Updated comment count for post {} to {}", postId, commentCount);
             }
         } catch (Exception e) {
-            log.warn("Failed to get user profile for username: {}. Using username as fallback. Error: {}", username, e.getMessage());
-            return username; // Fallback to username if user service is unavailable
+            log.error("Failed to update comment count for post {}: {}", postId, e.getMessage());
         }
     }
 
     /**
-     * Get the Authorization token from the current request
+     * Recalculates comment counts for all posts (useful for fixing existing data)
      */
-    private String getAuthorizationToken() {
+    @Transactional
+    public void recalculateAllCommentCounts() {
+        log.info("Recalculating comment counts for all posts");
         try {
-            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-            String authHeader = request.getHeader("Authorization");
-            return authHeader != null ? authHeader : null;
+            List<EventPost> allPosts = eventPostRepository.findAll();
+            for (EventPost post : allPosts) {
+                Long commentCount = eventCommentRepository.countByPostId(post.getId());
+                post.setCommentsCount(commentCount.intValue());
+                eventPostRepository.save(post);
+                log.debug("Updated comment count for post {} to {}", post.getId(), commentCount);
+            }
+            log.info("Successfully recalculated comment counts for {} posts", allPosts.size());
         } catch (Exception e) {
-            log.warn("Failed to get authorization token from request: {}", e.getMessage());
-            return null;
+            log.error("Failed to recalculate comment counts: {}", e.getMessage());
         }
     }
+
 } 

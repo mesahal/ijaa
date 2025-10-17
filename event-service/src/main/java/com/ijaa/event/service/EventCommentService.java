@@ -11,11 +11,11 @@ public interface EventCommentService {
     // Create a new comment
     EventCommentResponse createComment(EventCommentRequest request, String username);
 
-    // Get comments for an event (paginated)
-    PagedResponse<EventCommentResponse> getEventComments(Long eventId, int page, int size, String currentUsername);
+    // Get comments for a post (paginated)
+    PagedResponse<EventCommentResponse> getPostComments(Long postId, int page, int size, String currentUsername);
 
-    // Get all comments for an event (with replies)
-    List<EventCommentResponse> getEventCommentsWithReplies(Long eventId, String currentUsername);
+    // Get all comments for a post (with replies)
+    List<EventCommentResponse> getPostCommentsWithReplies(Long postId, String currentUsername);
 
     // Get a specific comment
     EventCommentResponse getComment(Long commentId, String currentUsername);
@@ -35,12 +35,12 @@ public interface EventCommentService {
     // Get recent comments
     PagedResponse<EventCommentResponse> getRecentComments(int page, int size, String currentUsername);
 
-    // Get recent comments for a specific event
-    PagedResponse<EventCommentResponse> getRecentCommentsByEventId(Long eventId, int page, int size, String currentUsername);
+    // Get recent comments for a specific post
+    PagedResponse<EventCommentResponse> getRecentCommentsByPostId(Long postId, int page, int size, String currentUsername);
 
     // Get popular comments
     PagedResponse<EventCommentResponse> getPopularComments(int page, int size, String currentUsername);
 
-    // Get popular comments for a specific event
-    PagedResponse<EventCommentResponse> getPopularCommentsByEventId(Long eventId, int page, int size, String currentUsername);
+    // Get popular comments for a specific post
+    PagedResponse<EventCommentResponse> getPopularCommentsByPostId(Long postId, int page, int size, String currentUsername);
 } 

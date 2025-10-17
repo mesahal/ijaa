@@ -3,9 +3,11 @@ package com.ijaa.event.presenter.rest.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ijaa.event.domain.entity.Event;
 import com.ijaa.event.domain.entity.EventComment;
+import com.ijaa.event.domain.entity.EventPost;
 import com.ijaa.event.domain.request.EventCommentRequest;
 import com.ijaa.event.domain.request.EventRequest;
 import com.ijaa.event.repository.EventCommentRepository;
+import com.ijaa.event.repository.EventPostRepository;
 import com.ijaa.event.repository.EventRepository;
 import com.ijaa.event.service.EventCommentService;
 import com.ijaa.event.service.EventService;
@@ -42,6 +44,9 @@ public class EventCommentResourceIntegrationTest {
     private EventCommentRepository eventCommentRepository;
 
     @Autowired
+    private EventPostRepository eventPostRepository;
+
+    @Autowired
     private EventService eventService;
 
     @Autowired
@@ -51,6 +56,7 @@ public class EventCommentResourceIntegrationTest {
     private ObjectMapper objectMapper;
 
     private Event testEvent;
+    private EventPost testPost;
     private EventComment testComment;
     private String testUsername = "testuser";
     private String userContextHeader;
@@ -75,9 +81,17 @@ public class EventCommentResourceIntegrationTest {
 
         testEvent = eventRepository.save(createEventFromRequest(eventRequest, testUsername));
 
+        // Create test post first
+        EventPost testPost = new EventPost();
+        testPost.setEventId(testEvent.getId());
+        testPost.setUsername(testUsername);
+        testPost.setContent("Test post content");
+        testPost.setPostType(EventPost.PostType.TEXT);
+        testPost = eventPostRepository.save(testPost);
+
         // Create test comment
         EventComment comment = new EventComment();
-        comment.setEventId(testEvent.getId());
+        comment.setPostId(testPost.getId());
         comment.setUsername(testUsername);
         comment.setContent("Test comment content");
         comment.setParentCommentId(null);
@@ -98,7 +112,7 @@ public class EventCommentResourceIntegrationTest {
     @Test
     void testCreateComment_Success() throws Exception {
         EventCommentRequest request = new EventCommentRequest();
-        request.setEventId(testEvent.getId());
+        request.setPostId(testPost.getId());
         request.setContent("New test comment");
 
         mockMvc.perform(post("/api/v1/user/events/comments")
@@ -118,7 +132,7 @@ public class EventCommentResourceIntegrationTest {
     @Test
     void testCreateComment_WithoutAuthentication() throws Exception {
         EventCommentRequest request = new EventCommentRequest();
-        request.setEventId(testEvent.getId());
+        request.setPostId(testPost.getId());
         request.setContent("New test comment");
 
         mockMvc.perform(post("/api/v1/user/events/comments")
@@ -133,7 +147,7 @@ public class EventCommentResourceIntegrationTest {
     void testGetEventComments_WithNestedReplies() throws Exception {
         // Create a reply to the test comment
         EventComment reply = new EventComment();
-        reply.setEventId(testEvent.getId());
+        reply.setPostId(testPost.getId());
         reply.setUsername("replyuser");
         reply.setContent("This is a reply");
         reply.setParentCommentId(testComment.getId());
@@ -186,7 +200,7 @@ public class EventCommentResourceIntegrationTest {
     @Test
     void testUpdateComment_Success() throws Exception {
         EventCommentRequest request = new EventCommentRequest();
-        request.setEventId(testEvent.getId());
+        request.setPostId(testPost.getId());
         request.setContent("Updated comment content");
 
         mockMvc.perform(put("/api/v1/user/events/comments/{commentId}", testComment.getId())

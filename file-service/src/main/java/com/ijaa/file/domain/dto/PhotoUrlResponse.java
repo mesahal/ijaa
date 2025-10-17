@@ -16,4 +16,11 @@ public class PhotoUrlResponse {
         this.message = message;
         this.exists = exists;
     }
+    
+    // Constructor for URL and file type
+    public PhotoUrlResponse(String photoUrl, String fileType) {
+        this.photoUrl = photoUrl;
+        this.message = "File retrieved successfully";
+        this.exists = true;
+    }
 }

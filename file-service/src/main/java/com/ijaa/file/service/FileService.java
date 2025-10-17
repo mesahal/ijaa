@@ -31,4 +31,17 @@ public interface FileService {
     Resource getEventBannerFile(String eventId, String fileName);
     
     void deleteEventBanner(String eventId);
+    
+    // Event Post Media methods
+    FileUploadResponse uploadPostMedia(String postId, MultipartFile file, String mediaType);
+    
+    PhotoUrlResponse getPostMediaUrl(String postId, String fileName);
+    
+    Resource getPostMediaFile(String postId, String fileName);
+    
+    void deletePostMedia(String postId, String fileName);
+    
+    void deleteAllPostMedia(String postId);
+    
+    java.util.List<com.ijaa.file.domain.dto.PostMediaResponse> getAllPostMedia(String postId);
 }

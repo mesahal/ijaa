@@ -5,11 +5,13 @@ import com.ijaa.file.domain.dto.FileUploadResponse;
 import com.ijaa.file.domain.dto.PhotoUrlResponse;
 import com.ijaa.file.domain.entity.User;
 import com.ijaa.file.domain.entity.EventBanner;
+import com.ijaa.file.domain.entity.EventPostMedia;
 import com.ijaa.file.exceptions.FileStorageException;
 import com.ijaa.file.exceptions.InvalidFileTypeException;
 import com.ijaa.file.exceptions.UserNotFoundException;
 import com.ijaa.file.repository.UserRepository;
 import com.ijaa.file.repository.EventBannerRepository;
+import com.ijaa.file.repository.EventPostMediaRepository;
 import com.ijaa.file.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -33,6 +36,7 @@ public class FileServiceImpl implements FileService {
     private final FileStorageConfig fileStorageConfig;
     private final UserRepository userRepository;
     private final EventBannerRepository eventBannerRepository;
+    private final EventPostMediaRepository eventPostMediaRepository;
 
     @Override
     public FileUploadResponse uploadProfilePhoto(String userId, MultipartFile file) {
@@ -305,6 +309,35 @@ public class FileServiceImpl implements FileService {
         return lastDotIndex > 0 ? fileName.substring(lastDotIndex + 1) : "";
     }
 
+    private String getFileExtensionFromContentType(String contentType) {
+        if (contentType == null) return null;
+        
+        switch (contentType.toLowerCase()) {
+            case "image/jpeg":
+                return "jpg";
+            case "image/jpg":
+                return "jpg";
+            case "image/png":
+                return "png";
+            case "image/webp":
+                return "webp";
+            case "video/mp4":
+                return "mp4";
+            case "video/avi":
+                return "avi";
+            case "video/quicktime":
+                return "mov";
+            case "video/x-ms-wmv":
+                return "wmv";
+            case "video/x-flv":
+                return "flv";
+            case "video/webm":
+                return "webm";
+            default:
+                return null;
+        }
+    }
+
     private String generateUniqueFileName(String originalFilename) {
         String extension = getFileExtension(originalFilename);
         String uniqueId = UUID.randomUUID().toString();
@@ -504,5 +537,233 @@ public class FileServiceImpl implements FileService {
                 throw new FileStorageException("Failed to delete event banner", e);
             }
         }
+    }
+
+    // Event Post Media methods
+    @Override
+    public FileUploadResponse uploadPostMedia(String postId, MultipartFile file, String mediaType) {
+        log.info("Uploading post media for post: {}, type: {}", postId, mediaType);
+
+        try {
+            validatePostMediaFile(file, mediaType);
+            log.debug("File validation passed for post: {}", postId);
+
+            // Create directory if it doesn't exist
+            Path uploadDir = Paths.get(fileStorageConfig.getEventPostMediaPath());
+            log.debug("Post media upload directory: {}", uploadDir);
+            
+            if (!Files.exists(uploadDir)) {
+                log.debug("Creating post media upload directory: {}", uploadDir);
+                Files.createDirectories(uploadDir);
+                log.debug("Created post media upload directory: {}", uploadDir);
+            }
+            
+            if (!Files.isWritable(uploadDir)) {
+                throw new FileStorageException("Upload directory is not writable: " + uploadDir);
+            }
+            
+            log.debug("Post media upload directory is ready: {}", uploadDir);
+
+            // Generate unique filename
+            String fileName = generateUniqueFileName(file.getOriginalFilename());
+            Path filePath = uploadDir.resolve(fileName);
+
+            // Save the file
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            log.debug("File saved successfully: {}", filePath);
+
+            // Store the media info in the database
+            log.debug("Saving media info to database for post: {}", postId);
+            EventPostMedia media = new EventPostMedia();
+            media.setPostId(postId);
+            media.setFileName(fileName);
+            media.setFileSize(file.getSize());
+            media.setFileType(file.getContentType());
+            media.setMediaType(EventPostMedia.MediaType.valueOf(mediaType.toUpperCase()));
+            
+            // Set file order (count existing files for this post)
+            Long existingCount = eventPostMediaRepository.countByPostId(postId);
+            media.setFileOrder(existingCount.intValue());
+            
+            EventPostMedia savedMedia = eventPostMediaRepository.save(media);
+            log.debug("Media saved to database with ID: {}", savedMedia.getId());
+
+            String fileUrl = "/ijaa/api/v1/files/posts/" + postId + "/media/" + fileName;
+
+            log.info("Post media uploaded successfully for post: {}, file: {}", postId, fileName);
+
+            return new FileUploadResponse(
+                    "Post media uploaded successfully",
+                    fileUrl,
+                    fileName,
+                    file.getSize()
+            );
+
+        } catch (IOException e) {
+            log.error("IO Error uploading post media for post: {} - Error: {}", postId, e.getMessage(), e);
+            throw new FileStorageException("Failed to upload post media: IO Error", e);
+        } catch (Exception e) {
+            log.error("Unexpected error uploading post media for post: {} - Error: {} - Type: {}", 
+                     postId, e.getMessage(), e.getClass().getSimpleName(), e);
+            throw new FileStorageException("Failed to upload post media: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public PhotoUrlResponse getPostMediaUrl(String postId, String fileName) {
+        log.info("Getting post media URL for post: {}, file: {}", postId, fileName);
+
+        EventPostMedia media = eventPostMediaRepository.findByPostIdAndFileName(postId, fileName)
+                .orElse(null);
+
+        if (media == null) {
+            throw new FileStorageException("No post media found for post: " + postId + ", file: " + fileName);
+        }
+
+        String fileUrl = "/ijaa/api/v1/files/posts/" + postId + "/media/" + fileName;
+        return new PhotoUrlResponse(fileUrl, media.getFileType());
+    }
+
+    @Override
+    public Resource getPostMediaFile(String postId, String fileName) {
+        log.info("Getting post media file for post: {}, file: {}", postId, fileName);
+
+        EventPostMedia media = eventPostMediaRepository.findByPostIdAndFileName(postId, fileName)
+                .orElse(null);
+
+        if (media == null) {
+            throw new FileStorageException("No post media found for post: " + postId + ", file: " + fileName);
+        }
+
+        // Validate that the requested filename matches the stored filename
+        if (!fileName.equals(media.getFileName())) {
+            throw new FileStorageException("File access denied: filename mismatch");
+        }
+
+        try {
+            Path filePath = Paths.get(fileStorageConfig.getEventPostMediaPath()).resolve(fileName);
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                return resource;
+            } else {
+                throw new FileStorageException("Post media file not found: " + fileName);
+            }
+        } catch (Exception e) {
+            log.error("Error getting post media file for post: {}, file: {}", postId, fileName, e);
+            throw new FileStorageException("Failed to get post media file", e);
+        }
+    }
+
+    @Override
+    public void deletePostMedia(String postId, String fileName) {
+        log.info("Deleting post media for post: {}, file: {}", postId, fileName);
+
+        EventPostMedia media = eventPostMediaRepository.findByPostIdAndFileName(postId, fileName)
+                .orElse(null);
+
+        if (media != null) {
+            try {
+                Path filePath = Paths.get(fileStorageConfig.getEventPostMediaPath()).resolve(fileName);
+                deleteFile(filePath);
+                eventPostMediaRepository.delete(media);
+                log.info("Post media deleted successfully for post: {}, file: {}", postId, fileName);
+            } catch (Exception e) {
+                log.error("Error deleting post media for post: {}, file: {}", postId, fileName, e);
+                throw new FileStorageException("Failed to delete post media", e);
+            }
+        }
+    }
+
+    @Override
+    public void deleteAllPostMedia(String postId) {
+        log.info("Deleting all post media for post: {}", postId);
+
+        try {
+            List<EventPostMedia> mediaList = eventPostMediaRepository.findByPostIdOrderByFileOrderAsc(postId);
+            
+            for (EventPostMedia media : mediaList) {
+                Path filePath = Paths.get(fileStorageConfig.getEventPostMediaPath()).resolve(media.getFileName());
+                deleteFile(filePath);
+            }
+            
+            eventPostMediaRepository.deleteByPostId(postId);
+            log.info("All post media deleted successfully for post: {}", postId);
+        } catch (Exception e) {
+            log.error("Error deleting all post media for post: {}", postId, e);
+            throw new FileStorageException("Failed to delete all post media", e);
+        }
+    }
+
+    private void validatePostMediaFile(MultipartFile file, String mediaType) {
+        if (file.isEmpty()) {
+            throw new FileStorageException("File is empty");
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null) {
+            throw new FileStorageException("File content type is null");
+        }
+
+        // Validate file type based on media type
+        if ("IMAGE".equalsIgnoreCase(mediaType)) {
+            // Extract file extension from content type or filename
+            String fileExtension = getFileExtensionFromContentType(contentType);
+            if (fileExtension == null) {
+                // Fallback to filename extension
+                fileExtension = getFileExtension(file.getOriginalFilename());
+            }
+            
+            if (!fileStorageConfig.getAllowedImageTypes().contains(fileExtension.toLowerCase())) {
+                throw new InvalidFileTypeException("Invalid image type: " + contentType + ". Allowed types: " + 
+                    String.join(", ", fileStorageConfig.getAllowedImageTypes()));
+            }
+            
+            // Check file size for images
+            long maxSize = fileStorageConfig.getMaxFileSizeMb() * 1024 * 1024;
+            if (file.getSize() > maxSize) {
+                throw new FileStorageException("File size exceeds maximum allowed size: " + fileStorageConfig.getMaxFileSizeMb() + "MB");
+            }
+        } else if ("VIDEO".equalsIgnoreCase(mediaType)) {
+            // Extract file extension from content type or filename
+            String fileExtension = getFileExtensionFromContentType(contentType);
+            if (fileExtension == null) {
+                // Fallback to filename extension
+                fileExtension = getFileExtension(file.getOriginalFilename());
+            }
+            
+            if (!fileStorageConfig.getAllowedVideoTypes().contains(fileExtension.toLowerCase())) {
+                throw new InvalidFileTypeException("Invalid video type: " + contentType + ". Allowed types: " + 
+                    String.join(", ", fileStorageConfig.getAllowedVideoTypes()));
+            }
+            
+            // Check file size for videos
+            long maxSize = fileStorageConfig.getMaxVideoSizeMb() * 1024 * 1024;
+            if (file.getSize() > maxSize) {
+                throw new FileStorageException("File size exceeds maximum allowed size: " + fileStorageConfig.getMaxVideoSizeMb() + "MB");
+            }
+        } else {
+            throw new FileStorageException("Invalid media type: " + mediaType);
+        }
+    }
+
+    @Override
+    public List<com.ijaa.file.domain.dto.PostMediaResponse> getAllPostMedia(String postId) {
+        log.info("Getting all post media for post: {}", postId);
+
+        List<EventPostMedia> mediaList = eventPostMediaRepository.findByPostIdOrderByFileOrderAsc(postId);
+        
+        return mediaList.stream()
+                .map(media -> com.ijaa.file.domain.dto.PostMediaResponse.builder()
+                        .id(media.getId())
+                        .fileName(media.getFileName())
+                        .fileUrl("/ijaa/api/v1/files/posts/" + postId + "/media/" + media.getFileName())
+                        .fileType(media.getFileType())
+                        .mediaType(media.getMediaType().name())
+                        .fileSize(media.getFileSize())
+                        .fileOrder(media.getFileOrder())
+                        .createdAt(media.getCreatedAt())
+                        .build())
+                .collect(java.util.stream.Collectors.toList());
     }
 }

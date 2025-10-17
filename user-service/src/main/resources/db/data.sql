@@ -63,6 +63,14 @@ INSERT INTO feature_flags (id, feature_name, enabled, description, created_at, u
 -- Missing Event Features
 (40, 'events.banner', true, 'Enable event banner upload and management', '2025-08-27 02:36:53.437514', '2025-08-27 02:36:53.437514', 'Event Banner', 17),
 
+-- Event Posts Features
+(47, 'events.posts', true, 'Enable event posts and discussion functionality', '2025-12-01 12:00:00.000000', '2025-12-01 12:00:00.000000', 'Event Posts', 17),
+(48, 'events.posts.create', true, 'Enable creating posts in events', '2025-12-01 12:00:00.000000', '2025-12-01 12:00:00.000000', 'Create Posts', 47),
+(49, 'events.posts.update', true, 'Enable updating posts in events', '2025-12-01 12:00:00.000000', '2025-12-01 12:00:00.000000', 'Update Posts', 47),
+(50, 'events.posts.delete', true, 'Enable deleting posts in events', '2025-12-01 12:00:00.000000', '2025-12-01 12:00:00.000000', 'Delete Posts', 47),
+(51, 'events.posts.like', true, 'Enable liking posts in events', '2025-12-01 12:00:00.000000', '2025-12-01 12:00:00.000000', 'Like Posts', 47),
+(52, 'events.posts.media', true, 'Enable media upload for posts (images and videos)', '2025-12-01 12:00:00.000000', '2025-12-01 12:00:00.000000', 'Post Media', 47),
+
 -- Search Features
 (41, 'search', true, 'Enable basic search functionality', '2025-08-27 02:36:53.440857', '2025-08-27 02:36:53.440857', 'Search', NULL),
 (42, 'search.advanced-filters', true, 'Enable advanced search filters and features', '2025-08-27 02:36:53.440857', '2025-08-27 02:36:53.440857', 'Advanced Search Filters', 41),

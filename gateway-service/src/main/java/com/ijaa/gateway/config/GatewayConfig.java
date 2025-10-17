@@ -42,7 +42,8 @@ public class GatewayConfig {
                 .route(p -> p
                         .path("/ijaa/api/v1/files/users/*/profile-photo/file/**", 
                               "/ijaa/api/v1/files/users/*/cover-photo/file/**",
-                              "/ijaa/api/v1/files/events/*/banner/file/**")
+                              "/ijaa/api/v1/files/events/*/banner/file/**",
+                              "/ijaa/api/v1/files/posts/*/media/file/**")
                         .filters(f -> f
                                 .rewritePath("/ijaa/(?<segment>.*)", "/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
@@ -95,6 +96,11 @@ public class GatewayConfig {
                         .uri("lb://event-service"))
                 .route(p -> p
                         .path("/ijaa/api/v1/files/**")
+                        .and()
+                        .not(route -> route.path("/ijaa/api/v1/files/users/*/profile-photo/file/**",
+                                                "/ijaa/api/v1/files/users/*/cover-photo/file/**",
+                                                "/ijaa/api/v1/files/events/*/banner/file/**",
+                                                "/ijaa/api/v1/files/posts/*/media/file/**"))
                         .filters(f -> f
                                 .filter(filter.apply(new AuthenticationFilter.Config()))
                                 .rewritePath("/ijaa/(?<segment>.*)", "/${segment}")

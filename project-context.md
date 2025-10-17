@@ -3,7 +3,7 @@
 ## Project Overview
 IJAA (IIT JU Alumni Association) is a comprehensive microservices-based alumni management system built with Spring Boot. The system facilitates alumni networking, event management, file handling, and advanced event features through a distributed architecture.
 
-**Recent Update (December 2024)**: Complete API standardization following REST conventions, JWT authentication with refresh tokens, database schema alignment, SQL initialization, and comprehensive feature flag system with 44 hierarchical flags. **CRITICAL FIX**: Added missing feature flags to all API endpoints for complete access control.
+**Recent Update (January 2025)**: Complete API standardization following REST conventions, JWT authentication with refresh tokens, database schema alignment, SQL initialization, and comprehensive feature flag system with 52 hierarchical flags. **NEW FEATURE**: Added comprehensive post system for event discussions with mixed content support (text, images, videos). **CRITICAL FIX**: Added missing feature flags to all API endpoints for complete access control.
 
 **API Standardization (December 2024)**: All API endpoints have been standardized to follow industry best practices:
 - **Resource-based URLs**: `/api/v1/users/`, `/api/v1/events/`, `/api/v1/files/`
@@ -95,19 +95,21 @@ Gateway Service (8080) → User Service (8081), Event Service (8082), File Servi
 
 ### Event Service Tables
 - `events`: Event information and metadata
-- `event_comments`: Comment system with nested replies
+- `event_posts`: Event discussion posts with mixed content support
+- `event_comments`: Comment system with nested replies (now post-based)
 - `event_participations`: Event RSVP and participation tracking
 - `event_invitations`: Event invitation management
 
 ### File Service Tables
 - `users`: User file metadata
 - `event_banners`: Event banner file metadata
+- `event_post_media`: Post media files (images and videos)
 
 ### Database Configuration
 - **SQL Initialization**: `spring.sql.init.mode=always` with `ddl-auto=none`
 - **Schema Files**: `classpath:db/schema.sql` for table creation
 - **Data Files**: `classpath:db/data.sql` for initial data
-- **Initial Data**: 1 admin account, 245 countries, 381 cities, 44 feature flags
+- **Initial Data**: 1 admin account, 245 countries, 381 cities, 52 feature flags
 
 ## API Endpoints
 
@@ -185,15 +187,26 @@ Gateway Service (8080) → User Service (8081), Event Service (8082), File Servi
 - ✅ `GET /{eventId}/participants/{status}` - Get participants by status
 - ✅ `GET /my-participations` - Get user's event participations
 
+### Event Posts APIs (`/ijaa/api/v1/events/posts/`)
+- ✅ `POST /` - Create event post (**Feature Flag**: `events.posts.create`)
+- ✅ `GET /event/{eventId}` - Get event posts (paginated) (**Feature Flag**: `events.posts`)
+- ✅ `GET /event/{eventId}/all` - Get all event posts (**Feature Flag**: `events.posts`)
+- ✅ `GET /{postId}` - Get specific post (**Feature Flag**: `events.posts`)
+- ✅ `PUT /{postId}` - Update post (**Feature Flag**: `events.posts.update`)
+- ✅ `DELETE /{postId}` - Delete post (**Feature Flag**: `events.posts.delete`)
+- ✅ `POST /{postId}/like` - Toggle post like (**Feature Flag**: `events.posts.like`)
+- ✅ `GET /user/{username}` - Get user's posts (paginated) (**Feature Flag**: `events.posts`)
+- ✅ `GET /user/{username}/event/{eventId}` - Get user's posts for event (**Feature Flag**: `events.posts`)
+
 ### Event Comments APIs (`/ijaa/api/v1/events/comments/`)
-- ✅ `POST /` - Add event comment
-- ✅ `GET /event/{eventId}` - Get event comments with nested replies
-- ✅ `GET /{commentId}` - Get specific comment
-- ✅ `PUT /{commentId}` - Update comment
-- ✅ `DELETE /{commentId}` - Delete comment
-- ✅ `POST /{commentId}/like` - Toggle comment like
-- ✅ `GET /recent` - Get recent comments
-- ✅ `GET /popular` - Get popular comments
+- ✅ `POST /` - Add post comment (**Feature Flag**: `events.comments`)
+- ✅ `GET /post/{postId}` - Get post comments with nested replies (**Feature Flag**: `events.comments`)
+- ✅ `GET /{commentId}` - Get specific comment (**Feature Flag**: `events.comments`)
+- ✅ `PUT /{commentId}` - Update comment (**Feature Flag**: `events.comments`)
+- ✅ `DELETE /{commentId}` - Delete comment (**Feature Flag**: `events.comments`)
+- ✅ `POST /{commentId}/like` - Toggle comment like (**Feature Flag**: `events.comments`)
+- ✅ `GET /recent/post/{postId}` - Get recent comments for post (**Feature Flag**: `events.comments`)
+- ✅ `GET /popular/post/{postId}` - Get popular comments for post (**Feature Flag**: `events.comments`)
 
 ### Event Invitations APIs (`/ijaa/api/v1/events/invitations/`)
 - ✅ `POST /send` - Send event invitation
@@ -233,15 +246,22 @@ Gateway Service (8080) → User Service (8081), Event Service (8082), File Servi
 - ✅ `GET /{userId}/cover-photo/file/**` - Serve cover photo file (public - no feature flag)
 
 ### Event File APIs (`/ijaa/api/v1/files/events/`)
-- ✅ `POST /{eventId}/banner` - Upload event banner
-- ✅ `GET /{eventId}/banner` - Get event banner URL
-- ✅ `DELETE /{eventId}/banner` - Delete event banner
+- ✅ `POST /{eventId}/banner` - Upload event banner (**Feature Flag**: `events.banner`)
+- ✅ `GET /{eventId}/banner` - Get event banner URL (**Feature Flag**: `events.banner`)
+- ✅ `DELETE /{eventId}/banner` - Delete event banner (**Feature Flag**: `events.banner`)
 - ✅ `GET /{eventId}/banner/file/{fileName}` - Serve event banner file (public)
+
+### Post Media APIs (`/ijaa/api/v1/files/posts/`)
+- ✅ `GET /{postId}/media` - Get all post media files (public)
+- ✅ `POST /{postId}/media` - Upload post media (**Feature Flag**: `events.posts.media`)
+- ✅ `GET /{postId}/media/{fileName}` - Get post media URL (**Feature Flag**: `file-download`)
+- ✅ `GET /{postId}/media/file/{fileName}` - Serve post media file (public)
+- ✅ `DELETE /{postId}/media/{fileName}` - Delete post media (**Feature Flag**: `file-delete`)
 
 ## Feature Flag System
 
 ### Overview
-The system implements a sophisticated feature flag mechanism with 44 hierarchical flags:
+The system implements a sophisticated feature flag mechanism with 52 hierarchical flags:
 - **Hierarchical Structure**: Parent-child relationships between flags
 - **Database-Driven**: Flags stored in database for runtime changes
 - **Public Status Checks**: Feature flag status accessible without authentication
@@ -276,10 +296,16 @@ The system implements a sophisticated feature flag mechanism with 44 hierarchica
 - `search.advanced-filters` → Advanced event search endpoints
 - `events` → Core event management (creation, update, deletion)
 - `events.participation` → Event participation/RSVP
-- `events.comments` → Event commenting system
+- `events.comments` → Event commenting system (now post-based)
 - `events.invitations` → Event invitation system
 - `events.media` → Event media attachments
 - `events.banner` → Event banner upload and management
+- `events.posts` → Event posts and discussion system
+- `events.posts.create` → Create event posts
+- `events.posts.update` → Update event posts
+- `events.posts.delete` → Delete event posts
+- `events.posts.like` → Like event posts
+- `events.posts.media` → Upload media for posts
 
 **System Feature Flags:**
 - `alumni.search` → Alumni search functionality
@@ -310,6 +336,8 @@ Production-ready JWT authentication with refresh tokens:
 - `GET /ijaa/api/v1/files/users/*/profile-photo/file/**` - Profile photo serving (**Feature Flag**: `file-download`)
 - `GET /ijaa/api/v1/files/users/*/cover-photo/file/**` - Cover photo serving (**Feature Flag**: `file-download`)
 - `GET /ijaa/api/v1/files/events/{eventId}/banner/file/{fileName}` - Event banner serving (**Feature Flag**: `file-download`)
+- `GET /ijaa/api/v1/files/posts/{postId}/media` - Get post media files (public)
+- `GET /ijaa/api/v1/files/posts/{postId}/media/file/{fileName}` - Serve post media files (public)
 
 ## Health Check APIs
 
@@ -363,17 +391,64 @@ src/
 - **Authorization Tests**: Role-based access control validation
 - **Feature Flag Tests**: Feature toggle functionality validation
 
+## Post System (NEW FEATURE)
+
+### Overview
+The IJAA system now includes a comprehensive post system for event discussions, allowing event creators to create rich, interactive content within their events.
+
+### Key Features
+- **Mixed Content Posts**: Support for text, multiple images, and multiple videos in a single post
+- **Media Ordering**: Proper ordering and display of media files with `fileOrder` field
+- **Post-based Comments**: Comments are now associated with posts rather than directly with events
+- **Access Control**: Only event creators can create, update, and delete posts on their events
+- **Public Media Access**: Media files can be accessed without authentication for display
+- **Real-time Integration**: Media files are automatically included in post responses
+
+### Post Types
+- **TEXT**: Text-only posts
+- **IMAGE**: Posts with images only
+- **VIDEO**: Posts with videos only
+- **MIXED**: Posts with both images and videos
+
+### Media Support
+- **Images**: JPG, JPEG, PNG, WEBP (max 5MB each)
+- **Videos**: MP4, AVI, MOV, WMV, FLV, WEBM (max 50MB each)
+- **Multiple Files**: Support for multiple media files per post with proper ordering
+
+### Database Tables
+- `event_posts`: Main posts table with content and metadata
+- `event_post_media`: Media files associated with posts
+- `event_comments`: Comments now reference posts instead of events directly
+
+### API Endpoints
+- **Post Management**: Create, read, update, delete posts
+- **Media Management**: Upload, serve, delete media files
+- **Comment System**: Post-based commenting with nested replies
+- **User Posts**: Get posts by user across all events or for specific events
+
 ## System Status
 
 **Key Strengths**:
 - ✅ **Complete microservices architecture** with proper service separation
 - ✅ **JWT authentication system** with refresh tokens and secure cookies
 - ✅ **Comprehensive API coverage** for all core features
-- ✅ **Feature flag system** with 44 hierarchical flags
+- ✅ **Feature flag system** with 52 hierarchical flags
 - ✅ **Database schema alignment** with JPA entities
 - ✅ **SQL initialization** for automatic database setup
 - ✅ **Production-ready database** with clean, essential-only data
+- ✅ **Advanced post system** with mixed content support (text, images, videos)
+- ✅ **Post-based commenting system** with nested replies
+- ✅ **Media management** for posts with proper ordering and validation
 
-**Ready for Frontend Integration**: All APIs are stable and tested, with proper authentication flow and error handling in place.
+**Ready for Frontend Integration**: All APIs are stable and tested, with proper authentication flow and error handling in place. The new post system provides rich discussion capabilities for events.
 
-**System Status**: 🟢 **READY FOR PRODUCTION** with comprehensive functionality and standardized API structure.
+## API Summary
+
+- **Total Endpoints**: 100+ (including new post system)
+- **Authentication Required**: 85+
+- **Public Endpoints**: 15+
+- **Feature Flags**: 52 hierarchical flags
+- **Services**: 5 (User, Event, File, Config, Discovery)
+- **New Features**: Post system with mixed content support
+
+**System Status**: 🟢 **READY FOR PRODUCTION** with comprehensive functionality, standardized API structure, and advanced social features.

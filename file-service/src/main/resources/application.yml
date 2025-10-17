@@ -23,21 +23,25 @@ spring:
   servlet:
     multipart:
       enabled: true  # Explicitly enable multipart support
-      max-file-size: 5MB
-      max-request-size: 10MB  # Should be larger than max-file-size
+      max-file-size: 50MB  # Increased to match max-video-size-mb
+      max-request-size: 100MB  # Should be larger than max-file-size for multiple files
       file-size-threshold: 1KB  # Files larger than this will be written to disk
       location: ${java.io.tmpdir}  # Temporary directory for multipart files
       resolve-lazily: false  # Resolve multipart files immediately
+  web:
+    resources:
+      add-mappings: false  # Disable automatic static resource handling
   cloud:
     compatibility-verifier:
       enabled: false
 
 server:
   port: ${SERVER_PORT:8083}
+
   # Add these for better file handling
   tomcat:
-    max-swallow-size: 10MB
-    max-http-form-post-size: 10MB
+    max-swallow-size: 100MB
+    max-http-form-post-size: 100MB
 
 eureka:
   client:
@@ -53,8 +57,11 @@ file:
     profile-photos-path: ${file.storage.base-path}/profile
     cover-photos-path: ${file.storage.base-path}/cover
     event-banners-path: ${file.storage.base-path}/event-banners
+    event-post-media-path: ${file.storage.base-path}/event-posts
     allowed-image-types: jpg,jpeg,png,webp
+    allowed-video-types: mp4,avi,mov,wmv,flv,webm
     max-file-size-mb: 5
+    max-video-size-mb: 50
 
 # Feign client configuration
 feign:

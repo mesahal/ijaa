@@ -71,11 +71,11 @@ public class SwaggerConfig {
                                 .url("https://opensource.org/licenses/MIT")))
                 .servers(servers)
                 .components(new Components()
-                        .addSecuritySchemes("Bearer Authentication", new SecurityScheme()
+                        .addSecuritySchemes("bearerAuth", new SecurityScheme()
                                 .type(SecurityScheme.Type.HTTP)
                                 .scheme("bearer")
                                 .bearerFormat("JWT")
                                 .description("JWT token for authentication")))
-                .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"));
+                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
     }
 }

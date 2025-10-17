@@ -15,14 +15,20 @@ public class FileStorageConfig {
     private String profilePhotosPath;
     private String coverPhotosPath;
     private String eventBannersPath;
+    private String eventPostMediaPath;
     private List<String> allowedImageTypes;
+    private List<String> allowedVideoTypes;
     private int maxFileSizeMb;
+    private int maxVideoSizeMb;
 
     // Getters for backward compatibility
     public String getBasePath() { return basePath; }
     public String getProfilePhotosPath() { return profilePhotosPath; }
     public String getCoverPhotosPath() { return coverPhotosPath; }
     public String getEventBannersPath() { return eventBannersPath; }
+    public String getEventPostMediaPath() { return eventPostMediaPath; }
     public List<String> getAllowedImageTypes() { return allowedImageTypes; }
+    public List<String> getAllowedVideoTypes() { return allowedVideoTypes; }
     public int getMaxFileSizeMb() { return maxFileSizeMb; }
+    public int getMaxVideoSizeMb() { return maxVideoSizeMb; }
 }
