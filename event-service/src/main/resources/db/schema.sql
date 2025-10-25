@@ -70,20 +70,6 @@ CREATE TABLE IF NOT EXISTS event_participations (
     UNIQUE(event_id, participant_username)
 );
 
--- Event invitations table
-CREATE TABLE IF NOT EXISTS event_invitations (
-    id BIGSERIAL PRIMARY KEY,
-    event_id BIGINT NOT NULL,
-    invited_username VARCHAR(50) NOT NULL,
-    invited_by_username VARCHAR(50) NOT NULL,
-    personal_message VARCHAR(500),
-    is_read BOOLEAN DEFAULT FALSE,
-    is_responded BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(event_id, invited_username)
-);
-
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_events_start_date ON events(start_date);
 CREATE INDEX IF NOT EXISTS idx_events_location ON events(location);
@@ -98,5 +84,3 @@ CREATE INDEX IF NOT EXISTS idx_event_comments_username ON event_comments(usernam
 CREATE INDEX IF NOT EXISTS idx_event_comments_parent ON event_comments(parent_comment_id);
 CREATE INDEX IF NOT EXISTS idx_event_participations_event_id ON event_participations(event_id);
 CREATE INDEX IF NOT EXISTS idx_event_participations_username ON event_participations(participant_username);
-CREATE INDEX IF NOT EXISTS idx_event_invitations_event_id ON event_invitations(event_id);
-CREATE INDEX IF NOT EXISTS idx_event_invitations_invited ON event_invitations(invited_username);

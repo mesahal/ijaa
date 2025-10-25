@@ -20,11 +20,14 @@ public interface EventPostService {
     // Get a specific post
     EventPostResponse getPost(Long postId, String currentUsername);
 
-    // Update a post
-    EventPostResponse updatePost(Long postId, String content, String username);
+    // Update a post with content and/or media files
+    EventPostResponse updatePostWithContentAndMedia(Long postId, String content, List<MultipartFile> files, String username);
+    
+    // Update a post with content, new media files, and media files to remove
+    EventPostResponse updatePostWithContentAndMedia(Long postId, String content, List<MultipartFile> files, List<String> filesToRemove, String username);
 
-    // Delete a post (soft delete)
-    void deletePost(Long postId, String username);
+    // Remove media files from a post
+    void removeMediaFromPost(Long postId, List<String> fileNames, String username);
 
     // Like/unlike a post
     EventPostResponse toggleLike(Long postId, String username);
@@ -34,5 +37,8 @@ public interface EventPostService {
 
     // Get user's posts for a specific event
     PagedResponse<EventPostResponse> getUserEventPosts(String username, Long eventId, int page, int size, String currentUsername);
+    
+    // Delete a post
+    void deletePost(Long postId, String username);
 
 }

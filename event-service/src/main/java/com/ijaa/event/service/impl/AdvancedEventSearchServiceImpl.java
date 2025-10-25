@@ -52,6 +52,7 @@ public class AdvancedEventSearchServiceImpl implements AdvancedEventSearchServic
         Page<Event> events = eventRepository.findActiveEvents(pageable);
 
         // Apply filters
+        LocalDateTime now = LocalDateTime.now();
         List<Event> filteredEvents = events.getContent().stream()
                 .filter(event -> query == null || event.getTitle().toLowerCase().contains(query.toLowerCase()) ||
                         event.getDescription().toLowerCase().contains(query.toLowerCase()))
@@ -64,6 +65,7 @@ public class AdvancedEventSearchServiceImpl implements AdvancedEventSearchServic
                 .filter(event -> privacy == null || event.getPrivacy().name().equalsIgnoreCase(privacy))
                 .filter(event -> minParticipants == null || event.getCurrentParticipants() >= minParticipants)
                 .filter(event -> maxParticipants == null || event.getCurrentParticipants() <= maxParticipants)
+                .filter(event -> !Boolean.TRUE.equals(request.getUpcomingOnly()) || event.getStartDate().isAfter(now))
                 .collect(Collectors.toList());
 
         // Apply engagement filters
@@ -82,6 +84,13 @@ public class AdvancedEventSearchServiceImpl implements AdvancedEventSearchServic
         //             .collect(Collectors.toList());
         // }
 
+        // Apply limit if specified (for non-paginated results)
+        if (request.getLimit() != null && request.getLimit() > 0) {
+            filteredEvents = filteredEvents.stream()
+                    .limit(request.getLimit())
+                    .collect(Collectors.toList());
+        }
+
         // Convert to responses
         List<EventResponse> responses = filteredEvents.stream()
                 .map(this::mapToEventResponse)
@@ -96,116 +105,6 @@ public class AdvancedEventSearchServiceImpl implements AdvancedEventSearchServic
                 pageable.getPageNumber() == 0,
                 pageable.getPageNumber() >= (int) Math.ceil((double) filteredEvents.size() / pageable.getPageSize()) - 1
         );
-    }
-
-    @Override
-    public List<EventResponse> getEventRecommendations(String username) {
-        log.info("Getting event recommendations for user: {}", username);
-
-        // Simple recommendation logic - get recent active events
-        // In a real app, you'd implement more sophisticated recommendation algorithms
-        List<Event> events = eventRepository.findActiveEventsOrderByCreatedAtDesc(PageRequest.of(0, 10)).getContent();
-
-        return events.stream()
-                .map(this::mapToEventResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<EventResponse> getTrendingEvents(int limit) {
-        log.info("Getting trending events, limit: {}", limit);
-
-        // Simple trending logic - events with high participation
-        // In a real app, you'd consider engagement metrics, social signals, etc.
-        List<Event> events = eventRepository.findActiveEventsOrderByCurrentParticipantsDesc(PageRequest.of(0, limit)).getContent();
-
-        return events.stream()
-                .map(this::mapToEventResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<EventResponse> getEventsByLocation(String location, int limit) {
-        log.info("Getting events by location: {}, limit: {}", location, limit);
-
-        List<Event> events = eventRepository.findByLocationContainingIgnoreCaseAndActiveTrueOrderByStartDateAsc(location, PageRequest.of(0, limit)).getContent();
-
-        return events.stream()
-                .map(this::mapToEventResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<EventResponse> getEventsByOrganizer(String organizerName, int limit) {
-        log.info("Getting events by organizer: {}, limit: {}", organizerName, limit);
-
-        List<Event> events = eventRepository.findByOrganizerNameContainingIgnoreCaseAndActiveTrueOrderByStartDateDesc(organizerName, PageRequest.of(0, limit)).getContent();
-
-        return events.stream()
-                .map(this::mapToEventResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<EventResponse> getHighEngagementEvents(int limit) {
-        log.info("Getting high engagement events, limit: {}", limit);
-
-        // Events with high participation, comments, and media
-        List<Event> events = eventRepository.findActiveEventsOrderByCurrentParticipantsDesc(PageRequest.of(0, limit)).getContent();
-
-        // Filter for events with engagement
-        List<Event> highEngagementEvents = events.stream()
-                .filter(event -> {
-                    // Note: Comment counting removed as comments are now post-based
-                    // Comments are now associated with posts, not directly with events
-                    // long commentCount = eventCommentRepository.countByEventId(event.getId());
-                    return event.getCurrentParticipants() > 5; // Only use participation for engagement
-                })
-                .limit(limit)
-                .collect(Collectors.toList());
-
-        return highEngagementEvents.stream()
-                .map(this::mapToEventResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<EventResponse> getUpcomingEvents(String location, String eventType, int limit) {
-        log.info("Getting upcoming events, location: {}, eventType: {}, limit: {}", location, eventType, limit);
-
-        LocalDateTime now = LocalDateTime.now();
-        List<Event> events = eventRepository.findByStartDateAfterAndActiveTrueOrderByStartDateAsc(now, PageRequest.of(0, limit)).getContent();
-
-        // Apply filters
-        List<Event> filteredEvents = events.stream()
-                .filter(event -> location == null || event.getLocation().toLowerCase().contains(location.toLowerCase()))
-                .filter(event -> eventType == null || event.getEventType().equalsIgnoreCase(eventType))
-                .limit(limit)
-                .collect(Collectors.toList());
-
-        return filteredEvents.stream()
-                .map(this::mapToEventResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<EventResponse> getSimilarEvents(Long eventId, int limit) {
-        log.info("Getting similar events for event: {}, limit: {}", eventId, limit);
-
-        Event sourceEvent = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("Event not found"));
-
-        // Find events with similar characteristics
-        List<Event> similarEvents = eventRepository.findByEventTypeAndLocationAndActiveTrueAndIdNot(
-                sourceEvent.getEventType(),
-                sourceEvent.getLocation(),
-                eventId,
-                PageRequest.of(0, limit)
-        );
-
-        return similarEvents.stream()
-                .map(this::mapToEventResponse)
-                .collect(Collectors.toList());
     }
 
     private Pageable createPageable(AdvancedEventSearchRequest request) {

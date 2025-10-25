@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -217,12 +220,14 @@ public class EventPostResource extends BaseService {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{postId}")
+    @PutMapping(value = "/{postId}", consumes = {"multipart/form-data"})
     @RequiresRole("USER")
     @RequiresFeature("events.posts.update")
     @Operation(
         summary = "Update a post", 
-        description = "Update the content of a post. Only the post author can update their post."
+        description = "Update the content, add new media files, and/or remove existing media files from a post. " +
+                     "Only the post author can update their post. To update media files, use multipart/form-data. " +
+                     "To update only text content, use application/json. To remove media files, specify their names in the 'removeMedia' parameter."
     )
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
@@ -241,17 +246,49 @@ public class EventPostResource extends BaseService {
     public ResponseEntity<EventPostResponse> updatePost(
             @Parameter(description = "Post ID", required = true, example = "1")
             @PathVariable Long postId,
-            @Parameter(description = "New content for the post", required = true, example = "Updated post content")
-            @RequestBody String content) {
+            @Parameter(description = "New content for the post (can be null if only updating media)", 
+                      example = "Updated post content")
+            @RequestParam(value = "content", required = false) String content,
+            @Parameter(description = "New media files to add to the post")
+            @RequestParam(value = "files", required = false) List<MultipartFile> files,
+            @Parameter(description = "Comma-separated list of media file names to remove from the post")
+            @RequestParam(value = "removeMedia", required = false) String removeMedia) {
         
         String username = getCurrentUsername();
         if (username == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         
-        log.info("Updating post: {} by user: {}", postId, username);
-        EventPostResponse response = eventPostService.updatePost(postId, content, username);
-        return ResponseEntity.ok(response);
+        // Validate that at least content, files, or files to remove are provided
+        if ((content == null || content.trim().isEmpty()) && 
+            (files == null || files.isEmpty()) && 
+            (removeMedia == null || removeMedia.trim().isEmpty())) {
+            return ResponseEntity.badRequest().build();
+        }
+        
+        log.info("Updating post: {} by user: {}, content: {}, files: {}, removeMedia: {}", 
+                postId, username, 
+                content != null ? "present" : "none", 
+                files != null ? files.size() : 0,
+                removeMedia != null ? removeMedia : "none");
+        
+        try {
+            // Parse comma-separated file names to remove
+            List<String> filesToRemove = new ArrayList<>();
+            if (removeMedia != null && !removeMedia.trim().isEmpty()) {
+                filesToRemove = Arrays.stream(removeMedia.split(","))
+                        .map(String::trim)
+                        .filter(name -> !name.isEmpty())
+                        .collect(Collectors.toList());
+            }
+            
+            EventPostResponse response = eventPostService.updatePostWithContentAndMedia(
+                    postId, content, files, filesToRemove, username);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            log.error("Failed to update post: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     @DeleteMapping("/{postId}")

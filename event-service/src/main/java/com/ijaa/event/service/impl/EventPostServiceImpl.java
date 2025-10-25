@@ -222,9 +222,19 @@ public class EventPostServiceImpl extends BaseService implements EventPostServic
 
     @Override
     @Transactional
-    public EventPostResponse updatePost(Long postId, String content, String username) {
-        log.info("Updating post: {} by user: {}", postId, username);
+    public EventPostResponse updatePostWithContentAndMedia(Long postId, String content, List<MultipartFile> files, String username) {
+        return updatePostWithContentAndMedia(postId, content, files, null, username);
+    }
 
+    @Transactional
+    public EventPostResponse updatePostWithContentAndMedia(Long postId, String content, List<MultipartFile> files, List<String> filesToRemove, String username) {
+        log.info("Updating post with content and/or media: {} by user: {}, content: {}, files: {}, files to remove: {}", 
+                postId, username, 
+                content != null ? "present" : "none", 
+                files != null ? files.size() : 0,
+                filesToRemove != null ? filesToRemove.size() : 0);
+
+        // Find the existing post
         EventPost post = eventPostRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
@@ -236,14 +246,91 @@ public class EventPostServiceImpl extends BaseService implements EventPostServic
             throw new RuntimeException("Unauthorized to update this post");
         }
 
-        post.setContent(content);
-        post.setIsEdited(true);
+        boolean isUpdated = false;
 
-        EventPost updatedPost = eventPostRepository.save(post);
-        log.info("Post updated successfully: {}", postId);
+        // Update content if provided
+        if (content != null) {
+            post.setContent(content);
+            post.setIsEdited(true);
+            isUpdated = true;
+        }
 
-        return mapToResponse(updatedPost, username);
+        // Remove specified media files if any
+        if (filesToRemove != null && !filesToRemove.isEmpty()) {
+            try {
+                removeMediaFromPost(postId, filesToRemove, username);
+                isUpdated = true;
+            } catch (Exception e) {
+                log.error("Failed to remove media files from post {}: {}", postId, e.getMessage());
+                // Continue with other updates even if media removal fails
+            }
+        }
+
+        // Handle adding new media files if provided
+        if (files != null && !files.isEmpty()) {
+            log.info("Uploading {} media files for post: {}", files.size(), postId);
+            
+            for (int i = 0; i < files.size(); i++) {
+                MultipartFile file = files.get(i);
+                if (file != null && !file.isEmpty()) {
+                    try {
+                        // Determine media type based on file content type
+                        String mediaType = determineMediaType(file.getContentType());
+                        
+                        // Get authorization token from current request
+                        String authToken = getAuthorizationToken();
+                        if (authToken == null) {
+                            log.error("Authorization token not available for file upload");
+                            continue; // Skip this file and continue with others
+                        }
+                        
+                        // Upload the file using the file service client
+                        fileServiceClient.uploadPostMedia(postId.toString(), file, mediaType, authToken, username);
+                        log.info("Successfully uploaded media file {} for post: {}", file.getOriginalFilename(), postId);
+                        isUpdated = true;
+                    } catch (Exception e) {
+                        String errorMessage = extractErrorMessage(e);
+                        log.error("Failed to upload media file {} for post: {} - Error: {}", 
+                                file.getOriginalFilename(), postId, errorMessage);
+                        // Continue with other files even if one fails
+                    }
+                }
+            }
+        }
+
+        // Update post type based on current content and files
+        if (isUpdated) {
+            List<PostMediaResponse> currentMedia = getPostMediaFiles(postId.toString());
+            boolean hasMedia = !currentMedia.isEmpty();
+            boolean hasContent = post.getContent() != null && !post.getContent().trim().isEmpty();
+            
+            if (hasMedia && hasContent) {
+                post.setPostType(EventPost.PostType.MIXED);
+            } else if (hasMedia) {
+                // Determine if we have images, videos, or both
+                boolean hasImages = currentMedia.stream().anyMatch(m -> m.getMediaType().equals("IMAGE"));
+                boolean hasVideos = currentMedia.stream().anyMatch(m -> m.getMediaType().equals("VIDEO"));
+                
+                if (hasImages && hasVideos) {
+                    post.setPostType(EventPost.PostType.MIXED);
+                } else if (hasImages) {
+                    post.setPostType(EventPost.PostType.IMAGE);
+                } else if (hasVideos) {
+                    post.setPostType(EventPost.PostType.VIDEO);
+                } else {
+                    post.setPostType(EventPost.PostType.TEXT);
+                }
+            } else {
+                post.setPostType(EventPost.PostType.TEXT);
+            }
+            
+            post = eventPostRepository.save(post);
+            log.info("Post updated successfully: {}", postId);
+        }
+
+        return mapToResponse(post, username);
     }
+    
 
     @Override
     @Transactional
@@ -329,6 +416,56 @@ public class EventPostServiceImpl extends BaseService implements EventPostServic
                 posts.isFirst(),
                 posts.isLast()
         );
+    }
+
+    @Override
+    @Transactional
+    public void removeMediaFromPost(Long postId, List<String> fileNames, String username) {
+        log.info("Removing {} media files from post {} by user {}", fileNames.size(), postId, username);
+        
+        // Verify the post exists and belongs to the user
+        EventPost post = eventPostRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+                
+        if (!post.getUsername().equals(username)) {
+            throw new RuntimeException("Unauthorized to modify this post");
+        }
+        
+        if (fileNames == null || fileNames.isEmpty()) {
+            return; // Nothing to remove
+        }
+        
+        try {
+            // Get authorization token from current request
+            String authToken = getAuthorizationToken();
+            if (authToken == null) {
+                throw new RuntimeException("Authorization token not available");
+            }
+            
+            // Delete each media file
+            for (String fileName : fileNames) {
+                try {
+                    fileServiceClient.deletePostMedia(postId.toString(), fileName, authToken, username);
+                    log.info("Successfully removed media file {} from post {}", fileName, postId);
+                } catch (Exception e) {
+                    log.error("Failed to remove media file {} from post {}: {}", 
+                            fileName, postId, e.getMessage());
+                    // Continue with other files even if one fails
+                }
+            }
+            
+            // Update post type if needed
+            List<PostMediaResponse> remainingMedia = getPostMediaFiles(postId.toString());
+            if (remainingMedia.isEmpty() && (post.getContent() == null || post.getContent().trim().isEmpty())) {
+                post.setPostType(EventPost.PostType.TEXT);
+                eventPostRepository.save(post);
+            }
+            
+        } catch (Exception e) {
+            String errorMessage = extractErrorMessage(e);
+            log.error("Failed to remove media files from post {}: {}", postId, errorMessage);
+            throw new RuntimeException("Failed to remove media files: " + errorMessage, e);
+        }
     }
 
 

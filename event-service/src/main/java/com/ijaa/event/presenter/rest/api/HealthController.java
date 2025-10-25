@@ -5,7 +5,6 @@ import com.ijaa.event.common.utils.AppUtils;
 import com.ijaa.event.repository.EventRepository;
 import com.ijaa.event.repository.EventCommentRepository;
 import com.ijaa.event.repository.EventParticipationRepository;
-import com.ijaa.event.repository.EventInvitationRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,6 @@ public class HealthController {
     private final EventRepository eventRepository;
     private final EventCommentRepository eventCommentRepository;
     private final EventParticipationRepository eventParticipationRepository;
-    private final EventInvitationRepository eventInvitationRepository;
 
     @GetMapping("/status")
     @RequiresFeature("system.health")
@@ -68,7 +66,6 @@ public class HealthController {
             long eventCount = eventRepository.count();
             long commentCount = eventCommentRepository.count();
             long participationCount = eventParticipationRepository.count();
-            long invitationCount = eventInvitationRepository.count();
             
             response.put("status", "healthy");
             response.put("message", "Database connection successful");
@@ -76,13 +73,12 @@ public class HealthController {
             response.put("metrics", Map.of(
                 "events", eventCount,
                 "comments", commentCount,
-                "participations", participationCount,
-                "invitations", invitationCount
+                "participations", participationCount
             ));
             response.put("timestamp", LocalDateTime.now());
             
-            log.info("Database health check successful. Events: {}, Comments: {}, Participations: {}, Invitations: {}", 
-                    eventCount, commentCount, participationCount, invitationCount);
+            log.info("Database health check successful. Events: {}, Comments: {}, Participations: {}", 
+                    eventCount, commentCount, participationCount);
             return ResponseEntity.ok(response);
             
         } catch (Exception e) {

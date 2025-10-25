@@ -35,5 +35,6 @@ public interface FileServiceClient {
                           @RequestHeader("X-Username") String username);
 
     @DeleteMapping("/api/v1/files/posts/{postId}/media/{fileName}")
-    Object deletePostMedia(@PathVariable String postId, @PathVariable String fileName, @RequestHeader("Authorization") String token);
+    Object deletePostMedia(@PathVariable String postId, @PathVariable String fileName, 
+                          @RequestHeader("Authorization") String token, @RequestHeader("X-Username") String username);
 }

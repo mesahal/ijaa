@@ -3,24 +3,16 @@
 ## Project Overview
 IJAA (IIT JU Alumni Association) is a comprehensive microservices-based alumni management system built with Spring Boot. The system facilitates alumni networking, event management, file handling, and advanced event features through a distributed architecture.
 
-**Recent Update (January 2025)**: Complete API standardization following REST conventions, JWT authentication with refresh tokens, database schema alignment, SQL initialization, and comprehensive feature flag system with 52 hierarchical flags. **NEW FEATURE**: Added comprehensive post system for event discussions with mixed content support (text, images, videos). **CRITICAL FIX**: Added missing feature flags to all API endpoints for complete access control.
-
-**API Standardization (December 2024)**: All API endpoints have been standardized to follow industry best practices:
-- **Resource-based URLs**: `/api/v1/users/`, `/api/v1/events/`, `/api/v1/files/`
-- **Consistent HTTP methods**: GET for retrieval, POST for creation, PUT for updates, DELETE for removal
-- **Hierarchical resource organization**: `/users/{userId}/experiences/`, `/events/{eventId}/comments/`
-- **Standardized authentication**: `/api/v1/auth/` for all authentication endpoints
-- **Centralized admin management**: `/api/v1/admin/` for all administrative functions
 
 ## Architecture
 
 ### Service Architecture
 ```
-Gateway Service (8080) → User Service (8081), Event Service (8082), File Service (8083)
+Gateway Service (8000) → User Service (8081), Event Service (8082), File Service (8083)
                        ↓
                  Discovery Service (8761)
                        ↓  
-                 Config Service (8888)
+                 Config Service (8071)
 ```
 
 ### Current Services
@@ -30,12 +22,12 @@ Gateway Service (8080) → User Service (8081), Event Service (8082), File Servi
 - **Purpose**: Service registry and discovery
 - **Status**: ✅ Functional
 
-#### 2. Config Service (Port: 8888)  
+#### 2. Config Service (Port: 8071)  
 - **Technology**: Spring Cloud Config Server
-- **Purpose**: Centralized configuration management
+- **Purpose**: Centralized configuration server (native file system). Currently, services use their local `application.yml` and do not import from Config Server.
 - **Status**: ✅ Functional
 
-#### 3. Gateway Service (Port: 8080)
+#### 3. Gateway Service (Port: 8000)
 - **Technology**: Spring Cloud Gateway
 - **Purpose**: API Gateway and routing
 - **Status**: ✅ Functional
@@ -44,6 +36,7 @@ Gateway Service (8080) → User Service (8081), Event Service (8082), File Servi
   - JWT token validation and user context propagation
   - Public access for feature flag status checks
   - File serving routes for public image access
+  - Centralized token blacklisting with PostgreSQL via `/api/v1/token/*`
 
 #### 4. User Service (Port: 8081)
 - **Technology**: Spring Boot + PostgreSQL + JPA
@@ -66,7 +59,7 @@ Gateway Service (8080) → User Service (8081), Event Service (8082), File Servi
   - Advanced search with multiple criteria
   - Comment system with likes and replies
   - Event participation and RSVP system
-  - Event invitations and banner management
+  - Event banner management
 
 #### 6. File Service (Port: 8083)
 - **Technology**: Spring Boot + File System Storage
@@ -98,7 +91,6 @@ Gateway Service (8080) → User Service (8081), Event Service (8082), File Servi
 - `event_posts`: Event discussion posts with mixed content support
 - `event_comments`: Comment system with nested replies (now post-based)
 - `event_participations`: Event RSVP and participation tracking
-- `event_invitations`: Event invitation management
 
 ### File Service Tables
 - `users`: User file metadata
@@ -161,7 +153,6 @@ Gateway Service (8080) → User Service (8081), Event Service (8082), File Servi
 - ✅ `PUT /{name}` - Update feature flag (ADMIN only)
 - ✅ `DELETE /{name}` - Delete feature flag (ADMIN only)
 - ✅ `GET /{name}/enabled` - Check feature flag status (Public - No authentication required)
-- ✅ `POST /refresh-cache` - Refresh feature flag cache (ADMIN only)
 
 ### Location APIs (`/ijaa/api/v1/locations/`)
 - ✅ `GET /countries` - Get all countries (**Feature Flag**: `user.location`)
@@ -208,32 +199,11 @@ Gateway Service (8080) → User Service (8081), Event Service (8082), File Servi
 - ✅ `GET /recent/post/{postId}` - Get recent comments for post (**Feature Flag**: `events.comments`)
 - ✅ `GET /popular/post/{postId}` - Get popular comments for post (**Feature Flag**: `events.comments`)
 
-### Event Invitations APIs (`/ijaa/api/v1/events/invitations/`)
-- ✅ `POST /send` - Send event invitation
-- ✅ `POST /{eventId}/accept` - Accept invitation
-- ✅ `POST /{eventId}/decline` - Decline invitation
-- ✅ `POST /{eventId}/mark-read` - Mark invitation as read
-- ✅ `GET /my-invitations` - Get user's received invitations
-- ✅ `GET /my-invitations/unread` - Get unread invitations
-- ✅ `GET /my-invitations/unresponded` - Get unresponded invitations
-- ✅ `GET /{eventId}/invitations` - Get event invitations
-- ✅ `GET /sent-by-me` - Get invitations sent by user
-- ✅ `GET /counts` - Get invitation counts
-
-### Event Banner APIs (`/ijaa/api/v1/events/banner/`)
-- ✅ `POST /{eventId}` - Upload/Update event banner (**Feature Flag**: `events.banner`)
-- ✅ `GET /{eventId}` - Get event banner URL (**Feature Flag**: `events.banner`)
-- ✅ `DELETE /{eventId}` - Delete event banner (**Feature Flag**: `events.banner`)
-
-### Advanced Event Search APIs (`/ijaa/api/v1/events/advanced-search/`)
-- ✅ `POST /advanced` - Advanced event search with multiple filters
-- ✅ `GET /recommendations` - Get event recommendations
-- ✅ `GET /trending` - Get trending events
-- ✅ `GET /location/{location}` - Get events by location
-- ✅ `GET /organizer/{organizerName}` - Get events by organizer
-- ✅ `GET /high-engagement` - Get high engagement events
-- ✅ `GET /upcoming` - Get upcoming events
-- ✅ `GET /similar/{eventId}` - Get similar events
+### Advanced Event Search API (`/ijaa/api/v1/events/advanced-search/`)
+- ✅ `POST /advanced` - Unified advanced event search with comprehensive filters
+  - Supports: location, organizer, event type, date range, online status, upcoming events
+  - Features: pagination, sorting, limit-based results
+  - Flexible search combining any/all criteria
 
 ### File Management APIs (`/ijaa/api/v1/files/users/`)
 - ✅ `POST /{userId}/profile-photo` - Upload profile photo (**Feature Flag**: `file-upload.profile-photo`)
@@ -252,7 +222,7 @@ Gateway Service (8080) → User Service (8081), Event Service (8082), File Servi
 - ✅ `GET /{eventId}/banner/file/{fileName}` - Serve event banner file (public)
 
 ### Post Media APIs (`/ijaa/api/v1/files/posts/`)
-- ✅ `GET /{postId}/media` - Get all post media files (public)
+- ✅ `GET /{postId}/media` - Get all post media files (protected)
 - ✅ `POST /{postId}/media` - Upload post media (**Feature Flag**: `events.posts.media`)
 - ✅ `GET /{postId}/media/{fileName}` - Get post media URL (**Feature Flag**: `file-download`)
 - ✅ `GET /{postId}/media/file/{fileName}` - Serve post media file (public)
@@ -297,7 +267,6 @@ The system implements a sophisticated feature flag mechanism with 52 hierarchica
 - `events` → Core event management (creation, update, deletion)
 - `events.participation` → Event participation/RSVP
 - `events.comments` → Event commenting system (now post-based)
-- `events.invitations` → Event invitation system
 - `events.media` → Event media attachments
 - `events.banner` → Event banner upload and management
 - `events.posts` → Event posts and discussion system
@@ -318,7 +287,7 @@ The system implements a sophisticated feature flag mechanism with 52 hierarchica
 
 ### Overview
 Production-ready JWT authentication with refresh tokens:
-- **Access Tokens**: 15-minute expiration, JWT format with user claims
+- **Access Tokens**: 60-minute expiration, JWT format with user claims
 - **Refresh Tokens**: 7-day expiration, stored in database
 - **Secure Cookies**: HttpOnly, Secure, SameSite=Strict for refresh tokens
 - **Multi-device Support**: Each device gets its own refresh token
@@ -332,11 +301,9 @@ Production-ready JWT authentication with refresh tokens:
 ### Public Endpoints (No Authentication Required)
 - `GET /ijaa/api/v1/admin/feature-flags/{name}/enabled` - Feature flag status check (**Feature Flag**: `system.health`)
 - `POST /ijaa/api/v1/auth/refresh` - Refresh access token (**Feature Flag**: `user.refresh`)
-- `POST /ijaa/api/v1/auth/logout` - Logout endpoint (No feature flag required)
 - `GET /ijaa/api/v1/files/users/*/profile-photo/file/**` - Profile photo serving (**Feature Flag**: `file-download`)
 - `GET /ijaa/api/v1/files/users/*/cover-photo/file/**` - Cover photo serving (**Feature Flag**: `file-download`)
 - `GET /ijaa/api/v1/files/events/{eventId}/banner/file/{fileName}` - Event banner serving (**Feature Flag**: `file-download`)
-- `GET /ijaa/api/v1/files/posts/{postId}/media` - Get post media files (public)
 - `GET /ijaa/api/v1/files/posts/{postId}/media/file/{fileName}` - Serve post media files (public)
 
 ## Health Check APIs
@@ -364,6 +331,28 @@ Production-ready JWT authentication with refresh tokens:
 - `GET /ijaa/api/v1/discovery/health/test` - Test endpoint
 
 **Note**: Config Service and Discovery Service health endpoints are **NOT** protected by feature flags as they are critical infrastructure services that need to be accessible for system monitoring.
+
+## Inter-Service Communication
+
+### Feign Client Integration
+The Event Service communicates with the File Service using Spring Cloud OpenFeign:
+- **FileServiceClient**: Interface for calling file-service endpoints
+- **Authentication**: Feign client forwards `Authorization` headers from incoming requests
+- **User Context**: `X-Username` header is passed to file-service for authorization
+- **Multipart Support**: Custom Feign encoder (`SpringFormEncoder`) for file uploads
+- **Service Discovery**: Feign uses Eureka for service location (`file-service` name resolves via discovery)
+
+### Header Forwarding
+Critical headers forwarded in inter-service calls:
+- **Authorization**: JWT bearer token for authentication
+- **X-Username**: Username extracted from JWT for user-specific operations
+- **X-USER_ID**: Base64-encoded user context from gateway (when applicable)
+
+### Key Implementation Details
+- Media deletion from posts requires both `Authorization` and `X-Username` headers
+- Upload operations include media type classification (IMAGE/VIDEO)
+- File service validates user permissions using the username header
+- Feign client handles errors gracefully, allowing post updates to continue even if some media operations fail
 
 ## Development Guidelines
 
@@ -414,6 +403,7 @@ The IJAA system now includes a comprehensive post system for event discussions, 
 - **Images**: JPG, JPEG, PNG, WEBP (max 5MB each)
 - **Videos**: MP4, AVI, MOV, WMV, FLV, WEBM (max 50MB each)
 - **Multiple Files**: Support for multiple media files per post with proper ordering
+- **Media Removal**: Full support for removing media from posts during updates via Feign client with proper authentication headers
 
 ### Database Tables
 - `event_posts`: Main posts table with content and metadata
@@ -439,6 +429,7 @@ The IJAA system now includes a comprehensive post system for event discussions, 
 - ✅ **Advanced post system** with mixed content support (text, images, videos)
 - ✅ **Post-based commenting system** with nested replies
 - ✅ **Media management** for posts with proper ordering and validation
+- ✅ **Feign client integration** with proper header forwarding for inter-service communication
 
 **Ready for Frontend Integration**: All APIs are stable and tested, with proper authentication flow and error handling in place. The new post system provides rich discussion capabilities for events.
 

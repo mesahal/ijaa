@@ -15,7 +15,7 @@ public class AlumniSearchRequest {
     private String searchQuery;
     
     @Schema(description = "Filter by graduation batch year", example = "2020")
-    @Pattern(regexp = "^\\d{4}$", message = "Batch must be a 4-digit year")
+//    @Pattern(regexp = "^\\d{4}$", message = "Batch must be a 4-digit year")
     private String batch;
     
     @Schema(description = "Filter by profession or industry", example = "Technology")

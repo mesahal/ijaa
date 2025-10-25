@@ -10,7 +10,6 @@ import com.ijaa.event.domain.request.AdvancedEventSearchRequest;
 import com.ijaa.event.domain.response.EventResponse;
 import com.ijaa.event.service.AdvancedEventSearchService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,8 +19,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -37,33 +34,81 @@ public class AdvancedEventSearchResource {
     @RequiresRole("USER")
     @RequiresFeature("search.advanced-filters")
     @Operation(
-        summary = "Advanced Event Search",
-        description = "Search events with multiple filters and criteria including location, date range, event type, and more",
+        summary = "Unified Advanced Event Search",
+        description = """
+            Comprehensive event search with flexible filtering capabilities.
+            
+            **Features:**
+            - Search by location, organizer, event type, dates
+            - Filter upcoming events only
+            - Online/offline filtering
+            - Privacy and participant filters
+            - Flexible pagination or limit-based results
+            - Sorting by multiple criteria
+            
+            **All parameters are optional** - combine any filters as needed.
+            """,
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Advanced search criteria",
+            description = "Advanced search criteria (all fields optional)",
             required = true,
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = AdvancedEventSearchRequest.class),
                 examples = {
                     @ExampleObject(
-                        name = "Location and Date Search",
-                        summary = "Search events by location and date range",
+                        name = "Search by Location",
+                        summary = "Find events in a specific location",
                         value = """
                             {
                                 "location": "IIT Campus",
-                                "startDate": "2024-12-01T00:00:00",
-                                "endDate": "2024-12-31T23:59:59",
+                                "limit": 10
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "Search by Organizer",
+                        summary = "Find events by organizer name",
+                        value = """
+                            {
+                                "organizerName": "John Doe",
+                                "limit": 10
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "Upcoming Events Only",
+                        summary = "Get upcoming events with optional filters",
+                        value = """
+                            {
+                                "upcomingOnly": true,
+                                "location": "IIT Campus",
                                 "eventType": "MEETING",
+                                "limit": 10
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "Complex Multi-Filter Search",
+                        summary = "Combine multiple filters for precise results",
+                        value = """
+                            {
+                                "query": "networking",
+                                "location": "IIT",
+                                "eventType": "NETWORKING",
+                                "organizerName": "Alumni",
+                                "upcomingOnly": true,
                                 "isOnline": false,
+                                "minParticipants": 20,
+                                "sortBy": "start_date",
+                                "sortOrder": "asc",
                                 "page": 0,
-                                "size": 10
+                                "size": 20
                             }
                             """
                     ),
                     @ExampleObject(
                         name = "Online Events Search",
-                        summary = "Search for online events",
+                        summary = "Search for online events with date range",
                         value = """
                             {
                                 "isOnline": true,
@@ -180,186 +225,4 @@ public class AdvancedEventSearchResource {
         return ResponseEntity.ok(new ApiResponse<>("Events found successfully", "200", response));
     }
 
-    @GetMapping("/recommendations")
-    @RequiresRole("USER")
-    @RequiresFeature("search.advanced-filters")
-    @Operation(
-        summary = "Get Event Recommendations",
-        description = "Get personalized event recommendations based on user preferences and past behavior"
-    )
-    @ApiResponses(value = {
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "200",
-            description = "Event recommendations retrieved successfully",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = com.ijaa.event.domain.common.ApiResponse.class),
-                examples = {
-                    @ExampleObject(
-                        name = "Success Response",
-                        value = """
-                            {
-                                "message": "Event recommendations retrieved successfully",
-                                "code": "200",
-                                "data": [
-                                    {
-                                        "id": 1,
-                                        "title": "Recommended Event 1",
-                                        "description": "This event matches your interests",
-                                        "startDate": "2024-12-25T18:00:00",
-                                        "endDate": "2024-12-25T22:00:00",
-                                        "location": "IIT Campus",
-                                        "eventType": "MEETING",
-                                        "active": true,
-                                        "isOnline": false,
-                                        "meetingLink": null,
-                                        "maxParticipants": 100,
-                                        "currentParticipants": 45,
-                                        "organizerName": "John Doe",
-                                        "organizerEmail": "john@example.com",
-                                        "createdByUsername": "johndoe",
-                                        "privacy": "PUBLIC",
-                                        "inviteMessage": "Join us for this event",
-                                        "createdAt": "2024-12-01T10:00:00",
-                                        "updatedAt": "2024-12-01T10:00:00"
-                                    }
-                                ]
-                            }
-                            """
-                    )
-                }
-            )
-        )
-    })
-    public ResponseEntity<ApiResponse<List<EventResponse>>> getEventRecommendations(
-            @Parameter(description = "Username for personalized recommendations") @RequestParam(defaultValue = "user") String username) {
-        
-        List<EventResponse> response = advancedEventSearchService.getEventRecommendations(username);
-        
-        return ResponseEntity.ok(new ApiResponse<>("Event recommendations retrieved successfully", "200", response));
-    }
-
-    @GetMapping("/trending")
-    @RequiresRole("USER")
-    @RequiresFeature("search.advanced-filters")
-    @Operation(
-        summary = "Get Trending Events",
-        description = "Get trending events based on engagement metrics and popularity"
-    )
-    @ApiResponses(value = {
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "200",
-            description = "Trending events retrieved successfully",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = com.ijaa.event.domain.common.ApiResponse.class),
-                examples = {
-                    @ExampleObject(
-                        name = "Success Response",
-                        value = """
-                            {
-                                "message": "Trending events retrieved successfully",
-                                "code": "200",
-                                "data": [
-                                    {
-                                        "id": 1,
-                                        "title": "Trending Event 1",
-                                        "description": "This is a trending event",
-                                        "startDate": "2024-12-25T18:00:00",
-                                        "endDate": "2024-12-25T22:00:00",
-                                        "location": "IIT Campus",
-                                        "eventType": "MEETING",
-                                        "active": true,
-                                        "isOnline": false,
-                                        "meetingLink": null,
-                                        "maxParticipants": 100,
-                                        "currentParticipants": 85,
-                                        "organizerName": "John Doe",
-                                        "organizerEmail": "john@example.com",
-                                        "createdByUsername": "johndoe",
-                                        "privacy": "PUBLIC",
-                                        "inviteMessage": "Join us for this trending event",
-                                        "createdAt": "2024-12-01T10:00:00",
-                                        "updatedAt": "2024-12-01T10:00:00"
-                                    }
-                                ]
-                            }
-                            """
-                    )
-                }
-            )
-        )
-    })
-    public ResponseEntity<ApiResponse<List<EventResponse>>> getTrendingEvents(
-            @Parameter(description = "Number of events to return") @RequestParam(defaultValue = "10") int limit) {
-        
-        List<EventResponse> response = advancedEventSearchService.getTrendingEvents(limit);
-        
-        return ResponseEntity.ok(new ApiResponse<>("Trending events retrieved successfully", "200", response));
-    }
-
-    @GetMapping("/location/{location}")
-    @RequiresRole("USER")
-    @RequiresFeature("search.advanced-filters")
-    @Operation(summary = "Get events by location", description = "Get events in a specific location")
-    public ResponseEntity<ApiResponse<List<EventResponse>>> getEventsByLocation(
-            @PathVariable String location,
-            @Parameter(description = "Number of events to return") @RequestParam(defaultValue = "10") int limit) {
-        
-        List<EventResponse> response = advancedEventSearchService.getEventsByLocation(location, limit);
-        
-        return ResponseEntity.ok(new ApiResponse<>("Events by location retrieved successfully", "200", response));
-    }
-
-    @GetMapping("/organizer/{organizerName}")
-    @RequiresRole("USER")
-    @RequiresFeature("search.advanced-filters")
-    @Operation(summary = "Get events by organizer", description = "Get events organized by a specific person")
-    public ResponseEntity<ApiResponse<List<EventResponse>>> getEventsByOrganizer(
-            @PathVariable String organizerName,
-            @Parameter(description = "Number of events to return") @RequestParam(defaultValue = "10") int limit) {
-        
-        List<EventResponse> response = advancedEventSearchService.getEventsByOrganizer(organizerName, limit);
-        
-        return ResponseEntity.ok(new ApiResponse<>("Events by organizer retrieved successfully", "200", response));
-    }
-
-    @GetMapping("/high-engagement")
-    @RequiresRole("USER")
-    @RequiresFeature("search.advanced-filters")
-    @Operation(summary = "Get high engagement events", description = "Get events with high engagement (comments, media, participants)")
-    public ResponseEntity<ApiResponse<List<EventResponse>>> getHighEngagementEvents(
-            @Parameter(description = "Number of events to return") @RequestParam(defaultValue = "10") int limit) {
-        
-        List<EventResponse> response = advancedEventSearchService.getHighEngagementEvents(limit);
-        
-        return ResponseEntity.ok(new ApiResponse<>("High engagement events retrieved successfully", "200", response));
-    }
-
-    @GetMapping("/upcoming")
-    @RequiresRole("USER")
-    @RequiresFeature("search.advanced-filters")
-    @Operation(summary = "Get upcoming events", description = "Get upcoming events with optional filters")
-    public ResponseEntity<ApiResponse<List<EventResponse>>> getUpcomingEvents(
-            @Parameter(description = "Location filter") @RequestParam(required = false) String location,
-            @Parameter(description = "Event type filter") @RequestParam(required = false) String eventType,
-            @Parameter(description = "Number of events to return") @RequestParam(defaultValue = "10") int limit) {
-        
-        List<EventResponse> response = advancedEventSearchService.getUpcomingEvents(location, eventType, limit);
-        
-        return ResponseEntity.ok(new ApiResponse<>("Upcoming events retrieved successfully", "200", response));
-    }
-
-    @GetMapping("/similar/{eventId}")
-    @RequiresRole("USER")
-    @RequiresFeature("search.advanced-filters")
-    @Operation(summary = "Get similar events", description = "Get events similar to the specified event")
-    public ResponseEntity<ApiResponse<List<EventResponse>>> getSimilarEvents(
-            @PathVariable Long eventId,
-            @Parameter(description = "Number of events to return") @RequestParam(defaultValue = "10") int limit) {
-        
-        List<EventResponse> response = advancedEventSearchService.getSimilarEvents(eventId, limit);
-        
-        return ResponseEntity.ok(new ApiResponse<>("Similar events retrieved successfully", "200", response));
-    }
 } 

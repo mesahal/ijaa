@@ -46,7 +46,7 @@ public class EventParticipationResource extends BaseService {
     @RequiresFeature("events.participation")
     @Operation(
         summary = "RSVP to Event",
-        description = "RSVP to an event with GOING, MAYBE, or NOT_GOING status",
+        description = "RSVP to an event with CONFIRMED, MAYBE, or DECLINED status",
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "RSVP details",
             required = true,
@@ -60,7 +60,7 @@ public class EventParticipationResource extends BaseService {
                         value = """
                             {
                                 "eventId": 1,
-                                "status": "GOING",
+                                "status": "CONFIRMED",
                                 "message": "Looking forward to attending!"
                             }
                             """
@@ -77,12 +77,12 @@ public class EventParticipationResource extends BaseService {
                             """
                     ),
                     @ExampleObject(
-                        name = "Not Going",
-                        summary = "RSVP as not going",
+                        name = "Declined",
+                        summary = "RSVP as declined",
                         value = """
                             {
                                 "eventId": 1,
-                                "status": "NOT_GOING",
+                                "status": "DECLINED",
                                 "message": "Sorry, I have a prior commitment"
                             }
                             """
@@ -93,7 +93,7 @@ public class EventParticipationResource extends BaseService {
                         value = """
                             {
                                 "eventId": 1,
-                                "status": "GOING"
+                                "status": "CONFIRMED"
                             }
                             """
                     )
@@ -119,7 +119,7 @@ public class EventParticipationResource extends BaseService {
                                     "id": 1,
                                     "eventId": 1,
                                     "participantUsername": "john.doe",
-                                    "status": "GOING",
+                                    "status": "CONFIRMED",
                                     "message": "Looking forward to attending!",
                                     "createdAt": "2024-12-01T10:00:00",
                                     "updatedAt": "2024-12-01T10:00:00"
@@ -184,7 +184,7 @@ public class EventParticipationResource extends BaseService {
     @RequiresFeature("events.participation")
     @Operation(
         summary = "Update RSVP Status",
-        description = "Update your RSVP status for an event (GOING, MAYBE, NOT_GOING)"
+        description = "Update your RSVP status for an event (CONFIRMED, MAYBE, DECLINED)"
     )
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
@@ -244,7 +244,7 @@ public class EventParticipationResource extends BaseService {
                         name = "Invalid Status",
                         value = """
                             {
-                                "message": "Invalid status. Must be GOING, MAYBE, or NOT_GOING",
+                                "message": "Invalid status. Must be CONFIRMED, MAYBE, or DECLINED",
                                 "code": "400",
                                 "data": null
                             }
@@ -349,7 +349,7 @@ public class EventParticipationResource extends BaseService {
                                     "id": 1,
                                     "eventId": 1,
                                     "participantUsername": "john.doe",
-                                    "status": "GOING",
+                                    "status": "CONFIRMED",
                                     "message": "Looking forward to attending!",
                                     "createdAt": "2024-12-01T10:00:00",
                                     "updatedAt": "2024-12-01T10:00:00"
@@ -420,7 +420,7 @@ public class EventParticipationResource extends BaseService {
                                         "id": 1,
                                         "eventId": 1,
                                         "participantUsername": "john.doe",
-                                        "status": "GOING",
+                                        "status": "CONFIRMED",
                                         "message": "Looking forward to attending!",
                                         "createdAt": "2024-12-01T10:00:00",
                                         "updatedAt": "2024-12-01T10:00:00"
@@ -474,7 +474,7 @@ public class EventParticipationResource extends BaseService {
     @RequiresFeature("events.participation")
     @Operation(
         summary = "Get Participants by Status",
-        description = "Get participants for an event by status (GOING, MAYBE, NOT_GOING)"
+        description = "Get participants for an event by status (CONFIRMED, MAYBE, DECLINED)"
     )
     @ApiResponses(value = {
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
@@ -485,7 +485,7 @@ public class EventParticipationResource extends BaseService {
                 schema = @Schema(implementation = com.ijaa.event.domain.common.ApiResponse.class),
                 examples = {
                     @ExampleObject(
-                        name = "Success Response - GOING",
+                        name = "Success Response - CONFIRMED",
                         value = """
                             {
                                 "message": "Participants by status retrieved successfully",
@@ -495,7 +495,7 @@ public class EventParticipationResource extends BaseService {
                                         "id": 1,
                                         "eventId": 1,
                                         "participantUsername": "john.doe",
-                                        "status": "GOING",
+                                        "status": "CONFIRMED",
                                         "message": "Looking forward to attending!",
                                         "createdAt": "2024-12-01T10:00:00",
                                         "updatedAt": "2024-12-01T10:00:00"
@@ -504,7 +504,7 @@ public class EventParticipationResource extends BaseService {
                                         "id": 3,
                                         "eventId": 1,
                                         "participantUsername": "mike.johnson",
-                                        "status": "GOING",
+                                        "status": "CONFIRMED",
                                         "message": "Can't wait!",
                                         "createdAt": "2024-12-01T12:00:00",
                                         "updatedAt": "2024-12-01T12:00:00"
@@ -526,7 +526,7 @@ public class EventParticipationResource extends BaseService {
                         name = "Invalid Status",
                         value = """
                             {
-                                "message": "Invalid status. Must be GOING, MAYBE, or NOT_GOING",
+                                "message": "Invalid status. Must be CONFIRMED, MAYBE, or DECLINED",
                                 "code": "400",
                                 "data": null
                             }
@@ -590,7 +590,7 @@ public class EventParticipationResource extends BaseService {
                                         "id": 1,
                                         "eventId": 1,
                                         "participantUsername": "john.doe",
-                                        "status": "GOING",
+                                        "status": "CONFIRMED",
                                         "message": "Looking forward to attending!",
                                         "createdAt": "2024-12-01T10:00:00",
                                         "updatedAt": "2024-12-01T10:00:00"
@@ -608,7 +608,7 @@ public class EventParticipationResource extends BaseService {
                                         "id": 3,
                                         "eventId": 5,
                                         "participantUsername": "john.doe",
-                                        "status": "NOT_GOING",
+                                        "status": "DECLINED",
                                         "message": "Sorry, I have a prior commitment",
                                         "createdAt": "2024-12-03T10:00:00",
                                         "updatedAt": "2024-12-03T10:00:00"
@@ -619,7 +619,8 @@ public class EventParticipationResource extends BaseService {
                     )
                 }
             )
-        ),
+        )
+,
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "401",
             description = "Unauthorized - Missing or invalid token",

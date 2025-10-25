@@ -20,7 +20,6 @@ public class FeatureFlagUtils {
     public static final String EVENT_UPDATE = "events.update";
     public static final String EVENT_DELETE = "events.delete";
     public static final String EVENT_PARTICIPATION = "events.participation";
-    public static final String EVENT_INVITATIONS = "events.invitations";
     public static final String EVENT_COMMENTS = "events.comments";
     public static final String EVENT_MEDIA = "events.media";
 
@@ -78,10 +77,6 @@ public class FeatureFlagUtils {
 
     public boolean isEventParticipationEnabled() {
         return isFeatureEnabled(EVENT_PARTICIPATION);
-    }
-
-    public boolean isEventInvitationsEnabled() {
-        return isFeatureEnabled(EVENT_INVITATIONS);
     }
 
     public boolean isEventCommentsEnabled() {

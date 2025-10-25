@@ -44,7 +44,7 @@ public class EventParticipationServiceImpl implements EventParticipationService 
         EventParticipation participation = new EventParticipation();
         participation.setEventId(request.getEventId());
         participation.setParticipantUsername(username);
-        participation.setStatus(EventParticipation.ParticipationStatus.valueOf(request.getStatus().toUpperCase()));
+        participation.setStatus(mapIncomingStatus(request.getStatus()));
         participation.setMessage(request.getMessage());
         
         EventParticipation savedParticipation = eventParticipationRepository.save(participation);
@@ -63,7 +63,7 @@ public class EventParticipationServiceImpl implements EventParticipationService 
                 .orElseThrow(() -> new RuntimeException("Participation not found"));
         
         EventParticipation.ParticipationStatus oldStatus = participation.getStatus();
-        participation.setStatus(EventParticipation.ParticipationStatus.valueOf(status.toUpperCase()));
+        participation.setStatus(mapIncomingStatus(status));
         participation.setMessage(message);
         
         EventParticipation savedParticipation = eventParticipationRepository.save(participation);
@@ -109,8 +109,7 @@ public class EventParticipationServiceImpl implements EventParticipationService 
 
     @Override
     public List<EventParticipationResponse> getEventParticipationsByStatus(Long eventId, String status) {
-        EventParticipation.ParticipationStatus participationStatus = 
-            EventParticipation.ParticipationStatus.valueOf(status.toUpperCase());
+        EventParticipation.ParticipationStatus participationStatus = mapIncomingStatus(status);
         return eventParticipationRepository.findByEventIdAndStatus(eventId, participationStatus).stream()
                 .map(this::createParticipationResponse)
                 .collect(Collectors.toList());
@@ -118,8 +117,7 @@ public class EventParticipationServiceImpl implements EventParticipationService 
 
     @Override
     public Long countParticipationsByStatus(Long eventId, String status) {
-        EventParticipation.ParticipationStatus participationStatus = 
-            EventParticipation.ParticipationStatus.valueOf(status.toUpperCase());
+        EventParticipation.ParticipationStatus participationStatus = mapIncomingStatus(status);
         return eventParticipationRepository.countByEventIdAndStatus(eventId, participationStatus);
     }
 
@@ -131,7 +129,39 @@ public class EventParticipationServiceImpl implements EventParticipationService 
     @Override
     public String getUserParticipationStatus(Long eventId, String username) {
         Optional<EventParticipation> participation = eventParticipationRepository.findByEventIdAndParticipantUsername(eventId, username);
-        return participation.map(p -> p.getStatus().name()).orElse(null);
+        return participation.map(p -> mapOutgoingStatus(p.getStatus())).orElse(null);
+    }
+
+    private EventParticipation.ParticipationStatus mapIncomingStatus(String status) {
+        if (status == null) {
+            throw new RuntimeException("Invalid status. Must be CONFIRMED, MAYBE, or DECLINED");
+        }
+        switch (status) { // case-sensitive, no trimming
+            case "CONFIRMED":
+                return EventParticipation.ParticipationStatus.GOING;
+            case "MAYBE":
+                return EventParticipation.ParticipationStatus.MAYBE;
+            case "DECLINED":
+                return EventParticipation.ParticipationStatus.NOT_GOING;
+            default:
+                throw new RuntimeException("Invalid status. Must be CONFIRMED, MAYBE, or DECLINED");
+        }
+    }
+
+    private String mapOutgoingStatus(EventParticipation.ParticipationStatus status) {
+        if (status == null) return null;
+        switch (status) {
+            case GOING:
+                return "CONFIRMED";
+            case MAYBE:
+                return "MAYBE";
+            case NOT_GOING:
+                return "DECLINED";
+            case PENDING:
+                return "MAYBE"; // normalize legacy pending to supported value
+            default:
+                return null;
+        }
     }
 
     private EventParticipationResponse createParticipationResponse(EventParticipation participation) {
@@ -139,7 +169,7 @@ public class EventParticipationServiceImpl implements EventParticipationService 
                 participation.getId(),
                 participation.getEventId(),
                 participation.getParticipantUsername(),
-                participation.getStatus().name(),
+                mapOutgoingStatus(participation.getStatus()),
                 participation.getMessage(),
                 participation.getCreatedAt(),
                 participation.getUpdatedAt()

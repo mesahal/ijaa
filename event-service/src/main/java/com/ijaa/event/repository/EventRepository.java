@@ -83,14 +83,14 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     
     // Complex search query
     @Query("SELECT e FROM Event e WHERE e.active = true " +
-           "AND (:location IS NULL OR e.location LIKE %:location%) " +
+           "AND (:location IS NULL OR LOWER(e.location) LIKE LOWER(CONCAT('%', :location, '%'))) " +
            "AND (:eventType IS NULL OR e.eventType = :eventType) " +
-           "AND (:startDate IS NULL OR e.startDate >= :startDate) " +
-           "AND (:endDate IS NULL OR e.endDate <= :endDate) " +
+           "AND (CAST(:startDate AS timestamp) IS NULL OR e.startDate >= :startDate) " +
+           "AND (CAST(:endDate AS timestamp) IS NULL OR e.endDate <= :endDate) " +
            "AND (:isOnline IS NULL OR e.isOnline = :isOnline) " +
-           "AND (:organizerName IS NULL OR e.organizerName LIKE %:organizerName%) " +
-           "AND (:title IS NULL OR e.title LIKE %:title%) " +
-           "AND (:description IS NULL OR e.description LIKE %:description%) " +
+           "AND (:organizerName IS NULL OR LOWER(e.organizerName) LIKE LOWER(CONCAT('%', :organizerName, '%'))) " +
+           "AND (:title IS NULL OR LOWER(e.title) LIKE LOWER(CONCAT('%', :title, '%'))) " +
+           "AND (:description IS NULL OR LOWER(e.description) LIKE LOWER(CONCAT('%', :description, '%'))) " +
            "ORDER BY e.startDate ASC")
     List<Event> searchEvents(@Param("location") String location, 
                            @Param("eventType") String eventType, 
